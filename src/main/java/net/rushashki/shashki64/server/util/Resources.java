@@ -1,5 +1,6 @@
 package net.rushashki.shashki64.server.util;
 
+import javax.ejb.Singleton;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,6 +11,7 @@ import javax.persistence.PersistenceContext;
  * Date: 15.11.14
  * Time: 17:34
  */
+@Singleton
 public class Resources {
 
   @PersistenceContext(unitName = "shashki64PU")

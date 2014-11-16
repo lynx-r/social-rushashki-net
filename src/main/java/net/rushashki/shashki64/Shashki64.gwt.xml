@@ -3,6 +3,7 @@
 <module>
 
   <inherits name='com.google.gwt.user.User'/>
+  <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
 
   <entry-point class='net.rushashki.shashki64.client.Shashki64'/>
   <servlet path="/Shashki64Service" class="net.rushashki.shashki64.server.Shashki64ServiceImpl"/>
