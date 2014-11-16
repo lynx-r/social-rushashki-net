@@ -7,6 +7,8 @@
         <!-- This allows you to define additional dependencies, it is the same as using the Dependencies: manifest attribute -->
         <dependencies>
             <module name="org.apache.commons.lang"/>
+            <module name="org.apache.commons.codec"/>
+            <module name="org.apache.commons.login"/>
             <module name="com.h2database.h2"/>
         </dependencies>
     </deployment>
