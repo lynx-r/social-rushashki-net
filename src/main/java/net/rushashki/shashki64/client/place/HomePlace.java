@@ -11,14 +11,14 @@ import com.google.gwt.place.shared.PlaceTokenizer;
  */
 public class HomePlace extends Place {
 
-  private String greetingName;
+  private String token;
 
   public HomePlace(String token) {
-    this.greetingName = token;
+    this.token = token;
   }
 
-  public String getGreetingName() {
-    return greetingName;
+  public String getToken() {
+    return token;
   }
 
   public static class Tokenizer implements PlaceTokenizer<HomePlace> {
@@ -30,7 +30,7 @@ public class HomePlace extends Place {
 
     @Override
     public String getToken(HomePlace place) {
-      return place.getGreetingName();
+      return place.getToken();
     }
   }
 

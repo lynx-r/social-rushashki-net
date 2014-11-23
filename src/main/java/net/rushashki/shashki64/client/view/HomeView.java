@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface HomeView extends IsWidget {
 
-  void setName(String greetingName);
+  void setToken(String greetingName);
 
   void setPresenter(Presenter presenter);
 

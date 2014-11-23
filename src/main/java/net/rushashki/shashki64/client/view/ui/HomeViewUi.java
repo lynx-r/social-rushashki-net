@@ -38,7 +38,7 @@ public class HomeViewUi extends Composite implements HomeView {
   }
 
   @Override
-  public void setName(String greetingName) {
+  public void setToken(String greetingName) {
     this.name = greetingName;
     greeting.setText(greetingName);
   }

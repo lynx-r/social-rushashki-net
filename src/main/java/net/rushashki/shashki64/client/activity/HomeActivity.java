@@ -6,6 +6,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.shashki64.client.event.NavbarReloadEvent;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.client.view.HomeView;
 
@@ -17,24 +18,26 @@ import net.rushashki.shashki64.client.view.HomeView;
  */
 public class HomeActivity extends AbstractActivity implements HomeView.Presenter {
 
+  private final com.google.web.bindery.event.shared.EventBus eventBus;
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
 
   private HomeView homeView;
-
   private PlaceController placeController;
 
-  private String name;
+  private String token;
 
   public HomeActivity(HomePlace homePlace) {
-    this.name = homePlace.getGreetingName();
+    this.token = homePlace.getToken();
     this.homeView = shashkiGinjector.getHomeView();
     this.placeController = shashkiGinjector.getPlaceController();
+    this.eventBus = shashkiGinjector.getEventBus();
   }
 
   @Override
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
-    homeView.setName(name);
+    homeView.setToken(token);
     homeView.setPresenter(this);
+    eventBus.fireEvent(new NavbarReloadEvent(token));
     panel.setWidget(homeView.asWidget());
   }
 

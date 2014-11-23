@@ -6,6 +6,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.shashki64.client.event.NavbarReloadEvent;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.view.PlayView;
 
@@ -17,24 +18,26 @@ import net.rushashki.shashki64.client.view.PlayView;
  */
 public class PlayActivity extends AbstractActivity implements PlayView.Presenter {
 
-  ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
+  private final com.google.web.bindery.event.shared.EventBus eventBus;
+  private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
 
   private PlayView playView;
-
   private PlaceController placeController;
 
-  private String name;
+  private String token;
 
   public PlayActivity(PlayPlace playPlace) {
-    this.name = playPlace.getPlayerName();
+    this.token = playPlace.getPlayerName();
     this.playView = shashkiGinjector.getPlayView();
     this.placeController = shashkiGinjector.getPlaceController();
+    this.eventBus = shashkiGinjector.getEventBus();
   }
 
   @Override
   public void start(AcceptsOneWidget panel, EventBus eventBus) {
-    playView.setPlayer(name);
+    playView.setToken(token);
     playView.setPresenter(this);
+    eventBus.fireEvent(new NavbarReloadEvent(token));
     panel.setWidget(playView.asWidget());
   }
 

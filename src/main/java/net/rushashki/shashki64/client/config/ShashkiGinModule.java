@@ -5,6 +5,8 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import net.rushashki.shashki64.client.component.NavbarComponent;
+import net.rushashki.shashki64.client.component.ui.NavbarComponentUi;
 import net.rushashki.shashki64.client.view.HomeView;
 import net.rushashki.shashki64.client.view.PlayView;
 import net.rushashki.shashki64.client.view.ui.HomeViewUi;

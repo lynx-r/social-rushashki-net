@@ -28,7 +28,7 @@ public class PlayViewUi extends Composite implements PlayView {
   }
 
   @Override
-  public void setPlayer(String playerName) {
+  public void setToken(String playerName) {
     this.name = playerName;
     this.playerName.setText(playerName);
   }

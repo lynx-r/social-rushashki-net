@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface PlayView extends IsWidget {
 
-  void setPlayer(String playerName);
+  void setToken(String playerName);
 
   void setPresenter(Presenter presenter);
 

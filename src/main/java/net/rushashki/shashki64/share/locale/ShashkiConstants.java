@@ -12,4 +12,11 @@ public interface ShashkiConstants extends Constants {
 
   String home();
 
+  String homeToken();
+
+  String play();
+
+  String playToken();
+
+  String unrecognizedPlace();
 }

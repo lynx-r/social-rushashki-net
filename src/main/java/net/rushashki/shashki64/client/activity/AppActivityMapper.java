@@ -15,8 +15,6 @@ import net.rushashki.shashki64.client.place.PlayPlace;
  */
 public class AppActivityMapper implements ActivityMapper {
 
-  ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
-
   @Override
   public Activity getActivity(Place place) {
     if (place instanceof HomePlace) {

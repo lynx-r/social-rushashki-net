@@ -5,7 +5,6 @@ import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -38,22 +37,17 @@ public class Shashki64 implements EntryPoint {
     splashImage.addStyleName("loader-image");
     RootPanel.get("content").add(splashImage);
 
-    new Timer() {
-      @Override
-      public void run() {
-        ActivityMapper activityMapper = new AppActivityMapper();
-        ActivityManager activityManager = new ActivityManager(activityMapper, shashkiGinjector.getEventBus());
-        activityManager.setDisplay(appWidget);
+    ActivityMapper activityMapper = new AppActivityMapper();
+    ActivityManager activityManager = new ActivityManager(activityMapper, shashkiGinjector.getEventBus());
+    activityManager.setDisplay(appWidget);
 
-        AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
-        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
-        historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
+    AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
+    PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
+    historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
-        RootPanel.get("content").remove(splashImage);
-        RootPanel.get("content").add((IsWidget) appWidget);
+    RootPanel.get("content").remove(splashImage);
+    RootPanel.get("content").add((IsWidget) appWidget);
 
-        historyHandler.handleCurrentHistory();
-      }
-    }.schedule(1);
+    historyHandler.handleCurrentHistory();
   }
 }

@@ -1,14 +1,25 @@
 package net.rushashki.shashki64.client.component.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.web.bindery.event.shared.EventBus;
+import net.rushashki.shashki64.client.component.NavbarComponent;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.shashki64.client.event.NavbarReloadEvent;
+import net.rushashki.shashki64.client.event.NavbarReloadEventHandler;
+import net.rushashki.shashki64.client.place.HomePlace;
+import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.share.locale.ShashkiConstants;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.NavbarNav;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,28 +27,78 @@ import org.gwtbootstrap3.client.ui.NavbarNav;
  * Date: 23.11.14
  * Time: 18:29
  */
-public class NavbarComponentUi extends Composite {
-  interface NavbarComponentUiUiBinder extends UiBinder<HTMLPanel, NavbarComponentUi> {
-  }
-
+public class NavbarComponentUi extends Composite implements NavbarComponent {
   private static NavbarComponentUiUiBinder ourUiBinder = GWT.create(NavbarComponentUiUiBinder.class);
-
-  private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
-
-  private ShashkiConstants constants;
-
+  private final AnchorListItem homeLink;
+  private final AnchorListItem playLink;
+  private AnchorListItem prevActiveLink = null;
   @UiField
   NavbarNav navLeft;
-
   @UiField
   NavbarNav navRight;
+
+  private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
+  private PlaceController placeController;
+  private ShashkiConstants constants;
+  private EventBus eventBus;
 
   public NavbarComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.constants = shashkiGinjector.getShashkiConstants();
+    this.placeController = shashkiGinjector.getPlaceController();
+    this.eventBus = shashkiGinjector.getEventBus();
+    eventBus.addHandler(NavbarReloadEvent.TYPE, new NavbarReloadEventHandler() {
+      @Override
+      public void onEvent(NavbarReloadEvent event) {
+        setActive(event.getToken());
+      }
+    });
 
-    AnchorListItem homeLink = new AnchorListItem(constants.home());
+    homeLink = new AnchorListItem(constants.home());
+    homeLink.setIcon(IconType.HOME);
+    homeLink.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        disableLink(prevActiveLink);
+        prevActiveLink = homeLink;
+        placeController.goTo(new HomePlace(constants.homeToken()));
+      }
+    });
     navLeft.add(homeLink);
+
+    playLink = new AnchorListItem(constants.play());
+    playLink.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        disableLink(prevActiveLink);
+        prevActiveLink = playLink;
+        placeController.goTo(new PlayPlace(constants.playToken()));
+      }
+    });
+    navLeft.add(playLink);
+  }
+
+  private void setActive(String token) {
+    if (prevActiveLink == null) {
+      if (token.equals(constants.homeToken())) {
+        prevActiveLink = homeLink;
+      } else if (token.equals(constants.playToken())) {
+        prevActiveLink = playLink;
+      } else {
+        Window.alert(constants.unrecognizedPlace());
+        return;
+      }
+    }
+    prevActiveLink.setActive(true);
+  }
+
+  private void disableLink(AnchorListItem link) {
+    if (link != null) {
+      link.setActive(false);
+    }
+  }
+
+  interface NavbarComponentUiUiBinder extends UiBinder<HTMLPanel, NavbarComponentUi> {
   }
 }
