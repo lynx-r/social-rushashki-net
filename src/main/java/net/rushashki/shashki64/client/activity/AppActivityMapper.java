@@ -20,9 +20,9 @@ public class AppActivityMapper implements ActivityMapper {
   @Override
   public Activity getActivity(Place place) {
     if (place instanceof HomePlace) {
-      return new HomeActivity((HomePlace) place, shashkiGinjector.getHomeView(), shashkiGinjector.getPlaceController());
+      return new HomeActivity((HomePlace) place);
     } else if (place instanceof PlayPlace) {
-      return new PlayActivity((PlayPlace) place, shashkiGinjector.getPlayView(), shashkiGinjector.getPlaceController());
+      return new PlayActivity((PlayPlace) place);
     }
     return null;
   }

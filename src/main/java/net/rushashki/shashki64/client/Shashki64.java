@@ -7,10 +7,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import net.rushashki.shashki64.client.activity.AppActivityMapper;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.shashki64.client.page.BasePage;
+import net.rushashki.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.share.resources.Resources;
@@ -25,11 +27,11 @@ public class Shashki64 implements EntryPoint {
 
   private Image splashImage;
 
-  private HomePlace defaultPlace = new HomePlace("World!");
+  private HomePlace defaultPlace = new HomePlace("Home");
 
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
 
-  private SimplePanel appWidget = new SimplePanel();
+  private BasePage appWidget = new BasePageUi();
 
   public void onModuleLoad() {
     splashImage = new Image(Resources.INSTANCE.images().loadIconImage().getSafeUri());
@@ -48,10 +50,10 @@ public class Shashki64 implements EntryPoint {
         historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
         RootPanel.get("content").remove(splashImage);
-        RootPanel.get("content").add(appWidget);
+        RootPanel.get("content").add((IsWidget) appWidget);
 
         historyHandler.handleCurrentHistory();
       }
-    }.schedule(1000);
+    }.schedule(1);
   }
 }

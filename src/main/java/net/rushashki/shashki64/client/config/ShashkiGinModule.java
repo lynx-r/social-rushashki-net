@@ -7,8 +7,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import net.rushashki.shashki64.client.view.HomeView;
 import net.rushashki.shashki64.client.view.PlayView;
-import net.rushashki.shashki64.client.view.impl.HomeViewImpl;
-import net.rushashki.shashki64.client.view.impl.PlayViewImpl;
+import net.rushashki.shashki64.client.view.ui.HomeViewUi;
+import net.rushashki.shashki64.client.view.ui.PlayViewUi;
+import net.rushashki.shashki64.share.locale.ShashkiConstants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,8 +28,10 @@ public class ShashkiGinModule extends AbstractGinModule {
 
     bind(PlaceController.class).toProvider(PlaceProvider.class).in(Singleton.class);
 
-    bind(HomeView.class).to(HomeViewImpl.class).in(Singleton.class);
-    bind(PlayView.class).to(PlayViewImpl.class).in(Singleton.class);
+    bind(ShashkiConstants.class).in(Singleton.class);
+
+    bind(HomeView.class).to(HomeViewUi.class).in(Singleton.class);
+    bind(PlayView.class).to(PlayViewUi.class).in(Singleton.class);
   }
 
   static class PlaceProvider implements Provider<PlaceController> {

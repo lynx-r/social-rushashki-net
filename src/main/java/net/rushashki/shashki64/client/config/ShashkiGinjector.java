@@ -5,8 +5,9 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
-import net.rushashki.shashki64.client.view.impl.HomeViewImpl;
-import net.rushashki.shashki64.client.view.impl.PlayViewImpl;
+import net.rushashki.shashki64.client.view.ui.HomeViewUi;
+import net.rushashki.shashki64.client.view.ui.PlayViewUi;
+import net.rushashki.shashki64.share.locale.ShashkiConstants;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +24,9 @@ public interface ShashkiGinjector extends Ginjector {
 
   PlaceController getPlaceController();
 
-  HomeViewImpl getHomeView();
+  ShashkiConstants getShashkiConstants();
 
-  PlayViewImpl getPlayView();
+  HomeViewUi getHomeView();
+
+  PlayViewUi getPlayView();
 }

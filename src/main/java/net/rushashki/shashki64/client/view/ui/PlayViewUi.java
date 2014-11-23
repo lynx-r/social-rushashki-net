@@ -1,12 +1,12 @@
-package net.rushashki.shashki64.client.view.impl;
+package net.rushashki.shashki64.client.view.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import net.rushashki.shashki64.client.view.PlayView;
+import org.gwtbootstrap3.client.ui.Container;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +14,7 @@ import net.rushashki.shashki64.client.view.PlayView;
  * Date: 23.11.14
  * Time: 14:58
  */
-public class PlayViewImpl extends Composite implements PlayView {
+public class PlayViewUi extends Composite implements PlayView {
 
   private static PlayViewImplUiBinder ourUiBinder = GWT.create(PlayViewImplUiBinder.class);
 
@@ -23,7 +23,7 @@ public class PlayViewImpl extends Composite implements PlayView {
   private String name;
   private Presenter presenter;
 
-  public PlayViewImpl() {
+  public PlayViewUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
@@ -38,7 +38,7 @@ public class PlayViewImpl extends Composite implements PlayView {
     this.presenter = presenter;
   }
 
-  interface PlayViewImplUiBinder extends UiBinder<HTMLPanel, PlayViewImpl> {
+  interface PlayViewImplUiBinder extends UiBinder<Container, PlayViewUi> {
   }
 
 }

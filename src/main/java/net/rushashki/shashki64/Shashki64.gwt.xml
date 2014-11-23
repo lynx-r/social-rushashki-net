@@ -5,9 +5,11 @@
   <inherits name='com.google.gwt.user.User'/>
   <inherits name="com.google.gwt.place.Place"/>
   <inherits name="com.google.gwt.inject.Inject"/>
+  <inherits name="com.google.gwt.activity.Activity"/>
+  <inherits name="com.google.gwt.i18n.I18N"/>
 
   <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
-  <inherits name="com.google.gwt.activity.Activity"/>
+  <inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
 
   <entry-point class='net.rushashki.shashki64.client.Shashki64'/>
 

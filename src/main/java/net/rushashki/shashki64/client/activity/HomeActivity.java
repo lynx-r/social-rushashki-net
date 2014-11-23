@@ -5,6 +5,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.client.view.HomeView;
 
@@ -15,16 +16,19 @@ import net.rushashki.shashki64.client.view.HomeView;
  * Time: 14:32
  */
 public class HomeActivity extends AbstractActivity implements HomeView.Presenter {
+
+  private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
+
   private HomeView homeView;
 
   private PlaceController placeController;
 
   private String name;
 
-  public HomeActivity(HomePlace homePlace, HomeView homeView, PlaceController placeController) {
+  public HomeActivity(HomePlace homePlace) {
     this.name = homePlace.getGreetingName();
-    this.homeView = homeView;
-    this.placeController = placeController;
+    this.homeView = shashkiGinjector.getHomeView();
+    this.placeController = shashkiGinjector.getPlaceController();
   }
 
   @Override

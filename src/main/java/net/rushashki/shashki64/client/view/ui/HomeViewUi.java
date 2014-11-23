@@ -1,4 +1,4 @@
-package net.rushashki.shashki64.client.view.impl;
+package net.rushashki.shashki64.client.view.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -7,11 +7,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.view.HomeView;
+import org.gwtbootstrap3.client.ui.Container;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ import javax.inject.Inject;
  * Date: 23.11.14
  * Time: 12:32
  */
-public class HomeViewImpl extends Composite implements HomeView {
+public class HomeViewUi extends Composite implements HomeView {
   private static HomeViewImplUiBinder ourUiBinder = GWT.create(HomeViewImplUiBinder.class);
 
   @UiField
@@ -33,7 +33,7 @@ public class HomeViewImpl extends Composite implements HomeView {
   private String name;
 
   @Inject
-  public HomeViewImpl(final EventBus eventBus) {
+  public HomeViewUi(final EventBus eventBus) {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
@@ -53,6 +53,6 @@ public class HomeViewImpl extends Composite implements HomeView {
     this.presenter = presenter;
   }
 
-  interface HomeViewImplUiBinder extends UiBinder<HTMLPanel, HomeViewImpl> {
+  interface HomeViewImplUiBinder extends UiBinder<Container, HomeViewUi> {
   }
 }

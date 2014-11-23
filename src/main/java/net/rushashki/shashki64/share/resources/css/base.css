@@ -21,11 +21,11 @@ h1 {
     border-radius: 0;
 }
 
-input, span.add-on {
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-}
+/*input, span.add-on {*/
+    /*-webkit-box-sizing: content-box;*/
+    /*-moz-box-sizing: content-box;*/
+    /*box-sizing: content-box;*/
+/*}*/
 
 .active-turn {
     color: red;

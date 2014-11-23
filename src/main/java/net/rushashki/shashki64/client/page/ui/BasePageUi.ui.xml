@@ -1,0 +1,76 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
+             xmlns:c="urn:import:net.rushashki.shashki64.client.component.ui">
+<ui:style>
+        /* Sticky footer styles
+        -------------------------------------------------- */
+
+        html,
+        body,
+        .main-container {
+            height: 100%;
+            /* The html and body elements cannot have any padding or margin. */
+        }
+
+        /* Wrapper for page content to push down footer */
+        #wrap {
+            min-height: 100%;
+            height: auto;
+            /* Negative indent footer by its height */
+            margin: 0 auto -184px;
+            /* Pad bottom by footer height */
+            padding: 0 0 184px;
+        }
+
+        /* Set the fixed height of the footer here */
+        #footer {
+            height: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .main-content {
+            /*padding-top: 60px;*/
+        }
+
+        .social {
+            padding-top: 20px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main-container}">
+        <div id="wrap">
+            <c:NavbarComponentUi ui:field="navbar"/>
+            <b:Container ui:field="container" addStyleNames="{style.main-content}" fluid="true"/>
+        </div>
+        <b:Container ui:field="socialAndAds" addStyleNames="{style.social}" fluid="true">
+            <g:HTMLPanel>
+                <div style="width: 728px; margin: 0 auto;">
+                    <!-- RuShashkiNet728x90 -->
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:728px;height:90px"
+                         data-ad-client="ca-pub-6590061713732270"
+                         data-ad-slot="4461668713"></ins>
+                </div>
+                <div style="width: 625px; margin: 0 auto;">
+                    <div style="float:left;">
+                        <div class="fb-like" data-href="http://www.rushashki.net" data-layout="button_count"
+                             data-action="like" data-show-faces="true" data-share="true"></div>
+                    </div>
+                    <div style="float:left;">
+                        <div id="vk_like"></div>
+                    </div>
+                    <div style="float:left;">
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-via="RuShashkiNet"
+                           data-lang="ru">Твитнуть
+                        </a>
+                    </div>
+                    <div class="g-plusone" data-annotation="inline" data-width="120"
+                         data-href="http://www.rushashki.net"></div>
+                </div>
+            </g:HTMLPanel>
+        </b:Container>
+        <footer>
+            <c:FooterComponentUi />
+        </footer>
+    </g:HTMLPanel>
+</ui:UiBinder>
