@@ -102,8 +102,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
       } else if (token.equals(constants.signInToken())) {
         prevActiveLink = signInLink;
       } else {
-//        Window.Location.assign("/404.html");
-        return;
+        prevActiveLink = homeLink;
       }
     }
     prevActiveLink.setActive(true);

@@ -1,6 +1,48 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
+             ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+             ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
+             ui:generateLocales="default">
+    <ui:style>
+        .vertical-align {
+        }
+        .align-horizontal {
+            margin: 0 auto;
+            display: table;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.vertical-align}">
+        <b:Row>
+            <b:Column size="MD_6" offset="MD_3">
+                <b:Well size="LARGE">
+                    <g:HTMLPanel>
+                        <b:Row>
+                            <b:Column size="MD_4" offset="MD_4">
+                                <b:Icon type="SIGN_IN" size="TIMES5" addStyleNames="{style.align-horizontal}"/>
+                            </b:Column>
+                        </b:Row>
+                        <br/>
+                        <b:Row>
+                            <b:Column size="MD_3">
+                                <b:Anchor href="/OAuthVKServlet" icon="VK" iconSize="TIMES5" addStyleNames="{style.align-horizontal}"/>
+                            </b:Column>
 
+                            <b:Column size="MD_3">
+                                <b:Anchor href="/OAuthVKServlet" icon="GOOGLE" iconSize="TIMES5" addStyleNames="{style.align-horizontal}"/>
+                            </b:Column>
+
+                            <b:Column size="MD_3">
+                                <b:Anchor href="/OAuthVKServlet" icon="FACEBOOK" iconSize="TIMES5" addStyleNames="{style.align-horizontal}"/>
+                            </b:Column>
+
+                            <b:Column size="MD_3">
+                                <b:Anchor href="/OAuthVKServlet" icon="WINDOWS" iconSize="TIMES5" addStyleNames="{style.align-horizontal}"/>
+                            </b:Column>
+                        </b:Row>
+                    </g:HTMLPanel>
+                </b:Well>
+            </b:Column>
+        </b:Row>
     </g:HTMLPanel>
 </ui:UiBinder>

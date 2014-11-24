@@ -5,7 +5,7 @@
              ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
     <g:HTMLPanel>
-        <b:Navbar>
+        <b:Navbar >
             <b:NavbarHeader>
                 <b:NavbarBrand href="/"><ui:msg description="Brand">Русские шашки</ui:msg></b:NavbarBrand>
                 <b:NavbarCollapseButton dataTarget="#navbar-collapse"/>

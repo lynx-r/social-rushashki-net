@@ -6,27 +6,21 @@
         /* Sticky footer styles
         -------------------------------------------------- */
 
-        html,
-        body,
-        .main-container {
-            height: 100%;
+        /*html,*/
+        /*body,*/
+        /*.main-container {*/
+            /*height: 100%;*/
             /* The html and body elements cannot have any padding or margin. */
-        }
-
-        /* Wrapper for page content to push down footer */
-        #wrap {
-            min-height: 100%;
-            height: auto;
-            /* Negative indent footer by its height */
-            margin: 0 auto -184px;
-            /* Pad bottom by footer height */
-            padding: 0 0 184px;
-        }
+        /*}*/
 
         /* Set the fixed height of the footer here */
-        #footer {
-            height: 40px;
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 61px;
             background-color: #f5f5f5;
+            /*text-align: right;*/
         }
 
         .main-content {
@@ -37,15 +31,15 @@
             padding-top: 20px;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main-container}">
-        <div id="wrap">
-            <c:NavbarComponentUi ui:field="navbar"/>
+    <g:HTMLPanel>
+        <c:NavbarComponentUi ui:field="navbar"/>
+        <div class="container">
             <b:Container ui:field="container" addStyleNames="{style.main-content}" fluid="true"/>
         </div>
-        <b:Container ui:field="socialAndAds" addStyleNames="{style.social}" fluid="true">
+        <!--<b:Container ui:field="socialAndAds" addStyleNames="{style.social}" fluid="true">
             <g:HTMLPanel>
                 <div style="width: 728px; margin: 0 auto;">
-                    <!-- RuShashkiNet728x90 -->
+                    &lt;!&ndash; RuShashkiNet728x90 &ndash;&gt;
                     <ins class="adsbygoogle"
                          style="display:inline-block;width:728px;height:90px"
                          data-ad-client="ca-pub-6590061713732270"
@@ -69,6 +63,7 @@
                 </div>
             </g:HTMLPanel>
         </b:Container>
+        -->
         <footer>
             <c:FooterComponentUi />
         </footer>
