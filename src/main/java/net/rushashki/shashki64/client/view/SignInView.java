@@ -3,9 +3,9 @@ package net.rushashki.shashki64.client.view;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 23.11.14
- * Time: 14:57
+ * Date: 24.11.14
+ * Time: 12:37
  */
-public interface PlayView extends BasicView {
+public interface SignInView extends BasicView {
 
 }

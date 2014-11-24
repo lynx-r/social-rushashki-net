@@ -2,20 +2,19 @@ package net.rushashki.shashki64.client.view.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
-import net.rushashki.shashki64.client.view.PlayView;
-import org.gwtbootstrap3.client.ui.Container;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import net.rushashki.shashki64.client.view.SignInView;
 
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 23.11.14
- * Time: 14:58
+ * Date: 24.11.14
+ * Time: 12:37
  */
-public class PlayViewUi extends BasicViewUi implements PlayView {
+public class SignInViewUi extends BasicViewUi implements SignInView {
+  private static LoginViewUiUiBinder ourUiBinder = GWT.create(LoginViewUiUiBinder.class);
 
-  private static PlayViewImplUiBinder ourUiBinder = GWT.create(PlayViewImplUiBinder.class);
-
-  public PlayViewUi() {
+  public SignInViewUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
@@ -29,7 +28,6 @@ public class PlayViewUi extends BasicViewUi implements PlayView {
     this.presenter = presenter;
   }
 
-  interface PlayViewImplUiBinder extends UiBinder<Container, PlayViewUi> {
+  interface LoginViewUiUiBinder extends UiBinder<HTMLPanel, SignInViewUi> {
   }
-
 }

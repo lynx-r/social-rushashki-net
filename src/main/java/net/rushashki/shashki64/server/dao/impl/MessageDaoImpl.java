@@ -1,7 +1,7 @@
 package net.rushashki.shashki64.server.dao.impl;
 
 import net.rushashki.shashki64.server.dao.MessageDao;
-import net.rushashki.shashki64.share.model.Message;
+import net.rushashki.shashki64.shared.model.Message;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

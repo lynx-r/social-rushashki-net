@@ -1,4 +1,4 @@
-package net.rushashki.shashki64.share.locale;
+package net.rushashki.shashki64.shared.locale;
 
 import com.google.gwt.i18n.client.Constants;
 
@@ -19,4 +19,8 @@ public interface ShashkiConstants extends Constants {
   String playToken();
 
   String unrecognizedPlace();
+
+  String login();
+
+  String signInToken();
 }

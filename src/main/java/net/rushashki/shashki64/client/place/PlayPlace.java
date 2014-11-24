@@ -1,6 +1,5 @@
 package net.rushashki.shashki64.client.place;
 
-import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
 /**
@@ -9,16 +8,10 @@ import com.google.gwt.place.shared.PlaceTokenizer;
  * Date: 23.11.14
  * Time: 15:03
  */
-public class PlayPlace extends Place {
-
-  private String playerName;
+public class PlayPlace extends BasicPlace {
 
   public PlayPlace(String token) {
-    this.playerName = token;
-  }
-
-  public String getPlayerName() {
-    return playerName;
+    super(token);
   }
 
   public static class Tokenizer implements PlaceTokenizer<PlayPlace> {
@@ -30,7 +23,7 @@ public class PlayPlace extends Place {
 
     @Override
     public String getToken(PlayPlace place) {
-      return place.getPlayerName();
+      return place.getToken();
     }
 
   }

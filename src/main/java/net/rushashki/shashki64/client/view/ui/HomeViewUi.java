@@ -6,14 +6,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
-import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.view.HomeView;
 import org.gwtbootstrap3.client.ui.Container;
-
-import javax.inject.Inject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,31 +16,24 @@ import javax.inject.Inject;
  * Date: 23.11.14
  * Time: 12:32
  */
-public class HomeViewUi extends Composite implements HomeView {
+public class HomeViewUi extends BasicViewUi implements HomeView {
   private static HomeViewImplUiBinder ourUiBinder = GWT.create(HomeViewImplUiBinder.class);
 
   @UiField
-  Label greeting;
-  @UiField
   Anchor playLink;
 
-  private Presenter presenter;
-  private String name;
-
-  @Inject
-  public HomeViewUi(final EventBus eventBus) {
+  public HomeViewUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
   @Override
-  public void setToken(String greetingName) {
-    this.name = greetingName;
-    greeting.setText(greetingName);
+  public void setToken(String token) {
+    this.token = token;
   }
 
   @UiHandler("playLink")
   void onClickPlay(ClickEvent event) {
-    presenter.goTo(new PlayPlace(name));
+    presenter.goTo(new PlayPlace(token));
   }
 
   @Override

@@ -5,10 +5,10 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
-import net.rushashki.shashki64.client.component.NavbarComponent;
+import net.rushashki.shashki64.client.view.SignInView;
 import net.rushashki.shashki64.client.view.ui.HomeViewUi;
 import net.rushashki.shashki64.client.view.ui.PlayViewUi;
-import net.rushashki.shashki64.share.locale.ShashkiConstants;
+import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,4 +30,6 @@ public interface ShashkiGinjector extends Ginjector {
   HomeViewUi getHomeView();
 
   PlayViewUi getPlayView();
+
+  SignInView getSignInView();
 }

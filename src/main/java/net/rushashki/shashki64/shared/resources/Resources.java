@@ -1,4 +1,4 @@
-package net.rushashki.shashki64.share.resources;
+package net.rushashki.shashki64.shared.resources;
 
 import com.google.gwt.core.client.GWT;
 

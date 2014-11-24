@@ -5,13 +5,13 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import net.rushashki.shashki64.client.component.NavbarComponent;
-import net.rushashki.shashki64.client.component.ui.NavbarComponentUi;
 import net.rushashki.shashki64.client.view.HomeView;
 import net.rushashki.shashki64.client.view.PlayView;
+import net.rushashki.shashki64.client.view.SignInView;
 import net.rushashki.shashki64.client.view.ui.HomeViewUi;
 import net.rushashki.shashki64.client.view.ui.PlayViewUi;
-import net.rushashki.shashki64.share.locale.ShashkiConstants;
+import net.rushashki.shashki64.client.view.ui.SignInViewUi;
+import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,6 +34,7 @@ public class ShashkiGinModule extends AbstractGinModule {
 
     bind(HomeView.class).to(HomeViewUi.class).in(Singleton.class);
     bind(PlayView.class).to(PlayViewUi.class).in(Singleton.class);
+    bind(SignInView.class).to(SignInViewUi.class).in(Singleton.class);
   }
 
   static class PlaceProvider implements Provider<PlaceController> {

@@ -1,4 +1,4 @@
-package net.rushashki.shashki64.share.model;
+package net.rushashki.shashki64.shared.model;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;

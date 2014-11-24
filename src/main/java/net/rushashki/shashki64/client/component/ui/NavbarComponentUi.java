@@ -6,7 +6,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -16,7 +15,8 @@ import net.rushashki.shashki64.client.event.NavbarReloadEvent;
 import net.rushashki.shashki64.client.event.NavbarReloadEventHandler;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.client.place.PlayPlace;
-import net.rushashki.shashki64.share.locale.ShashkiConstants;
+import net.rushashki.shashki64.client.place.SignInPlace;
+import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.NavbarNav;
 import org.gwtbootstrap3.client.ui.constants.IconType;
@@ -31,6 +31,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
   private static NavbarComponentUiUiBinder ourUiBinder = GWT.create(NavbarComponentUiUiBinder.class);
   private final AnchorListItem homeLink;
   private final AnchorListItem playLink;
+  private final AnchorListItem signInLink;
   private AnchorListItem prevActiveLink = null;
   @UiField
   NavbarNav navLeft;
@@ -68,6 +69,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     navLeft.add(homeLink);
 
     playLink = new AnchorListItem(constants.play());
+    playLink.setIcon(IconType.PLAY);
     playLink.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
@@ -77,6 +79,18 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
       }
     });
     navLeft.add(playLink);
+
+    signInLink = new AnchorListItem(constants.login());
+    signInLink.setIcon(IconType.SIGN_IN);
+    signInLink.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent event) {
+        disableLink(prevActiveLink);
+        prevActiveLink = signInLink;
+        placeController.goTo(new SignInPlace(constants.signInToken()));
+      }
+    });
+    navRight.add(signInLink);
   }
 
   private void setActive(String token) {
@@ -85,8 +99,10 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         prevActiveLink = homeLink;
       } else if (token.equals(constants.playToken())) {
         prevActiveLink = playLink;
+      } else if (token.equals(constants.signInToken())) {
+        prevActiveLink = signInLink;
       } else {
-        Window.alert(constants.unrecognizedPlace());
+//        Window.Location.assign("/404.html");
         return;
       }
     }

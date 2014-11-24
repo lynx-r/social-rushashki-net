@@ -1,7 +1,7 @@
 package net.rushashki.shashki64.server.dao.impl;
 
 import net.rushashki.shashki64.server.dao.Dao;
-import net.rushashki.shashki64.share.model.PersistableObject;
+import net.rushashki.shashki64.shared.model.PersistableObject;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

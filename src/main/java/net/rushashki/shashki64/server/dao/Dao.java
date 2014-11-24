@@ -1,6 +1,6 @@
 package net.rushashki.shashki64.server.dao;
 
-import net.rushashki.shashki64.share.model.PersistableObject;
+import net.rushashki.shashki64.shared.model.PersistableObject;
 
 import java.util.List;
 

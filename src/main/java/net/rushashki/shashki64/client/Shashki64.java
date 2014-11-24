@@ -14,7 +14,7 @@ import net.rushashki.shashki64.client.page.BasePage;
 import net.rushashki.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.shashki64.client.place.HomePlace;
-import net.rushashki.shashki64.share.resources.Resources;
+import net.rushashki.shashki64.shared.resources.Resources;
 
 /**
  * Created with IntelliJ IDEA.

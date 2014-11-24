@@ -1,4 +1,4 @@
-package net.rushashki.shashki64.share.resources.images;
+package net.rushashki.shashki64.shared.resources.images;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;

@@ -1,9 +1,9 @@
-package net.rushashki.shashki64.share.resources;
+package net.rushashki.shashki64.shared.resources;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import net.rushashki.shashki64.share.resources.images.Images;
-import net.rushashki.shashki64.share.resources.sounds.Sounds;
+import net.rushashki.shashki64.shared.resources.images.Images;
+import net.rushashki.shashki64.shared.resources.sounds.Sounds;
 
 /**
  * Created with IntelliJ IDEA.

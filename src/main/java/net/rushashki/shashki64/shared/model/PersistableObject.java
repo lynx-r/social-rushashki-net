@@ -1,4 +1,4 @@
-package net.rushashki.shashki64.share.model;
+package net.rushashki.shashki64.shared.model;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
