@@ -12,7 +12,7 @@
             display: table;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.vertical-align}">
+    <g:HTMLPanel ui:field="signInContainer">
         <b:Row>
             <b:Column size="MD_6" offset="MD_3">
                 <b:Well size="LARGE">

@@ -5,6 +5,7 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
+import net.rushashki.shashki64.client.util.ShashkiLogger;
 import net.rushashki.shashki64.client.view.SignInView;
 import net.rushashki.shashki64.client.view.ui.HomeViewUi;
 import net.rushashki.shashki64.client.view.ui.PlayViewUi;
@@ -21,6 +22,8 @@ public interface ShashkiGinjector extends Ginjector {
 
   public static final ShashkiGinjector INSTANCE = GWT.create(ShashkiGinjector.class);
 
+  ShashkiLogger getLogger();
+
   EventBus getEventBus();
 
   PlaceController getPlaceController();
@@ -32,4 +35,5 @@ public interface ShashkiGinjector extends Ginjector {
   PlayViewUi getPlayView();
 
   SignInView getSignInView();
+
 }

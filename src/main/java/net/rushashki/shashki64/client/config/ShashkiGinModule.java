@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import net.rushashki.shashki64.client.util.ShashkiLogger;
 import net.rushashki.shashki64.client.view.HomeView;
 import net.rushashki.shashki64.client.view.PlayView;
 import net.rushashki.shashki64.client.view.SignInView;
@@ -26,6 +27,8 @@ public class ShashkiGinModule extends AbstractGinModule {
 
   @Override
   protected void configure() {
+    bind(ShashkiLogger.class).in(Singleton.class);
+
     bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
 
     bind(PlaceController.class).toProvider(PlaceProvider.class).in(Singleton.class);
