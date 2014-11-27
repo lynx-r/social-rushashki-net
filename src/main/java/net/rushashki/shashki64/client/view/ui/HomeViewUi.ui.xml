@@ -2,16 +2,14 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
              xmlns:c="urn:import:net.rushashki.shashki64.client.component.ui">
-    <b:Container>
+    <g:HTMLPanel>
         <b:Row>
+            <b:Column size="MD_8">
+                <c:ShashkiListUi ui:field="shashkiList"/>
+            </b:Column>
             <b:Column size="MD_4">
                 <c:ChatComponentUi ui:field="chatComponent" />
             </b:Column>
-            <b:Column size="MD_8">
-                <g:Label text="Привет"/>
-                <g:Label ui:field="greeting"/>
-                <g:Anchor ui:field="playLink" text="Играть!"/>
-            </b:Column>
         </b:Row>
-    </b:Container>
+    </g:HTMLPanel>
 </ui:UiBinder>

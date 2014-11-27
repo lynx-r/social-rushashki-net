@@ -6,9 +6,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.view.HomeView;
-import org.gwtbootstrap3.client.ui.Container;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,9 +19,6 @@ import org.gwtbootstrap3.client.ui.Container;
 public class HomeViewUi extends BasicViewUi implements HomeView {
   private static HomeViewImplUiBinder ourUiBinder = GWT.create(HomeViewImplUiBinder.class);
 
-  @UiField
-  Anchor playLink;
-
   public HomeViewUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
@@ -31,7 +28,6 @@ public class HomeViewUi extends BasicViewUi implements HomeView {
     this.token = token;
   }
 
-  @UiHandler("playLink")
   void onClickPlay(ClickEvent event) {
     presenter.goTo(new PlayPlace(token));
   }
@@ -41,6 +37,6 @@ public class HomeViewUi extends BasicViewUi implements HomeView {
     this.presenter = presenter;
   }
 
-  interface HomeViewImplUiBinder extends UiBinder<Container, HomeViewUi> {
+  interface HomeViewImplUiBinder extends UiBinder<HTMLPanel, HomeViewUi> {
   }
 }

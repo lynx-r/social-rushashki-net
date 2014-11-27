@@ -1,0 +1,30 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+    <ui:with field='playCellDto' type="net.rushashki.shashki64.client.cell.renderer.PlayCellDtoRenderer"/>
+
+    <ui:style field="style" type="net.rushashki.shashki64.client.cell.style.PlayCellStyle">
+        @external .hide;
+        @external .show;
+
+        .cell-card .applyColor {
+            /*** do whatever you want here */
+        }
+
+        .cell-card .show {
+            display: block;
+        }
+
+        .cell-card .hide {
+            display: none;
+        }
+
+    </ui:style>
+
+    <div ui:field="playCell" class="{style.cell-card}">
+        <div ui:field="firstName">
+            First name:
+            <ui:text from="{playCellDto.getTitle}"/>
+        </div>
+        Start date:
+        <ui:text from="{playCellDto.getWhitePlayer}"/>
+    </div>
+</ui:UiBinder>
