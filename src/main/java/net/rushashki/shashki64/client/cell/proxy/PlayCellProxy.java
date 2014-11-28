@@ -1,4 +1,4 @@
-package net.rushashki.shashki64.client.cell.renderer;
+package net.rushashki.shashki64.client.cell.proxy;
 
 import net.rushashki.shashki64.shared.model.dto.PlayDto;
 
@@ -8,11 +8,13 @@ import net.rushashki.shashki64.shared.model.dto.PlayDto;
  * Date: 25.11.14
  * Time: 20:47
  */
-public class PlayCellDtoRenderer {
+public class PlayCellProxy {
 
   private PlayDto playDto;
 
-  public PlayCellDtoRenderer(PlayDto playDto) {
+  public PlayCellProxy() {}
+
+  public PlayCellProxy(PlayDto playDto) {
     this.playDto = playDto;
   }
 

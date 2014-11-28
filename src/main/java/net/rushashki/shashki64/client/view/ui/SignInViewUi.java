@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import net.rushashki.shashki64.client.view.SignInView;
-import sun.tools.jconsole.Plotter;
 
 import java.util.logging.Logger;
 
