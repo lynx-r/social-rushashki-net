@@ -4,6 +4,8 @@ import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -21,7 +23,7 @@ import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
  * Date: 29.11.14
  * Time: 0:38
  */
-public class ShashkiComponentUi extends Composite {
+public class ShashkiComponentUi extends Composite implements ClickHandler {
   private static ShashkiUiBinder ourUiBinder = GWT.create(ShashkiUiBinder.class);
   private final LienzoPanel lienzoPanel;
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
@@ -31,13 +33,14 @@ public class ShashkiComponentUi extends Composite {
   HTMLPanel social;
   @UiField
   HTMLPanel comments;
-
+  private static ShashkiComponentUi INSTANCE;
   private PlayDto playDto;
 
   public ShashkiComponentUi(PlayDto playDto) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.playDto = playDto;
+    INSTANCE = this;
 
     int side = Window.getClientHeight() - RootPanel.get("navigation").getOffsetHeight() - RootPanel.get("footer").getOffsetHeight();
     lienzoPanel = new LienzoPanel(side, side);
@@ -49,6 +52,8 @@ public class ShashkiComponentUi extends Composite {
 
     social.add(new HTML("Твитнуть"));
     comments.add(new HTML("Отличная игра!"));
+
+    lienzoPanel.addClickHandler(this);
   }
 
   public void update() {
@@ -58,6 +63,14 @@ public class ShashkiComponentUi extends Composite {
     text.setX(0).setY(10);
     layer.add(text);
     lienzoPanel.add(layer);
+  }
+
+  @Override
+  public void onClick(ClickEvent clickEvent) {
+    INSTANCE.removeStyleName("focused");
+    addStyleName("focused");
+    RootPanel.get().getElement().setScrollTop(this.getElement().getAbsoluteTop() - 50);
+    INSTANCE = this;
   }
 
   interface ShashkiUiBinder extends UiBinder<HTMLPanel, ShashkiComponentUi> {

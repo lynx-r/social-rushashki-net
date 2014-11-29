@@ -4,7 +4,9 @@
 
     <ui:style>
         .chat-component {
-            /*margin-top: 100%;*/
+            position: fixed;
+            width: inherit;
+            padding-right: 30px;
         }
         .chat-listing {
             width: 100%;

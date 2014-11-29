@@ -1,11 +1,23 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
+    <ui:style>
+        .main-view {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .block {
+            padding-left: 15px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main-view}">
         <g:HTMLPanel ui:field="shashki"/>
-        <ui:msg description="Поделиться" key="shareShashki">Поделиться:</ui:msg>
-        <g:HTMLPanel ui:field="social"/>
-        <ui:msg description="Комментарии" key="commentsShashki">Комментарии:</ui:msg>
-        <g:HTMLPanel ui:field="comments"/>
+        <g:HTMLPanel addStyleNames="{style.block}">
+            <ui:msg description="Поделиться" key="shareShashki">Поделиться:</ui:msg>
+            <g:HTMLPanel ui:field="social"/>
+            <ui:msg description="Комментарии" key="commentsShashki">Комментарии:</ui:msg>
+            <g:HTMLPanel ui:field="comments"/>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 
 </ui:UiBinder>
