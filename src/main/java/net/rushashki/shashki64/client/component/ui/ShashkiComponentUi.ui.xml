@@ -1,22 +1,42 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
+             ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+             ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
+             ui:generateLocales="default">
     <ui:style>
         .main-view {
-            padding-top: 15px;
+            padding-top: 20px;
             padding-bottom: 15px;
+            padding-left: 10px;
         }
 
         .block {
             padding-left: 15px;
         }
+
+        .shashki-column {
+            float: left;
+        }
+
+        .players-column {
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main-view}">
-        <g:HTMLPanel ui:field="shashki"/>
-        <g:HTMLPanel addStyleNames="{style.block}">
-            <ui:msg description="Поделиться" key="shareShashki">Поделиться:</ui:msg>
-            <g:HTMLPanel ui:field="social"/>
-            <ui:msg description="Комментарии" key="commentsShashki">Комментарии:</ui:msg>
-            <g:HTMLPanel ui:field="comments"/>
+        <g:HTMLPanel ui:field="shashkiColumn" addStyleNames="{style.shashki-column}">
+            <g:HTMLPanel ui:field="shashki"/>
+            <g:HTMLPanel addStyleNames="{style.block}">
+                <ui:msg description="Поделиться" key="shareShashki">Поделиться:</ui:msg>
+                <g:HTMLPanel ui:field="social"/>
+                <ui:msg description="Комментарии" key="commentsShashki">Комментарии:</ui:msg>
+                <g:HTMLPanel ui:field="comments"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+        <g:HTMLPanel ui:field="playersColumn" addStyleNames="{style.players-column}">
+            <b:Button ui:field="playButton" icon="PLAY">
+                <ui:msg description="Играть" key="playButton">Играть</ui:msg>
+            </b:Button>
+            <g:ScrollPanel ui:field="playersList"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 

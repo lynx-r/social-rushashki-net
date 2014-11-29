@@ -27,12 +27,7 @@ public class SignInViewUi extends BasicViewUi implements SignInView {
   public SignInViewUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
-    Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-      @Override
-      public void execute() {
-        verticalAlignEnterBox();
-      }
-    });
+    Scheduler.get().scheduleFinally(this::verticalAlignEnterBox);
   }
 
   private void verticalAlignEnterBox() {
