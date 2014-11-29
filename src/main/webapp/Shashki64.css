@@ -1,10 +1,6 @@
-/*
-* {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+body > .container-fluid {
+    padding-top: 60px;
 }
-*/
 
 /* изображение которое показывается во время загрузки сайта */
 .loader-image {
@@ -13,9 +9,4 @@
     left: 50%;
     margin-left: -150px;
     margin-top: -150px;
-}
-
-/* для sticky footer */
-#content {
-    height: 100%;
 }

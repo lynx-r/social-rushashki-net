@@ -3,7 +3,7 @@ package net.rushashki.shashki64.client.component.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import org.gwtbootstrap3.client.ui.PanelFooter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,12 +12,12 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  * Time: 18:20
  */
 public class FooterComponentUi extends Composite {
-  interface FooterComponentImplUiBinder extends UiBinder<HTMLPanel, FooterComponentUi> {
-  }
-
   private static FooterComponentImplUiBinder ourUiBinder = GWT.create(FooterComponentImplUiBinder.class);
 
   public FooterComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
+  }
+
+  interface FooterComponentImplUiBinder extends UiBinder<PanelFooter, FooterComponentUi> {
   }
 }

@@ -7,7 +7,6 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.component.NavbarComponent;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
@@ -18,6 +17,7 @@ import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.place.SignInPlace;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.NavbarNav;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
@@ -114,6 +114,6 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     }
   }
 
-  interface NavbarComponentUiUiBinder extends UiBinder<HTMLPanel, NavbarComponentUi> {
+  interface NavbarComponentUiUiBinder extends UiBinder<Navbar, NavbarComponentUi> {
   }
 }

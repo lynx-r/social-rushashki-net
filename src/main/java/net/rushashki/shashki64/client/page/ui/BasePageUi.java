@@ -6,10 +6,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import net.rushashki.shashki64.client.component.NavbarComponent;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.page.BasePage;
-import org.gwtbootstrap3.client.ui.Container;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,10 +18,7 @@ import org.gwtbootstrap3.client.ui.Container;
 public class BasePageUi extends Composite implements BasePage {
 
   @UiField
-  NavbarComponent navbar;
-
-  @UiField
-  Container container;
+  HTMLPanel container;
 
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
 
@@ -33,11 +28,6 @@ public class BasePageUi extends Composite implements BasePage {
       container.clear();
       container.add(w);
     }
-  }
-
-  @Override
-  public NavbarComponent getNavbar() {
-    return navbar;
   }
 
   interface BasePageUiBinder extends UiBinder<HTMLPanel, BasePageUi> {

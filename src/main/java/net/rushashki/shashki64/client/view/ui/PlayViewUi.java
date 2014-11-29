@@ -2,6 +2,7 @@ package net.rushashki.shashki64.client.view.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import net.rushashki.shashki64.client.view.PlayView;
 import org.gwtbootstrap3.client.ui.Container;
 
@@ -29,7 +30,7 @@ public class PlayViewUi extends BasicViewUi implements PlayView {
     this.presenter = presenter;
   }
 
-  interface PlayViewImplUiBinder extends UiBinder<Container, PlayViewUi> {
+  interface PlayViewImplUiBinder extends UiBinder<HTMLPanel, PlayViewUi> {
   }
 
 }
