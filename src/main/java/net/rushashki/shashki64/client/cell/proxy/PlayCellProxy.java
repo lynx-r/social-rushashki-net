@@ -1,5 +1,6 @@
 package net.rushashki.shashki64.client.cell.proxy;
 
+import com.google.gwt.safehtml.shared.SafeHtml;
 import net.rushashki.shashki64.shared.model.dto.PlayDto;
 
 /**
@@ -30,8 +31,20 @@ public class PlayCellProxy {
     return playDto.getBlackPlayer();
   }
 
-  public String getDeskHtml() {
+  public SafeHtml getDeskHtml() {
     return playDto.getDeskHtml();
+  }
+
+  public PlayDto getDto() {
+    return playDto;
+  }
+
+  public void setDto(PlayDto playDto) {
+    this.playDto = playDto;
+  }
+
+  public void updateCanvas() {
+    playDto.getUpdateCanvas().update();
   }
 
 }

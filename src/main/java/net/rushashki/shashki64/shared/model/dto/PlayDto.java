@@ -1,5 +1,11 @@
 package net.rushashki.shashki64.shared.model.dto;
 
+import com.ait.lienzo.client.widget.LienzoPanel;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import net.rushashki.shashki64.client.util.UpdateLienzo;
+
+import java.util.function.Function;
+
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
@@ -10,32 +16,33 @@ public class PlayDto {
   private String title;
   private String playerWhite;
   private String playerBlack;
-  private String deskHtml;
+  private SafeHtml deskHtml;
+  private UpdateLienzo updateCanvas;
 
-//  public PlayDto() {}
+  public PlayDto() {}
 
-//  public PlayDto(String title, String playerWhite, String playerBlack) {
-//    this.title = title;
-//    this.playerWhite = playerWhite;
-//    this.playerBlack = playerBlack;
-//  }
-//
-//  public PlayDto(String title, String playerWhite, String playerBlack, String deskHtml) {
-//    this.title = title;
-//    this.playerWhite = playerWhite;
-//    this.playerBlack = playerBlack;
-//    this.deskHtml = deskHtml;
-//  }
-
-  public String getDeskHtml() {
-    return deskHtml;
+  public PlayDto(String title, String playerWhite, String playerBlack) {
+    this.title = title;
+    this.playerWhite = playerWhite;
+    this.playerBlack = playerBlack;
   }
 
-  public void setDeskHtml(String deskHtml) {
+  public PlayDto(String title, String playerWhite, String playerBlack, SafeHtml deskHtml) {
+    this.title = title;
+    this.playerWhite = playerWhite;
+    this.playerBlack = playerBlack;
     this.deskHtml = deskHtml;
   }
 
-  public String getBlackPlayer() {
+  public String getPlayerWhite() {
+    return playerWhite;
+  }
+
+  public void setPlayerWhite(String playerWhite) {
+    this.playerWhite = playerWhite;
+  }
+
+  public String getPlayerBlack() {
     return playerBlack;
   }
 
@@ -43,12 +50,28 @@ public class PlayDto {
     this.playerBlack = playerBlack;
   }
 
-  public String getWhitePlayer() {
-    return playerWhite;
+  public void setUpdateCanvas(UpdateLienzo updateCanvas) {
+    this.updateCanvas = updateCanvas;
   }
 
-  public void setPlayerWhite(String playerWhite) {
-    this.playerWhite = playerWhite;
+  public UpdateLienzo getUpdateCanvas() {
+    return updateCanvas;
+  }
+
+  public SafeHtml getDeskHtml() {
+    return deskHtml;
+  }
+
+  public void setDeskHtml(SafeHtml deskHtml) {
+    this.deskHtml = deskHtml;
+  }
+
+  public String getBlackPlayer() {
+    return playerBlack;
+  }
+
+  public String getWhitePlayer() {
+    return playerWhite;
   }
 
   public String getTitle() {

@@ -5,10 +5,10 @@
     <g:HTMLPanel>
         <b:Row>
             <b:Column size="MD_8">
-                <c:ShashkiListUi ui:field="shashkiList"/>
+                <c:ShashkiListComponentUi ui:field="shashkiLenta"/>
             </b:Column>
             <b:Column size="MD_4">
-                <c:ChatComponentUi ui:field="chatComponent" />
+                <c:ChatComponentUi ui:field="chatComponent"/>
             </b:Column>
         </b:Row>
     </g:HTMLPanel>

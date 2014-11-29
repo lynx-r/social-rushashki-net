@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import net.rushashki.shashki64.client.component.ui.ShashkiListComponentUi;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.view.HomeView;
 
@@ -18,6 +19,9 @@ import net.rushashki.shashki64.client.view.HomeView;
  */
 public class HomeViewUi extends BasicViewUi implements HomeView {
   private static HomeViewImplUiBinder ourUiBinder = GWT.create(HomeViewImplUiBinder.class);
+
+  @UiField
+  ShashkiListComponentUi shashkiLenta;
 
   public HomeViewUi() {
     initWidget(ourUiBinder.createAndBindUi(this));

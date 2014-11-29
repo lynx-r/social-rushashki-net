@@ -2,7 +2,9 @@ package net.rushashki.shashki64.client.cell;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiRenderer;
 import net.rushashki.shashki64.client.cell.proxy.PlayCellProxy;
 
@@ -16,9 +18,8 @@ public class PlayCell extends AbstractCell<PlayCellProxy> {
 
   private static final PlayCellBinder cellRenderer = GWT.create(PlayCellBinder.class);
 
-  interface PlayCellBinder extends UiRenderer {
-    void render(SafeHtmlBuilder sb, PlayCellProxy myCellRenderer);
-  }
+  @UiField
+  DivElement play;
 
   @Override
   public void render(Context context, PlayCellProxy value, SafeHtmlBuilder sb) {
@@ -27,6 +28,11 @@ public class PlayCell extends AbstractCell<PlayCellProxy> {
     }
 
     cellRenderer.render(sb, value);
+    value.updateCanvas();
+  }
+
+  interface PlayCellBinder extends UiRenderer {
+    void render(SafeHtmlBuilder sb, PlayCellProxy playCellProxy);
   }
 
 }
