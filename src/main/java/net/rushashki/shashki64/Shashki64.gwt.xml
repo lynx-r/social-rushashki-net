@@ -21,4 +21,6 @@
 
   <source path="client"/>
   <source path="shared"/>
+
+  <source path="shashki"/>
 </module>

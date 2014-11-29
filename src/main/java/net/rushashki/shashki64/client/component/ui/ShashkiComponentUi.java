@@ -2,17 +2,18 @@ package net.rushashki.shashki64.client.component.ui;
 
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Text;
-import com.ait.lienzo.client.core.types.Shadow;
 import com.ait.lienzo.client.widget.LienzoPanel;
-import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.shashki64.client.util.ShashkiLogger;
 import net.rushashki.shashki64.shared.model.dto.PlayDto;
+import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,32 +25,30 @@ public class ShashkiComponentUi extends Composite {
   private static ShashkiUiBinder ourUiBinder = GWT.create(ShashkiUiBinder.class);
   private final LienzoPanel lienzoPanel;
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
-  private final ShashkiLogger logger;
   @UiField
   HTMLPanel shashki;
+  @UiField
+  HTMLPanel social;
+  @UiField
+  HTMLPanel comments;
+
   private PlayDto playDto;
 
   public ShashkiComponentUi(PlayDto playDto) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.playDto = playDto;
-    this.logger = shashkiGinjector.getLogger();
 
-    Text text = new Text(playDto.getTitle() + " white:" + playDto.getWhitePlayer() + " black:" + playDto.getBlackPlayer(),
-        "Verdana, sans-serif", "italic bold", 12);
-    text.setX(0).setY(25);
-    text.setFillColor(ColorName.CORNFLOWERBLUE);
-    text.setStrokeColor(ColorName.BLUE);
-    text.setShadow(new Shadow(ColorName.DARKMAGENTA, 6, 4, 4));
-
-    lienzoPanel = new LienzoPanel(100, 50);
-
-    Layer layer = new Layer();
-    layer.add(text);
-
-    lienzoPanel.setBackgroundLayer(layer);
-
+    int side = Window.getClientHeight() - RootPanel.get("navigation").getOffsetHeight() - RootPanel.get("footer").getOffsetHeight();
+    lienzoPanel = new LienzoPanel(side, side);
+    BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
+        lienzoPanel.getHeight(), lienzoPanel.getHeight() - 20,
+        8, 8);
+    lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
     shashki.add(lienzoPanel);
+
+    social.add(new HTML("Твитнуть"));
+    comments.add(new HTML("Отличная игра!"));
   }
 
   public void update() {
