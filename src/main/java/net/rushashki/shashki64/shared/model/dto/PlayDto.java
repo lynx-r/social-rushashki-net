@@ -1,10 +1,6 @@
 package net.rushashki.shashki64.shared.model.dto;
 
-import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import net.rushashki.shashki64.client.util.UpdateLienzo;
-
-import java.util.function.Function;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,9 +13,9 @@ public class PlayDto {
   private String playerWhite;
   private String playerBlack;
   private SafeHtml deskHtml;
-  private UpdateLienzo updateCanvas;
 
-  public PlayDto() {}
+  public PlayDto() {
+  }
 
   public PlayDto(String title, String playerWhite, String playerBlack) {
     this.title = title;
@@ -48,14 +44,6 @@ public class PlayDto {
 
   public void setPlayerBlack(String playerBlack) {
     this.playerBlack = playerBlack;
-  }
-
-  public void setUpdateCanvas(UpdateLienzo updateCanvas) {
-    this.updateCanvas = updateCanvas;
-  }
-
-  public UpdateLienzo getUpdateCanvas() {
-    return updateCanvas;
   }
 
   public SafeHtml getDeskHtml() {
