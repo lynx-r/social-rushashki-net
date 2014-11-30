@@ -39,9 +39,7 @@ public class ShashkiComponentUi extends Composite implements ClickHandler {
   @UiField
   HTMLPanel playersColumn;
   @UiField
-  ScrollPanel playersList;
-  @UiField
-  Button playButton;
+  ScrollPanel notationList;
 
   private static ShashkiComponentUi INSTANCE;
   private PlayDto playDto;
@@ -71,7 +69,8 @@ public class ShashkiComponentUi extends Composite implements ClickHandler {
     Scheduler.get().scheduleFinally(() -> {
       playersColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
       playersColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
-      playersList.setHeight(shashkiColumn.getOffsetHeight() - playButton.getOffsetHeight() + "px");
+      // 20 текст Нотация
+      notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
     });
   }
 

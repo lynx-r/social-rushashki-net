@@ -6,6 +6,7 @@ import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.util.ShashkiLogger;
+import net.rushashki.shashki64.client.view.PlayLentaView;
 import net.rushashki.shashki64.client.view.SignInView;
 import net.rushashki.shashki64.client.view.ui.HomeViewUi;
 import net.rushashki.shashki64.client.view.ui.PlayViewUi;
@@ -31,6 +32,8 @@ public interface ShashkiGinjector extends Ginjector {
   ShashkiConstants getShashkiConstants();
 
   HomeViewUi getHomeView();
+
+  PlayLentaView getPlayLentaView();
 
   PlayViewUi getPlayView();
 

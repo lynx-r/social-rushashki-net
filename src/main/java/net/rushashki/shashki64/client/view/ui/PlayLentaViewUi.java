@@ -1,25 +1,24 @@
 package net.rushashki.shashki64.client.view.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import net.rushashki.shashki64.client.component.ui.ShashkiListComponentUi;
-import net.rushashki.shashki64.client.place.PlayPlace;
-import net.rushashki.shashki64.client.view.HomeView;
-import org.gwtbootstrap3.client.ui.PageHeader;
+import net.rushashki.shashki64.client.view.PlayLentaView;
 
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 23.11.14
- * Time: 12:32
+ * Date: 30.11.14
+ * Time: 12:34
  */
-public class HomeViewUi extends BasicViewUi implements HomeView {
-  private static HomeViewImplUiBinder ourUiBinder = GWT.create(HomeViewImplUiBinder.class);
+public class PlayLentaViewUi extends BasicViewUi implements PlayLentaView {
+  private static PlayLentaViewUiUiBinder ourUiBinder = GWT.create(PlayLentaViewUiUiBinder.class);
+  @UiField
+  ShashkiListComponentUi shashkiLenta;
 
-  public HomeViewUi() {
+  public PlayLentaViewUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
@@ -33,6 +32,6 @@ public class HomeViewUi extends BasicViewUi implements HomeView {
     this.presenter = presenter;
   }
 
-  interface HomeViewImplUiBinder extends UiBinder<HTMLPanel, HomeViewUi> {
+  interface PlayLentaViewUiUiBinder extends UiBinder<HTMLPanel, PlayLentaViewUi> {
   }
 }

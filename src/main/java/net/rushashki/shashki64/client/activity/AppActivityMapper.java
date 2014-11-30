@@ -4,6 +4,7 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
 import net.rushashki.shashki64.client.place.HomePlace;
+import net.rushashki.shashki64.client.place.PlayLentaPlace;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.place.SignInPlace;
 
@@ -19,6 +20,8 @@ public class AppActivityMapper implements ActivityMapper {
   public Activity getActivity(Place place) {
     if (place instanceof HomePlace) {
       return new HomeActivity((HomePlace) place);
+    } else if (place instanceof PlayLentaPlace) {
+      return new PlayLentaActivity((PlayLentaPlace) place);
     } else if (place instanceof PlayPlace) {
       return new PlayActivity((PlayPlace) place);
     } else if (place instanceof SignInPlace) {

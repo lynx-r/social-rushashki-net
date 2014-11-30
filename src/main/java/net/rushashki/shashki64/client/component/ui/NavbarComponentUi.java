@@ -13,6 +13,7 @@ import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.event.NavbarReloadEvent;
 import net.rushashki.shashki64.client.event.NavbarReloadEventHandler;
 import net.rushashki.shashki64.client.place.HomePlace;
+import net.rushashki.shashki64.client.place.PlayLentaPlace;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.place.SignInPlace;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
@@ -29,9 +30,6 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
  */
 public class NavbarComponentUi extends Composite implements NavbarComponent {
   private static NavbarComponentUiUiBinder ourUiBinder = GWT.create(NavbarComponentUiUiBinder.class);
-  private final AnchorListItem homeLink;
-  private final AnchorListItem playLink;
-  private final AnchorListItem signInLink;
   private AnchorListItem prevActiveLink = null;
   @UiField
   NavbarNav navLeft;
@@ -42,6 +40,10 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
   private PlaceController placeController;
   private ShashkiConstants constants;
   private EventBus eventBus;
+  private AnchorListItem homeLink;
+  private AnchorListItem playLink;
+  private AnchorListItem signInLink;
+  private AnchorListItem playLentaLink;
 
   public NavbarComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
@@ -49,46 +51,41 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     this.constants = shashkiGinjector.getShashkiConstants();
     this.placeController = shashkiGinjector.getPlaceController();
     this.eventBus = shashkiGinjector.getEventBus();
-    eventBus.addHandler(NavbarReloadEvent.TYPE, new NavbarReloadEventHandler() {
-      @Override
-      public void onEvent(NavbarReloadEvent event) {
-        setActive(event.getToken());
-      }
-    });
+    eventBus.addHandler(NavbarReloadEvent.TYPE, event -> setActive(event.getToken()));
 
     homeLink = new AnchorListItem(constants.home());
     homeLink.setIcon(IconType.HOME);
-    homeLink.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        disableLink(prevActiveLink);
-        prevActiveLink = homeLink;
-        placeController.goTo(new HomePlace(constants.homeToken()));
-      }
+    homeLink.addClickHandler(event -> {
+      disableLink(prevActiveLink);
+      prevActiveLink = homeLink;
+      placeController.goTo(new HomePlace(constants.homeToken()));
     });
     navLeft.add(homeLink);
 
+    playLentaLink = new AnchorListItem(constants.playLenta());
+    playLentaLink.setIcon(IconType.LIST);
+    playLentaLink.addClickHandler(event -> {
+      disableLink(prevActiveLink);
+      prevActiveLink = playLentaLink;
+      placeController.goTo(new PlayLentaPlace(constants.playLentaToken()));
+    });
+    navLeft.add(playLentaLink);
+
     playLink = new AnchorListItem(constants.play());
     playLink.setIcon(IconType.PLAY);
-    playLink.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        disableLink(prevActiveLink);
-        prevActiveLink = playLink;
-        placeController.goTo(new PlayPlace(constants.playToken()));
-      }
+    playLink.addClickHandler(event -> {
+      disableLink(prevActiveLink);
+      prevActiveLink = playLink;
+      placeController.goTo(new PlayPlace(constants.playToken()));
     });
     navLeft.add(playLink);
 
     signInLink = new AnchorListItem(constants.login());
     signInLink.setIcon(IconType.SIGN_IN);
-    signInLink.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        disableLink(prevActiveLink);
-        prevActiveLink = signInLink;
-        placeController.goTo(new SignInPlace(constants.signInToken()));
-      }
+    signInLink.addClickHandler(event -> {
+      disableLink(prevActiveLink);
+      prevActiveLink = signInLink;
+      placeController.goTo(new SignInPlace(constants.signInToken()));
     });
     navRight.add(signInLink);
   }
@@ -97,6 +94,8 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     if (prevActiveLink == null) {
       if (token.equals(constants.homeToken())) {
         prevActiveLink = homeLink;
+      } else if (token.equals(constants.playLentaToken())) {
+        prevActiveLink = playLentaLink;
       } else if (token.equals(constants.playToken())) {
         prevActiveLink = playLink;
       } else if (token.equals(constants.signInToken())) {

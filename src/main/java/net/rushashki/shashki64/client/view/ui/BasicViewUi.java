@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.Composite;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.util.ShashkiLogger;
 import net.rushashki.shashki64.client.view.BasicView;
+import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,15 +14,17 @@ import net.rushashki.shashki64.client.view.BasicView;
  */
 public class BasicViewUi extends Composite {
 
-  protected ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
+  protected final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
 
-  protected ShashkiLogger logger;
+  protected final ShashkiLogger logger;
+  protected final ShashkiConstants constants;
 
   protected String token;
   protected BasicView.Presenter presenter;
 
   public BasicViewUi() {
     logger = shashkiGinjector.getLogger();
+    constants = shashkiGinjector.getShashkiConstants();
   }
 
 }

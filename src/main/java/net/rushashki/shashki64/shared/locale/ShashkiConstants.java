@@ -23,4 +23,13 @@ public interface ShashkiConstants extends Constants {
   String login();
 
   String signInToken();
+
+  String jumbotronGreeting();
+
+  String jumbotronSubGreeting();
+
+  String playLenta();
+
+  String playLentaToken();
+
 }
