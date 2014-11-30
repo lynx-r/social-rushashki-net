@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import net.rushashki.shashki64.shashki.Board;
 import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
 
 /**
@@ -19,6 +20,7 @@ import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
  */
 public class ShashkiPlayComponentUi extends BasicComponent {
   private static ShashkiPlayComponentUiUiBinder ourUiBinder = GWT.create(ShashkiPlayComponentUiUiBinder.class);
+  private final Board board;
 
   @UiField
   HTMLPanel shashki;
@@ -49,13 +51,14 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
     shashki.add(lienzoPanel);
 
+    board = new Board(boardBackgroundLayer, 8, 8, true);
+    lienzoPanel.add(board);
+
     Scheduler.get().scheduleFinally(() -> {
-      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth() - playerListColumn.getOffsetWidth() - 81;
+      // 81 - отступы
+      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
+          - playerListColumn.getOffsetWidth() - 81;
       privateChatColumn.setWidth(side + "px");
-//      playersColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
-//      playersColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
-      // 20 текст Нотация
-//      notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
     });
   }
 
