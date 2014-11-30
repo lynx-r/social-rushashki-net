@@ -29,17 +29,17 @@ public class ShashkiListComponentUi extends Composite {
   public ShashkiListComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
-    List<ShashkiComponentUi> plays = new ArrayList<>();
+    List<ShashkiViewComponentUi> plays = new ArrayList<>();
 
     PlayDto playDto;
     for (int i = 0; i < 10; i++) {
       playDto = new PlayDto("test" + i, "master" + i, "bachelor" + i);
-      ShashkiComponentUi shashkiComponentUi = new ShashkiComponentUi(playDto);
-      plays.add(shashkiComponentUi);
-      playDto.setDeskHtml(shashkiComponentUi::toString);
+      ShashkiViewComponentUi shashkiViewComponentUi = new ShashkiViewComponentUi(playDto);
+      plays.add(shashkiViewComponentUi);
+      playDto.setDeskHtml(shashkiViewComponentUi::toString);
     }
 
-    for (ShashkiComponentUi play : plays) {
+    for (ShashkiViewComponentUi play : plays) {
       shashkiList.add(play);
     }
   }

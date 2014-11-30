@@ -19,7 +19,7 @@
             float: left;
         }
 
-        .players-column {
+        .sidebar-column {
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main-view}">
@@ -32,7 +32,7 @@
                 <g:HTMLPanel ui:field="comments"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
-        <g:HTMLPanel ui:field="playersColumn" addStyleNames="{style.players-column}">
+        <g:HTMLPanel ui:field="sidebarColumn" addStyleNames="{style.sidebar-column}">
             <ui:msg description="Нотация" key="notationList">Нотация:</ui:msg>
             <g:ScrollPanel ui:field="notationList"/>
         </g:HTMLPanel>

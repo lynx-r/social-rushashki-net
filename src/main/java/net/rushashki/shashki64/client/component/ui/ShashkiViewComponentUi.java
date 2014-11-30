@@ -1,7 +1,5 @@
 package net.rushashki.shashki64.client.component.ui;
 
-import com.ait.lienzo.client.core.shape.Layer;
-import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -12,10 +10,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.shared.model.dto.PlayDto;
 import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
-import org.gwtbootstrap3.client.ui.Button;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,10 +19,9 @@ import org.gwtbootstrap3.client.ui.Button;
  * Date: 29.11.14
  * Time: 0:38
  */
-public class ShashkiComponentUi extends Composite implements ClickHandler {
+public class ShashkiViewComponentUi extends Composite implements ClickHandler {
   private static ShashkiUiBinder ourUiBinder = GWT.create(ShashkiUiBinder.class);
   private final LienzoPanel lienzoPanel;
-  private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
 
   @UiField
   HTMLPanel shashki;
@@ -37,14 +32,14 @@ public class ShashkiComponentUi extends Composite implements ClickHandler {
   @UiField
   HTMLPanel shashkiColumn;
   @UiField
-  HTMLPanel playersColumn;
+  HTMLPanel sidebarColumn;
   @UiField
   ScrollPanel notationList;
 
-  private static ShashkiComponentUi INSTANCE;
+  private static ShashkiViewComponentUi INSTANCE;
   private PlayDto playDto;
 
-  public ShashkiComponentUi(PlayDto playDto) {
+  public ShashkiViewComponentUi(PlayDto playDto) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.playDto = playDto;
@@ -67,20 +62,11 @@ public class ShashkiComponentUi extends Composite implements ClickHandler {
     lienzoPanel.addClickHandler(this);
 
     Scheduler.get().scheduleFinally(() -> {
-      playersColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
-      playersColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
+      sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
+      sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
       // 20 текст Нотация
       notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
     });
-  }
-
-  public void update() {
-    lienzoPanel.getScene().draw();
-    Layer layer = new Layer();
-    Text text = new Text("Hi");
-    text.setX(0).setY(10);
-    layer.add(text);
-    lienzoPanel.add(layer);
   }
 
   @Override
@@ -91,6 +77,6 @@ public class ShashkiComponentUi extends Composite implements ClickHandler {
     INSTANCE = this;
   }
 
-  interface ShashkiUiBinder extends UiBinder<HTMLPanel, ShashkiComponentUi> {
+  interface ShashkiUiBinder extends UiBinder<HTMLPanel, ShashkiViewComponentUi> {
   }
 }
