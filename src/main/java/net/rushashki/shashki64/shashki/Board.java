@@ -1,16 +1,16 @@
 package net.rushashki.shashki64.shashki;
 
 import com.ait.lienzo.client.core.animation.*;
+import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
+import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.event.OnTurnEvent;
 import net.rushashki.shashki64.shashki.util.Operator;
-import net.rushashki.shashki64.shashki.util.Operators;
+import net.rushashki.shashki64.shashki.util.PossibleOperators;
 
-import java.util.HashMap;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +30,7 @@ public class Board extends Layer {
   private int cols;
   private final double removeDraughtFade = 400;
   private final double moveDraughtDuration = 800;
-  private boolean emulate = true; // эмулировать шашки
+  private boolean emulate = false; // эмулировать шашки
   private HashMap<String, Integer> alphMap;
   private Stack<Square> capturedStack = new Stack<>();
   // стек ходов шашек, когда они становятся дамками
@@ -38,6 +38,7 @@ public class Board extends Layer {
 
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   private EventBus eventBus;
+  private List<Square> highlightedSquares = new ArrayList<>();
 
   public Board(BoardBackgroundLayer backgroundLayer, int rows, int cols, boolean white) {
 
@@ -63,6 +64,10 @@ public class Board extends Layer {
     alphMap.put("f", 5);
     alphMap.put("g", 6);
     alphMap.put("h", 7);
+
+    this.addNodeMouseClickHandler(nodeMouseClickEvent -> {
+      this.moveDraught(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
+    });
   }
 
   private void placeDraughts() {
@@ -70,7 +75,9 @@ public class Board extends Layer {
 //    for(int row = 3; row < 4; row++) {
       for (int col = 0; col < 8; col++) {
 //      for (int col = 2; col < 3; col++) {
-        opponentDraughtVector.add(addDraught(row, col, !white));
+        if (Square.isValid(row, col)) {
+          opponentDraughtVector.add(addDraught(row, col, !white));
+        }
       }
     }
 
@@ -79,9 +86,8 @@ public class Board extends Layer {
 //    for(int row = 4; row < 5; row++) {
       for (int col = 0; col < 8; col++) {
 //      for (int col = 5; col < 6; col++) {
-        Draught draught = addDraught(row, col, white);
-        if (draught != null) {
-          mineDraughtVector.add(draught);
+        if (Square.isValid(row, col)) {
+          mineDraughtVector.add(addDraught(row, col, white));
         }
       }
     }
@@ -99,7 +105,7 @@ public class Board extends Layer {
   private Draught addDraught(int row, int col, boolean white) {
     Square square = backgroundLayer.getSquare(row, col);
     Draught draught;
-    if (square != null && square.isValid(row, col)) {
+    if (square != null && Square.isValid(row, col)) {
       draught = new Draught(backgroundLayer.getDeskSide(), rows, cols, row, col, white);
       add(draught);
       square.setOccupant(draught);
@@ -108,7 +114,7 @@ public class Board extends Layer {
     return null;
   }
 
-  public void highlightAllowedMoves(Draught clickedPiece) {
+  public List<Square> highlightAllowedMoves(Draught clickedPiece) {
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         Square square = backgroundLayer.getSquare(row, col);
@@ -132,6 +138,7 @@ public class Board extends Layer {
       }
     }
     backgroundLayer.draw();
+    return highlightedSquares;
   }
 
   /**
@@ -185,11 +192,13 @@ public class Board extends Layer {
           Square initSq = backgroundLayer.getSquare(clickedDraught.getRow(), clickedDraught.getCol());
           if (initSq.isOnLine(currentSq)) {
             highlightSquareToBeat(currentSq);
+            highlightedSquares.add(currentSq);
           }
         }
       } else if (!possibleMoves.isEmpty()) {
         for (Square square : possibleMoves) {
           fadeInSquare(square);
+          highlightedSquares.add(square);
         }
       }
     }
@@ -249,14 +258,14 @@ public class Board extends Layer {
               Vector<Square> oneJumps = new Vector<>();
               while (inBounds(i, j) && !backgroundLayer.getSquare(i, j).isOccupied()) {
                 if (straightQueen) {
-                  if (opRow.equals(Operators.SUB) && opCol.equals(Operators.SUB)
-                      || opRow.equals(Operators.ADD) && opCol.equals(Operators.ADD)) { // top-left & bottom-right
+                  if (opRow.equals(PossibleOperators.SUB) && opCol.equals(PossibleOperators.SUB)
+                      || opRow.equals(PossibleOperators.ADD) && opCol.equals(PossibleOperators.ADD)) { // top-left & bottom-right
                     possibleMovePair(Operator.ADDITION, Operator.SUBTRACTION, i, j, white, sideWhite, true,
                         outPossibleMoves, outJumpMoves, false);
                     possibleMovePair(Operator.SUBTRACTION, Operator.ADDITION, i, j, white, sideWhite, true,
                         outPossibleMoves, outJumpMoves, false);
-                  } else if (opRow.equals(Operators.SUB) && opCol.equals(Operators.ADD)
-                      || opRow.equals(Operators.ADD) && opCol.equals(Operators.SUB)) { // bottom-left & top-right
+                  } else if (opRow.equals(PossibleOperators.SUB) && opCol.equals(PossibleOperators.ADD)
+                      || opRow.equals(PossibleOperators.ADD) && opCol.equals(PossibleOperators.SUB)) { // bottom-left & top-right
                     possibleMovePair(Operator.SUBTRACTION, Operator.SUBTRACTION, i, j, white, sideWhite, true,
                         outPossibleMoves, outJumpMoves, false);
                     possibleMovePair(Operator.ADDITION, Operator.ADDITION, i, j, white, sideWhite, true,
@@ -319,6 +328,18 @@ public class Board extends Layer {
 
   public BoardBackgroundLayer getBackgroundLayer() {
     return backgroundLayer;
+  }
+
+  public void resetDeskDrawing() {
+    backgroundLayer.resetDeskDrawing();
+  }
+
+  public Square getSquare(double row, double col) {
+    return backgroundLayer.getSquare(row, col);
+  }
+
+  public Square getSquare(int row, int col) {
+    return backgroundLayer.getSquare(row, col);
   }
 
   private void possibleNextMovePair(Square takenSquare, Operator opRow, Operator opCol, int row, int col,
@@ -713,5 +734,53 @@ public class Board extends Layer {
 
   public void setEmulate(boolean emulate) {
     this.emulate = emulate;
+  }
+
+  public boolean moveDraught(double clickX, double clickY) {
+    Draught selectedDraught = Draught.getSelectedDraught();
+    if (selectedDraught != null && !highlightedSquares.isEmpty()) {
+      Square square = this.getSquare(clickX, clickY);
+      Square prevSquare = this.getSquare(selectedDraught.getRow(), selectedDraught.getCol());
+      if (square != null && highlightedSquares.contains(square)
+          && prevSquare.isOnLine(square)) {
+
+        String captured = this.move(prevSquare, square);
+
+        boolean simpleStroke = "null".equals(captured);
+        if ("null".equals(captured) || "none".equals(captured.split(",")[2])) {
+//          this.toggleTurn();
+        }
+        if (!selectedDraught.isQueen()) {
+          if (selectedDraught.getRow() == 0) {
+            selectedDraught.setQueen(true);
+          }
+        }
+
+//          String op = simpleStroke ? "-" : ":";
+//          NotationTextArea.get().appendStroke(
+//              startSquare.toNotation(isWhite(), false, false)
+//                  + op
+//                  + newSquare.toNotation(isWhite(), true, false)
+//                  + (isWhite() ? "" : "\n")
+//          );
+//          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
+//              clientFactory.getProfile().getUserId(), clientFactory.getOpponentId(),
+//              startSquare.toSend(), newSquare.toSend(), captured);
+        AnimationProperties props = new AnimationProperties();
+        props.push(AnimationProperty.Properties.X(square.getCenterX()));
+        props.push(AnimationProperty.Properties.Y(square.getCenterY()));
+
+        selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
+
+        props = new AnimationProperties();
+        props.push(AnimationProperty.Properties.SCALE(1.0));
+
+        selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
+
+        backgroundLayer.resetDeskDrawing();
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -6,6 +6,6 @@ package net.rushashki.shashki64.shashki.util;
  * Date: 30.11.14
  * Time: 14:23
  */
-public enum Operators {
+public enum PossibleOperators {
   ADD, SUB;
 }

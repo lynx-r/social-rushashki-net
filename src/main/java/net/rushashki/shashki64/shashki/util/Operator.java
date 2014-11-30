@@ -9,13 +9,13 @@ package net.rushashki.shashki64.shashki.util;
 public enum Operator
 {
 
-  ADDITION(Operators.ADD) {
+  ADDITION(PossibleOperators.ADD) {
     @Override
     public int apply(int x, int n) {
       return x + n;
     }
   },
-  SUBTRACTION(Operators.SUB) {
+  SUBTRACTION(PossibleOperators.SUB) {
     @Override
     public int apply(int x, int n) {
       return x - n;
@@ -23,17 +23,17 @@ public enum Operator
   };
   // You'd include other operators too...
 
-  private final Operators operator;
+  private final PossibleOperators operator;
 //  private boolean inverted;
 
-  private Operator(Operators operator) {
+  private Operator(PossibleOperators operator) {
     this.operator = operator;
   }
 
   // Yes, enums *can* have abstract methods. This code compiles...
   public abstract int apply(int x, int n);
 
-  public boolean equals(Operators operator) {
+  public boolean equals(PossibleOperators operator) {
     return this.operator.equals(operator);
   }
 }

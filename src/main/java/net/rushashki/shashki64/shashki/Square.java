@@ -40,7 +40,7 @@ public class Square extends Rectangle {
     setStrokeWidth(strokeLineWidth);
   }
 
-  public boolean isValid(int row, int col) {
+  public static boolean isValid(int row, int col) {
     return row % 2 != col % 2;
   }
 
