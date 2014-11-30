@@ -1,11 +1,10 @@
 package net.rushashki.shashki64.shashki;
 
 import com.ait.lienzo.client.core.animation.*;
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.shashki64.client.event.NotationStrokeEvent;
 import net.rushashki.shashki64.client.event.OnTurnEvent;
 import net.rushashki.shashki64.shashki.util.Operator;
 import net.rushashki.shashki64.shashki.util.PossibleOperators;
@@ -748,7 +747,7 @@ public class Board extends Layer {
 
         boolean simpleStroke = "null".equals(captured);
         if ("null".equals(captured) || "none".equals(captured.split(",")[2])) {
-//          this.toggleTurn();
+          this.toggleTurn();
         }
         if (!selectedDraught.isQueen()) {
           if (selectedDraught.getRow() == 0) {
@@ -756,13 +755,12 @@ public class Board extends Layer {
           }
         }
 
-//          String op = simpleStroke ? "-" : ":";
-//          NotationTextArea.get().appendStroke(
-//              startSquare.toNotation(isWhite(), false, false)
-//                  + op
-//                  + newSquare.toNotation(isWhite(), true, false)
-//                  + (isWhite() ? "" : "\n")
-//          );
+        String op = simpleStroke ? "-" : ":";
+        String stroke = prevSquare.toNotation(isWhite(), false, false)
+            + op
+            + square.toNotation(isWhite(), true, false)
+            + (isWhite() ? "" : "\n");
+        eventBus.fireEvent(new NotationStrokeEvent(stroke));
 //          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
 //              clientFactory.getProfile().getUserId(), clientFactory.getOpponentId(),
 //              startSquare.toSend(), newSquare.toSend(), captured);

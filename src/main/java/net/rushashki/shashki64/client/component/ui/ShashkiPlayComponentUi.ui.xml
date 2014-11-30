@@ -30,7 +30,7 @@
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="notationColumn" addStyleNames="{style.notation-column}">
             <ui:msg description="Нотация" key="notationList">Нотация:</ui:msg>
-            <g:ScrollPanel ui:field="notationList"/>
+            <g:HTMLPanel ui:field="notationList"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="privateChatColumn" addStyleNames="{style.private-chat}">
             <ui:msg description="Приватный чат" key="privateChat">Персональный чат:</ui:msg>

@@ -8,7 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import net.rushashki.shashki64.client.component.widget.NotationTextArea;
 import net.rushashki.shashki64.shashki.Board;
 import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
 
@@ -31,7 +31,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   @UiField
   HTMLPanel notationColumn;
   @UiField
-  ScrollPanel notationList;
+  HTMLPanel notationList;
   @UiField
   HTMLPanel playerListColumn;
 
@@ -54,11 +54,15 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     board = new Board(boardBackgroundLayer, 8, 8, true);
     lienzoPanel.add(board);
 
+    NotationTextArea notationTextArea = new NotationTextArea();
+    notationList.add(notationTextArea);
+
     Scheduler.get().scheduleFinally(() -> {
       // 81 - отступы
       int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
           - playerListColumn.getOffsetWidth() - 81;
       privateChatColumn.setWidth(side + "px");
+      notationTextArea.setHeight(lienzoPanel.getOffsetHeight() - 50 + "px");
     });
   }
 

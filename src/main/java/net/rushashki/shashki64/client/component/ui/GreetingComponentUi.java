@@ -19,10 +19,7 @@ public class GreetingComponentUi extends BasicComponent {
   PageHeader greeting;
 
   public GreetingComponentUi() {
-    super();
     initWidget(ourUiBinder.createAndBindUi(this));
-
-    this.constants = shashkiGinjector.getShashkiConstants();
 
     greeting.setText(constants.jumbotronGreeting());
     greeting.setSubText(constants.jumbotronSubGreeting());
