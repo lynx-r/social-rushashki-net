@@ -27,4 +27,5 @@ public class MessageDaoImpl extends DaoImpl<Message> implements MessageDao {
   protected EntityManager getEntityManager() {
     return entityManager;
   }
+
 }

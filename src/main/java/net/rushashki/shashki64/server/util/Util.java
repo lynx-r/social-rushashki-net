@@ -9,8 +9,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +18,7 @@ import java.io.IOException;
  * Time: 17:19
  */
 public class Util {
+
   public static AuthorizationCodeFlow getFlow(String apiTokenServerUrl, String apiKey, String apiSecret,
                                               String apiAuthorizationServerUrl,
                                               String credentialStoreFilePath) throws IOException {
@@ -32,5 +32,11 @@ public class Util {
         .setCredentialDataStore(StoredCredential.getDefaultDataStore(new FileDataStoreFactory(
             new File(credentialStoreFilePath))))
         .build();
+  }
+
+  public static String inputStreamToString(InputStream inputStream) throws IOException {
+    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+    return bufferedReader.readLine();
   }
 }

@@ -5,6 +5,7 @@ import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -16,6 +17,7 @@ import net.rushashki.shashki64.client.page.BasePage;
 import net.rushashki.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.shashki64.client.place.HomePlace;
+import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.shashki64.shared.resources.Resources;
 
 /**
@@ -31,10 +33,12 @@ public class Shashki64 implements EntryPoint {
   private HomePlace defaultPlace = new HomePlace("Home");
 
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
-
+  private ProfileServiceAsync profileService;
   private BasePage appWidget = new BasePageUi();
 
   public void onModuleLoad() {
+    this.profileService = shashkiGinjector.getProfileService();
+
     splashImage = new Image(Resources.INSTANCE.images().loadIconImage().getSafeUri());
     splashImage.addStyleName("loader-image");
     RootPanel.get("content").add(splashImage);
@@ -47,11 +51,21 @@ public class Shashki64 implements EntryPoint {
     PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
     historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
-    RootPanel.get("content").remove(splashImage);
+    profileService.isAuthenticated(new AsyncCallback<Boolean>() {
+      @Override
+      public void onFailure(Throwable throwable) {
 
-    RootPanel.get("navigation").add(new NavbarComponentUi());
-    RootPanel.get("content").add((IsWidget) appWidget);
-    RootPanel.get("footer").add(new FooterComponentUi());
+      }
+
+      @Override
+      public void onSuccess(Boolean aBoolean) {
+        RootPanel.get("content").remove(splashImage);
+
+        RootPanel.get("navigation").add(new NavbarComponentUi(aBoolean));
+        RootPanel.get("content").add((IsWidget) appWidget);
+        RootPanel.get("footer").add(new FooterComponentUi());
+      }
+    });
 
     historyHandler.handleCurrentHistory();
   }

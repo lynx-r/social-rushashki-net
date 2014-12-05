@@ -1,6 +1,6 @@
 package net.rushashki.shashki64.server.dao;
 
-import net.rushashki.shashki64.shared.model.PersistableObject;
+import net.rushashki.shashki64.shared.model.GwtPersistableObject;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 15.11.14
  * Time: 16:58
  */
-public interface Dao<E extends PersistableObject> {
+public interface Dao<E extends GwtPersistableObject> {
   public void create(E entity);
 
   public void edit(E entity);
@@ -21,7 +21,7 @@ public interface Dao<E extends PersistableObject> {
 
   public List<E> findAll();
 
-  public List<E> findPublicAll();
+  public List<E> findPublishedAll();
 
   public List<E> findRange(int[] range);
 

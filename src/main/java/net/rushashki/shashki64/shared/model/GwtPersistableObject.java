@@ -2,10 +2,7 @@ package net.rushashki.shashki64.shared.model;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,9 +11,10 @@ import javax.persistence.Version;
  * Time: 16:03
  */
 @MappedSuperclass
-public class PersistableObject implements IsSerializable {
+public class GwtPersistableObject implements IsSerializable {
+
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Version

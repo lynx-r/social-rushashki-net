@@ -17,6 +17,7 @@ import org.gwtbootstrap3.client.ui.PageHeader;
  * Time: 12:32
  */
 public class HomeViewUi extends BasicViewUi implements HomeView {
+
   private static HomeViewImplUiBinder ourUiBinder = GWT.create(HomeViewImplUiBinder.class);
 
   public HomeViewUi() {
@@ -35,4 +36,5 @@ public class HomeViewUi extends BasicViewUi implements HomeView {
 
   interface HomeViewImplUiBinder extends UiBinder<HTMLPanel, HomeViewUi> {
   }
+
 }

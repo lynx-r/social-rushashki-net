@@ -1,6 +1,7 @@
 package net.rushashki.shashki64.shared.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 /**
@@ -10,7 +11,8 @@ import javax.validation.constraints.Size;
  * Time: 15:49
  */
 @Entity
-public class Message extends PersistableObject {
+@Table(name = "message")
+public class Message extends GwtPersistableObject {
 
   @Size(min = 10, max = 5000)
   private String message;

@@ -1,6 +1,10 @@
 package net.rushashki.shashki64.server.util;
 
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
+
 import javax.ejb.Singleton;
+import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +24,12 @@ public class Resources {
   @Produces
   public EntityManager getEntityManager() {
     return entityManager;
+  }
+
+  @Default
+  @Produces
+  public EventBus getEventBus() {
+    return new SimpleEventBus();
   }
 
 }

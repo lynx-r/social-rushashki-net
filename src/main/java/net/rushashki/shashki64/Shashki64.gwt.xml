@@ -14,6 +14,7 @@
   <inherits name='com.ait.lienzo.Lienzo' />
 
   <entry-point class='net.rushashki.shashki64.client.Shashki64'/>
+  <servlet path="/ProfileService" class="net.rushashki.shashki64.server.rpc.ProfileServiceImpl"/>
 
   <!--<set-property name="user.agent" value="gecko1_8"/>-->
   <set-property name="user.agent" value="safari"/>

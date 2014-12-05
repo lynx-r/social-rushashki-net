@@ -17,6 +17,8 @@ public class OAuthClient {
 
   public static final String API_VK_AUTHORIZATION_SERVER_URL = "https://oauth.vk.com/authorize";
 
+  public static final String API_VK_GET_USER_INFO = "https://api.vk.com/method/users.get";
+
   public static final String REDIRECT_VK_CALLBACK_URL = "/OAuthVKCallbackServlet";
 
   // Facebook

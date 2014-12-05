@@ -63,6 +63,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.1.2.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!--<dependency>-->
         <!--<groupId>commons-logging</groupId>-->
         <!--<artifactId>commons-logging</artifactId>-->
@@ -218,7 +225,7 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <!-- "provided" so that we don't deploy -->
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -252,7 +259,20 @@
             <artifactId>lienzo-core</artifactId>
             <version>2.0.16-SNAPSHOT</version>
         </dependency>
+
+        <!--Postgresql-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.3-1102-jdbc41</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
+
+<!--*****************************************************************************************************************-->
+<!--*****************************************************************************************************************-->
+<!--*****************************************************************************************************************-->
 
     <build>
         <plugins>

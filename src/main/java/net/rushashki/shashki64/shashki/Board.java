@@ -759,7 +759,7 @@ public class Board extends Layer {
         String stroke = prevSquare.toNotation(isWhite(), false, false)
             + op
             + square.toNotation(isWhite(), true, false)
-            + (isWhite() ? "" : "\n");
+            + (isWhite() ? "" : "<br />");
         eventBus.fireEvent(new NotationStrokeEvent(stroke));
 //          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
 //              clientFactory.getProfile().getUserId(), clientFactory.getOpponentId(),
