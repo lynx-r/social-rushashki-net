@@ -1,6 +1,7 @@
 package net.rushashki.shashki64.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import net.rushashki.shashki64.shared.model.Shashist;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,4 +11,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface ProfileServiceAsync {
   void isAuthenticated(AsyncCallback<Boolean> async);
+
+  void getProfile(AsyncCallback<Shashist> async);
 }

@@ -27,4 +27,8 @@ public class ShashistService extends BaseService<Shashist> {
   public Shashist findByVkUid(String uid) {
     return shashistDao.findByVkUid(uid);
   }
+
+  public Shashist findBySessionId(String sessionId) {
+    return shashistDao.findBySessionId(sessionId);
+  }
 }

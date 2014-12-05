@@ -12,4 +12,5 @@ public interface ShashistDao extends Dao<Shashist> {
 
   public Shashist findByVkUid(String uid);
 
+  Shashist findBySessionId(String sessionId);
 }

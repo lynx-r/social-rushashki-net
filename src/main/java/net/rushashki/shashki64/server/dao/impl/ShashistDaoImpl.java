@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,9 +32,20 @@ public class ShashistDaoImpl extends DaoImpl<Shashist> implements ShashistDao {
 
   @Override
   public Shashist findByVkUid(String uid) {
-    Query queue = getEntityManager().createQuery("FROM Shashist WHERE vkUid = :vkUid");
-    queue.setParameter("vkUid", uid);
-    return (Shashist) queue.getSingleResult();
+    Query query = getEntityManager().createQuery("FROM Shashist WHERE vkUid = :vkUid");
+    query.setParameter("vkUid", uid);
+    return (Shashist) query.getSingleResult();
+  }
+
+  @Override
+  public Shashist findBySessionId(String sessionId) {
+    Query query = getEntityManager().createQuery("FROM Shashist WHERE sessionId = :sessionId");
+    query.setParameter("sessionId", sessionId);
+    List result = query.getResultList();
+    if (result.isEmpty()) {
+      return null;
+    }
+    return (Shashist) result.get(0);
   }
 
 }

@@ -3,6 +3,7 @@ package net.rushashki.shashki64.client.rpc;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.core.client.GWT;
+import net.rushashki.shashki64.shared.model.Shashist;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,8 @@ import com.google.gwt.core.client.GWT;
 public interface ProfileService extends RemoteService {
 
   public Boolean isAuthenticated();
+
+  public Shashist getProfile();
 
   /**
    * Utility/Convenience class.

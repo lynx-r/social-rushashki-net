@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -68,7 +69,17 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
       shashist.setVkUid(vkUid);
       shashist.setFirstName(firstName.getString());
       shashist.setLastName(lastName.getString());
-      shashistService.create(shashist);
+    }
+
+    HttpSession session = req.getSession();
+    if (shashist.getSessionId() == null
+        || !shashist.getSessionId().equals(session.getId())) {
+      shashist.setSessionId(session.getId());
+      if (shashist.getId() == null) {
+        shashistService.create(shashist);
+      } else {
+        shashistService.edit(shashist);
+      }
     }
 
     req.getSession().setAttribute("isAuthenticated", true);

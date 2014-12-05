@@ -1,9 +1,10 @@
 package net.rushashki.shashki64.shared.model;
 
+import com.google.gwt.user.client.rpc.GwtTransient;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -16,29 +17,37 @@ import java.util.Set;
 @Table(name = "shashist")
 public class Shashist extends GwtPersistableObject {
 
+  private String sessionId;
   private String vkUid;
   @Email
   private String email;
-
   private String firstName;
   private String middleName;
   private String lastName;
   private String playerName;
-
   private String authProvider;
-
+  @GwtTransient
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.friendOf", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Friend> friends;
-
+  @GwtTransient
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.friend", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Friend> friendOf;
   private boolean loggedIn;
   private boolean playing;
   private boolean online;
-  private LocalDate registerDate;
-  private LocalDate lastVisited;
+  private Date registerDate;
+  private Date lastVisited;
   private int visitCounter;
+
   public Shashist() {
+  }
+
+  public String getSessionId() {
+    return sessionId;
+  }
+
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
   }
 
   @Override
@@ -52,7 +61,8 @@ public class Shashist extends GwtPersistableObject {
     if (online != shashist.online) return false;
     if (playing != shashist.playing) return false;
     if (visitCounter != shashist.visitCounter) return false;
-    if (authProvider != null ? !authProvider.equals(shashist.authProvider) : shashist.authProvider != null) return false;
+    if (authProvider != null ? !authProvider.equals(shashist.authProvider) : shashist.authProvider != null)
+      return false;
     if (email != null ? !email.equals(shashist.email) : shashist.email != null) return false;
     if (firstName != null ? !firstName.equals(shashist.firstName) : shashist.firstName != null) return false;
     if (friendOf != null ? !friendOf.equals(shashist.friendOf) : shashist.friendOf != null) return false;
@@ -61,7 +71,8 @@ public class Shashist extends GwtPersistableObject {
     if (lastVisited != null ? !lastVisited.equals(shashist.lastVisited) : shashist.lastVisited != null) return false;
     if (middleName != null ? !middleName.equals(shashist.middleName) : shashist.middleName != null) return false;
     if (playerName != null ? !playerName.equals(shashist.playerName) : shashist.playerName != null) return false;
-    if (registerDate != null ? !registerDate.equals(shashist.registerDate) : shashist.registerDate != null) return false;
+    if (registerDate != null ? !registerDate.equals(shashist.registerDate) : shashist.registerDate != null)
+      return false;
     if (vkUid != null ? !vkUid.equals(shashist.vkUid) : shashist.vkUid != null) return false;
 
     return true;
@@ -183,19 +194,19 @@ public class Shashist extends GwtPersistableObject {
     this.online = online;
   }
 
-  public LocalDate getRegisterDate() {
+  public Date getRegisterDate() {
     return registerDate;
   }
 
-  public void setRegisterDate(LocalDate registerDate) {
+  public void setRegisterDate(Date registerDate) {
     this.registerDate = registerDate;
   }
 
-  public LocalDate getLastVisited() {
+  public Date getLastVisited() {
     return lastVisited;
   }
 
-  public void setLastVisited(LocalDate lastVisited) {
+  public void setLastVisited(Date lastVisited) {
     this.lastVisited = lastVisited;
   }
 

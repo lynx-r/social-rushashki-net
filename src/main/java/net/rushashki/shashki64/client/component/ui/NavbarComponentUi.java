@@ -18,6 +18,7 @@ import net.rushashki.shashki64.client.place.SignInPlace;
 import net.rushashki.shashki64.client.rpc.ProfileService;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
+import net.rushashki.shashki64.shared.model.Shashist;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.NavbarNav;
@@ -49,7 +50,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
   private AnchorListItem profileLink;
   private ProfileServiceAsync profileService;
 
-  public NavbarComponentUi(Boolean loggedIn) {
+  public NavbarComponentUi(Shashist shashist) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.constants = shashkiGinjector.getShashkiConstants();
@@ -86,8 +87,8 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     });
     navLeft.add(playLink);
 
-    if (loggedIn) {
-      profileLink = new AnchorListItem("Профиль");
+    if (shashist != null) {
+      profileLink = new AnchorListItem(shashist.getFirstName() + " " + shashist.getLastName());
       profileLink.setIcon(IconType.USER);
       profileLink.addClickHandler(event -> {
         disableLink(prevActiveLink);

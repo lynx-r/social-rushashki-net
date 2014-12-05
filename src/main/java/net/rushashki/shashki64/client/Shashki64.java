@@ -18,6 +18,7 @@ import net.rushashki.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
+import net.rushashki.shashki64.shared.model.Shashist;
 import net.rushashki.shashki64.shared.resources.Resources;
 
 /**
@@ -51,17 +52,17 @@ public class Shashki64 implements EntryPoint {
     PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
     historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
-    profileService.isAuthenticated(new AsyncCallback<Boolean>() {
+    profileService.getProfile(new AsyncCallback<Shashist>() {
       @Override
       public void onFailure(Throwable throwable) {
 
       }
 
       @Override
-      public void onSuccess(Boolean aBoolean) {
+      public void onSuccess(Shashist shashist) {
         RootPanel.get("content").remove(splashImage);
 
-        RootPanel.get("navigation").add(new NavbarComponentUi(aBoolean));
+        RootPanel.get("navigation").add(new NavbarComponentUi(shashist));
         RootPanel.get("content").add((IsWidget) appWidget);
         RootPanel.get("footer").add(new FooterComponentUi());
       }
