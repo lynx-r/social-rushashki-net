@@ -218,7 +218,7 @@ public class Shashist extends GwtPersistableObject {
     this.visitCounter = visitCounter;
   }
 
-  public String getName() {
+  public String getPublicName() {
     return playerName == null ? firstName : playerName;
   }
 }

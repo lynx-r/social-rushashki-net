@@ -42,6 +42,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
   private AnchorListItem profileLink;
   private AnchorListItem settingsLink;
   private ProfileServiceAsync profileService;
+  private AnchorListItem profileDropDown;
 
   public NavbarComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
@@ -51,8 +52,11 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     this.eventBus = shashkiGinjector.getEventBus();
     this.profileService = shashkiGinjector.getProfileService();
 
-    eventBus.addHandler(OnNavbarReloadEvent.TYPE, event -> setActive(event.getToken()));
+    addLinks();
+    addEvents();
+  }
 
+  private void addLinks() {
     homeLink = new AnchorListItem(constants.home());
     homeLink.setIcon(IconType.HOME);
     homeLink.addClickHandler(event -> {
@@ -60,7 +64,6 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
       prevActiveLink = homeLink;
       placeController.goTo(new HomePlace(constants.homeToken()));
     });
-    navLeft.add(homeLink);
 
     playLentaLink = new AnchorListItem(constants.playLenta());
     playLentaLink.setIcon(IconType.LIST);
@@ -69,7 +72,6 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
       prevActiveLink = playLentaLink;
       placeController.goTo(new PlayLentaPlace(constants.playLentaToken()));
     });
-    navLeft.add(playLentaLink);
 
     playLink = new AnchorListItem(constants.play());
     playLink.setIcon(IconType.PLAY);
@@ -78,52 +80,66 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
       prevActiveLink = playLink;
       placeController.goTo(new PlayPlace(constants.playToken()));
     });
-    navLeft.add(playLink);
 
+    profileLink = new AnchorListItem(constants.myPage());
+    profileLink.setIcon(IconType.CIRCLE_THIN);
+    profileLink.addClickHandler(event -> {
+      disableLink(prevActiveLink);
+      prevActiveLink = profileLink;
+      placeController.goTo(new ProfilePlace(constants.profileToken()));
+    });
+
+    settingsLink = new AnchorListItem(constants.settings());
+    settingsLink.setIcon(IconType.COG);
+    settingsLink.addClickHandler(event -> {
+      disableLink(prevActiveLink);
+      prevActiveLink = settingsLink;
+      placeController.goTo(new SettingsPlace(constants.settingsToken()));
+    });
+
+    signInLink = new AnchorListItem(constants.signIn());
+    signInLink.setIcon(IconType.SIGN_IN);
+    signInLink.addClickHandler(event -> {
+      disableLink(prevActiveLink);
+      prevActiveLink = signInLink;
+      placeController.goTo(new SignInPlace(constants.signInToken()));
+    });
+
+    AnchorListItem logoutLink = new AnchorListItem(constants.logout());
+    logoutLink.setHref("/logout");
+
+    profileDropDown = new AnchorListItem();
+    profileDropDown.setDataToggle(Toggle.DROPDOWN);
+
+    DropDownMenu dropDownMenu = new DropDownMenu();
+    dropDownMenu.add(profileLink);
+    dropDownMenu.add(settingsLink);
+    dropDownMenu.add(new Divider());
+    dropDownMenu.add(logoutLink);
+
+    profileDropDown.add(dropDownMenu);
+  }
+
+  private void addToNavbarPublicLinks() {
+    navLeft.add(homeLink);
+    navLeft.add(playLentaLink);
+  }
+
+  private void addToNavbarPrivateLinks() {
+    navLeft.add(playLink);
+    navRight.add(profileDropDown);
+  }
+
+  private void addEvents() {
+    eventBus.addHandler(OnNavbarReloadEvent.TYPE, event -> setActive(event.getToken()));
     eventBus.addHandler(OnGetProfileEvent.TYPE, profileEvent -> {
       Shashist shashist = profileEvent.getProfile();
       if (shashist != null) {
-        profileLink = new AnchorListItem(constants.myPage());
-        profileLink.setIcon(IconType.CIRCLE_THIN);
-        profileLink.addClickHandler(event -> {
-          disableLink(prevActiveLink);
-          prevActiveLink = profileLink;
-          placeController.goTo(new ProfilePlace(constants.profileToken()));
-        });
-
-        settingsLink = new AnchorListItem(constants.settings());
-        settingsLink.setIcon(IconType.COG);
-        settingsLink.addClickHandler(event -> {
-          disableLink(prevActiveLink);
-          prevActiveLink = settingsLink;
-          placeController.goTo(new SettingsPlace(constants.settingsToken()));
-        });
-
-        AnchorListItem logoutLink = new AnchorListItem(constants.logout());
-        logoutLink.setHref("/logout");
-
-        AnchorListItem profileDropDown = new AnchorListItem(shashist.getName());
+        addToNavbarPublicLinks();
+        addToNavbarPrivateLinks();
         profileDropDown.setIcon(IconType.USER);
-        profileDropDown.setDataToggle(Toggle.DROPDOWN);
-
-        DropDownMenu dropDownMenu = new DropDownMenu();
-        dropDownMenu.add(profileLink);
-        dropDownMenu.add(settingsLink);
-        dropDownMenu.add(new Divider());
-        dropDownMenu.add(logoutLink);
-
-        profileDropDown.add(dropDownMenu);
-
-        navRight.add(profileDropDown);
+        profileDropDown.setText(shashist.getPublicName());
       } else {
-        signInLink = new AnchorListItem(constants.signIn());
-        signInLink.setIcon(IconType.SIGN_IN);
-        signInLink.addClickHandler(event -> {
-          disableLink(prevActiveLink);
-          prevActiveLink = signInLink;
-          placeController.goTo(new SignInPlace(constants.signInToken()));
-        });
-
         navRight.add(signInLink);
       }
     });

@@ -9,6 +9,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import net.rushashki.shashki64.client.component.widget.NotationPanel;
+import net.rushashki.shashki64.client.event.OnGetProfileEvent;
+import net.rushashki.shashki64.shared.model.Shashist;
 import net.rushashki.shashki64.shashki.Board;
 import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
 
@@ -36,6 +38,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   HTMLPanel playerListColumn;
 
   private final LienzoPanel lienzoPanel;
+  private Shashist player;
 
   public ShashkiPlayComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
@@ -63,7 +66,12 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
           - playerListColumn.getOffsetWidth() - 81;
       privateChatColumn.setWidth(side + "px");
-      notationPanel.setHeight(lienzoPanel.getOffsetHeight() - 50 + "px");
+      String notationHeight = lienzoPanel.getHeight() - 50 + "px";
+      notationPanel.setHeight(notationHeight);
+    });
+
+    eventBus.addHandler(OnGetProfileEvent.TYPE, event -> {
+      player = event.getProfile();
     });
   }
 
