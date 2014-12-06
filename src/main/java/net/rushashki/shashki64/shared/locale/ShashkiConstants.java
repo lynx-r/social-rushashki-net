@@ -34,5 +34,10 @@ public interface ShashkiConstants extends Constants {
 
   String profile();
 
+  String profileToken();
+
   String myPage();
+
+  String settings();
+
 }

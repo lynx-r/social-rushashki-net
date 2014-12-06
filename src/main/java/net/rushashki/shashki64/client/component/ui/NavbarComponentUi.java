@@ -10,10 +10,7 @@ import net.rushashki.shashki64.client.component.NavbarComponent;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.event.OnGetProfileEvent;
 import net.rushashki.shashki64.client.event.OnNavbarReloadEvent;
-import net.rushashki.shashki64.client.place.HomePlace;
-import net.rushashki.shashki64.client.place.PlayLentaPlace;
-import net.rushashki.shashki64.client.place.PlayPlace;
-import net.rushashki.shashki64.client.place.SignInPlace;
+import net.rushashki.shashki64.client.place.*;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.shashki64.shared.model.Shashist;
@@ -43,6 +40,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
   private AnchorListItem signInLink;
   private AnchorListItem playLentaLink;
   private AnchorListItem profileLink;
+  private AnchorListItem userSettingsLink;
   private ProfileServiceAsync profileService;
 
   public NavbarComponentUi() {
@@ -90,6 +88,14 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         profileLink.addClickHandler(event -> {
           disableLink(prevActiveLink);
           prevActiveLink = profileLink;
+          placeController.goTo(new ProfilePlace(constants.profileToken()));
+        });
+
+        userSettingsLink = new AnchorListItem(constants.settings());
+        userSettingsLink.setIcon(IconType.COG);
+        userSettingsLink.addClickHandler(event -> {
+          disableLink(prevActiveLink);
+          prevActiveLink = userSettingsLink;
           placeController.goTo(new HomePlace(constants.homeToken()));
         });
 
@@ -102,6 +108,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
 
         DropDownMenu dropDownMenu = new DropDownMenu();
         dropDownMenu.add(profileLink);
+        dropDownMenu.add(userSettingsLink);
         dropDownMenu.add(new Divider());
         dropDownMenu.add(logoutLink);
 
@@ -132,6 +139,8 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         prevActiveLink = playLink;
       } else if (token.equals(constants.signInToken())) {
         prevActiveLink = signInLink;
+      } else if (token.equals(constants.profileToken())) {
+        prevActiveLink = profileLink;
       } else {
         prevActiveLink = homeLink;
       }

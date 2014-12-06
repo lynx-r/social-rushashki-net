@@ -3,10 +3,7 @@ package net.rushashki.shashki64.client.activity;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
-import net.rushashki.shashki64.client.place.HomePlace;
-import net.rushashki.shashki64.client.place.PlayLentaPlace;
-import net.rushashki.shashki64.client.place.PlayPlace;
-import net.rushashki.shashki64.client.place.SignInPlace;
+import net.rushashki.shashki64.client.place.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +23,8 @@ public class AppActivityMapper implements ActivityMapper {
       return new PlayActivity((PlayPlace) place);
     } else if (place instanceof SignInPlace) {
       return new SignInActivity((SignInPlace) place);
+    } else if (place instanceof ProfilePlace) {
+      return new ProfileActivity((ProfilePlace) place);
     }
     return null;
   }

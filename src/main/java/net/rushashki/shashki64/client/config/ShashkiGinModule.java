@@ -7,14 +7,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.shashki64.client.util.ShashkiLogger;
-import net.rushashki.shashki64.client.view.HomeView;
-import net.rushashki.shashki64.client.view.PlayLentaView;
-import net.rushashki.shashki64.client.view.PlayView;
-import net.rushashki.shashki64.client.view.SignInView;
-import net.rushashki.shashki64.client.view.ui.HomeViewUi;
-import net.rushashki.shashki64.client.view.ui.PlayLentaViewUi;
-import net.rushashki.shashki64.client.view.ui.PlayViewUi;
-import net.rushashki.shashki64.client.view.ui.SignInViewUi;
+import net.rushashki.shashki64.client.view.*;
+import net.rushashki.shashki64.client.view.ui.*;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 
 import javax.inject.Inject;
@@ -42,6 +36,7 @@ public class ShashkiGinModule extends AbstractGinModule {
     bind(PlayLentaView.class).to(PlayLentaViewUi.class).in(Singleton.class);
     bind(PlayView.class).to(PlayViewUi.class).in(Singleton.class);
     bind(SignInView.class).to(SignInViewUi.class).in(Singleton.class);
+    bind(ProfileView.class).to(ProfileViewUi.class).in(Singleton.class);
 
     bind(ProfileServiceAsync.class).in(Singleton.class);
   }
