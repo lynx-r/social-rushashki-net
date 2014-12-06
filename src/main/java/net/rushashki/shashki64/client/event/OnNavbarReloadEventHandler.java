@@ -5,9 +5,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 30.11.14
- * Time: 18:11
+ * Date: 23.11.14
+ * Time: 23:32
  */
-public interface NotationStrokeEventHandler extends EventHandler {
-  void onNotationStroke(NotationStrokeEvent event);
+public interface OnNavbarReloadEventHandler extends EventHandler {
+  void onEvent(OnNavbarReloadEvent event);
 }

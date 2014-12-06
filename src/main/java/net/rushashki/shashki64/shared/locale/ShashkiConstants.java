@@ -32,4 +32,7 @@ public interface ShashkiConstants extends Constants {
 
   String playLentaToken();
 
+  String profile();
+
+  String myPage();
 }

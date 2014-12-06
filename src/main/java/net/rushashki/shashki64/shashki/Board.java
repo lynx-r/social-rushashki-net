@@ -4,7 +4,7 @@ import com.ait.lienzo.client.core.animation.*;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.shashki64.client.event.NotationStrokeEvent;
+import net.rushashki.shashki64.client.event.OnNotationStrokeEvent;
 import net.rushashki.shashki64.client.event.OnTurnEvent;
 import net.rushashki.shashki64.shashki.util.Operator;
 import net.rushashki.shashki64.shashki.util.PossibleOperators;
@@ -760,7 +760,7 @@ public class Board extends Layer {
             + op
             + square.toNotation(isWhite(), true, false)
             + (isWhite() ? "" : "<br />");
-        eventBus.fireEvent(new NotationStrokeEvent(stroke));
+        eventBus.fireEvent(new OnNotationStrokeEvent(stroke));
 //          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
 //              clientFactory.getProfile().getUserId(), clientFactory.getOpponentId(),
 //              startSquare.toSend(), newSquare.toSend(), captured);

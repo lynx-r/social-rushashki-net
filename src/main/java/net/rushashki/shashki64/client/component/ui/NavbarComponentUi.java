@@ -4,27 +4,22 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.component.NavbarComponent;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.shashki64.client.event.NavbarReloadEvent;
+import net.rushashki.shashki64.client.event.OnGetProfileEvent;
+import net.rushashki.shashki64.client.event.OnNavbarReloadEvent;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.client.place.PlayLentaPlace;
 import net.rushashki.shashki64.client.place.PlayPlace;
 import net.rushashki.shashki64.client.place.SignInPlace;
-import net.rushashki.shashki64.client.rpc.ProfileService;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.shashki64.shared.model.Shashist;
-import org.gwtbootstrap3.client.ui.AnchorListItem;
-import org.gwtbootstrap3.client.ui.Navbar;
-import org.gwtbootstrap3.client.ui.NavbarNav;
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.IconType;
-
-import javax.inject.Inject;
+import org.gwtbootstrap3.client.ui.constants.Toggle;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,7 +45,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
   private AnchorListItem profileLink;
   private ProfileServiceAsync profileService;
 
-  public NavbarComponentUi(Shashist shashist) {
+  public NavbarComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.constants = shashkiGinjector.getShashkiConstants();
@@ -58,7 +53,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     this.eventBus = shashkiGinjector.getEventBus();
     this.profileService = shashkiGinjector.getProfileService();
 
-    eventBus.addHandler(NavbarReloadEvent.TYPE, event -> setActive(event.getToken()));
+    eventBus.addHandler(OnNavbarReloadEvent.TYPE, event -> setActive(event.getToken()));
 
     homeLink = new AnchorListItem(constants.home());
     homeLink.setIcon(IconType.HOME);
@@ -87,27 +82,44 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     });
     navLeft.add(playLink);
 
-    if (shashist != null) {
-      profileLink = new AnchorListItem(shashist.getFirstName() + " " + shashist.getLastName());
-      profileLink.setIcon(IconType.USER);
-      profileLink.addClickHandler(event -> {
-        disableLink(prevActiveLink);
-        prevActiveLink = profileLink;
-        placeController.goTo(new HomePlace(constants.homeToken()));
-      });
+    eventBus.addHandler(OnGetProfileEvent.TYPE, profileEvent -> {
+      Shashist shashist = profileEvent.getProfile();
+      if (shashist != null) {
+        profileLink = new AnchorListItem(constants.myPage());
+        profileLink.setIcon(IconType.CIRCLE_THIN);
+        profileLink.addClickHandler(event -> {
+          disableLink(prevActiveLink);
+          prevActiveLink = profileLink;
+          placeController.goTo(new HomePlace(constants.homeToken()));
+        });
 
-      navRight.add(profileLink);
-    } else {
-      signInLink = new AnchorListItem(constants.login());
-      signInLink.setIcon(IconType.SIGN_IN);
-      signInLink.addClickHandler(event -> {
-        disableLink(prevActiveLink);
-        prevActiveLink = signInLink;
-        placeController.goTo(new SignInPlace(constants.signInToken()));
-      });
+        AnchorListItem logoutLink = new AnchorListItem("Выход");
+        logoutLink.setHref("/logout");
 
-      navRight.add(signInLink);
-    }
+        AnchorListItem profileDropDown = new AnchorListItem(shashist.getName());
+        profileDropDown.setIcon(IconType.USER);
+        profileDropDown.setDataToggle(Toggle.DROPDOWN);
+
+        DropDownMenu dropDownMenu = new DropDownMenu();
+        dropDownMenu.add(profileLink);
+        dropDownMenu.add(new Divider());
+        dropDownMenu.add(logoutLink);
+
+        profileDropDown.add(dropDownMenu);
+
+        navRight.add(profileDropDown);
+      } else {
+        signInLink = new AnchorListItem(constants.login());
+        signInLink.setIcon(IconType.SIGN_IN);
+        signInLink.addClickHandler(event -> {
+          disableLink(prevActiveLink);
+          prevActiveLink = signInLink;
+          placeController.goTo(new SignInPlace(constants.signInToken()));
+        });
+
+        navRight.add(signInLink);
+      }
+    });
   }
 
   private void setActive(String token) {

@@ -9,10 +9,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.activity.AppActivityMapper;
 import net.rushashki.shashki64.client.component.ui.FooterComponentUi;
 import net.rushashki.shashki64.client.component.ui.NavbarComponentUi;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.shashki64.client.event.OnGetProfileEvent;
 import net.rushashki.shashki64.client.page.BasePage;
 import net.rushashki.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.shashki64.client.place.AppPlaceHistoryMapper;
@@ -34,11 +36,13 @@ public class Shashki64 implements EntryPoint {
   private HomePlace defaultPlace = new HomePlace("Home");
 
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
+  private EventBus eventBus;
   private ProfileServiceAsync profileService;
   private BasePage appWidget = new BasePageUi();
 
   public void onModuleLoad() {
     this.profileService = shashkiGinjector.getProfileService();
+    this.eventBus = shashkiGinjector.getEventBus();
 
     splashImage = new Image(Resources.INSTANCE.images().loadIconImage().getSafeUri());
     splashImage.addStyleName("loader-image");
@@ -52,6 +56,12 @@ public class Shashki64 implements EntryPoint {
     PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
     historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
+    RootPanel.get("content").remove(splashImage);
+
+    RootPanel.get("navigation").add(new NavbarComponentUi());
+    RootPanel.get("content").add((IsWidget) appWidget);
+    RootPanel.get("footer").add(new FooterComponentUi());
+
     profileService.getProfile(new AsyncCallback<Shashist>() {
       @Override
       public void onFailure(Throwable throwable) {
@@ -60,11 +70,7 @@ public class Shashki64 implements EntryPoint {
 
       @Override
       public void onSuccess(Shashist shashist) {
-        RootPanel.get("content").remove(splashImage);
-
-        RootPanel.get("navigation").add(new NavbarComponentUi(shashist));
-        RootPanel.get("content").add((IsWidget) appWidget);
-        RootPanel.get("footer").add(new FooterComponentUi());
+        eventBus.fireEvent(new OnGetProfileEvent(shashist));
       }
     });
 

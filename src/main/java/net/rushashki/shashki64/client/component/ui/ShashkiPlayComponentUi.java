@@ -45,8 +45,9 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     shashkiColumn.setWidth(shashkiSide + "px");
 
     lienzoPanel = new LienzoPanel(shashkiSide, shashkiSide);
+    int lienzoSide = lienzoPanel.getHeight() - 20;
     BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
-        lienzoPanel.getHeight(), lienzoPanel.getHeight() - 30,
+        lienzoSide, lienzoSide - 30,
         8, 8);
     lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
     shashki.add(lienzoPanel);
