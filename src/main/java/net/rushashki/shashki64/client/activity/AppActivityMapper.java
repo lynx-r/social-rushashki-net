@@ -25,6 +25,8 @@ public class AppActivityMapper implements ActivityMapper {
       return new SignInActivity((SignInPlace) place);
     } else if (place instanceof ProfilePlace) {
       return new ProfileActivity((ProfilePlace) place);
+    } else if (place instanceof SettingsPlace) {
+      return new SettingsActivity((SettingsPlace) place);
     }
     return null;
   }

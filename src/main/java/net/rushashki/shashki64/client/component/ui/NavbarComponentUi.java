@@ -40,7 +40,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
   private AnchorListItem signInLink;
   private AnchorListItem playLentaLink;
   private AnchorListItem profileLink;
-  private AnchorListItem userSettingsLink;
+  private AnchorListItem settingsLink;
   private ProfileServiceAsync profileService;
 
   public NavbarComponentUi() {
@@ -91,15 +91,15 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
           placeController.goTo(new ProfilePlace(constants.profileToken()));
         });
 
-        userSettingsLink = new AnchorListItem(constants.settings());
-        userSettingsLink.setIcon(IconType.COG);
-        userSettingsLink.addClickHandler(event -> {
+        settingsLink = new AnchorListItem(constants.settings());
+        settingsLink.setIcon(IconType.COG);
+        settingsLink.addClickHandler(event -> {
           disableLink(prevActiveLink);
-          prevActiveLink = userSettingsLink;
-          placeController.goTo(new HomePlace(constants.homeToken()));
+          prevActiveLink = settingsLink;
+          placeController.goTo(new SettingsPlace(constants.settingsToken()));
         });
 
-        AnchorListItem logoutLink = new AnchorListItem("Выход");
+        AnchorListItem logoutLink = new AnchorListItem(constants.logout());
         logoutLink.setHref("/logout");
 
         AnchorListItem profileDropDown = new AnchorListItem(shashist.getName());
@@ -108,7 +108,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
 
         DropDownMenu dropDownMenu = new DropDownMenu();
         dropDownMenu.add(profileLink);
-        dropDownMenu.add(userSettingsLink);
+        dropDownMenu.add(settingsLink);
         dropDownMenu.add(new Divider());
         dropDownMenu.add(logoutLink);
 
@@ -116,7 +116,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
 
         navRight.add(profileDropDown);
       } else {
-        signInLink = new AnchorListItem(constants.login());
+        signInLink = new AnchorListItem(constants.signIn());
         signInLink.setIcon(IconType.SIGN_IN);
         signInLink.addClickHandler(event -> {
           disableLink(prevActiveLink);
@@ -141,6 +141,8 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         prevActiveLink = signInLink;
       } else if (token.equals(constants.profileToken())) {
         prevActiveLink = profileLink;
+      } else if (token.equals(constants.settingsToken())) {
+        prevActiveLink = settingsLink;
       } else {
         prevActiveLink = homeLink;
       }

@@ -20,9 +20,11 @@ public interface ShashkiConstants extends Constants {
 
   String unrecognizedPlace();
 
-  String login();
+  String signIn();
 
   String signInToken();
+
+  String logout();
 
   String jumbotronGreeting();
 
@@ -39,5 +41,7 @@ public interface ShashkiConstants extends Constants {
   String myPage();
 
   String settings();
+
+  String settingsToken();
 
 }
