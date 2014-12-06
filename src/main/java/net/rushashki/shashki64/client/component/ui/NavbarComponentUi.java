@@ -163,12 +163,23 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         prevActiveLink = homeLink;
       }
     }
+    if (prevActiveLink == profileLink || prevActiveLink == settingsLink) {
+      activateLink(profileDropDown);
+    } else {
+      disableLink(profileDropDown);
+    }
     prevActiveLink.setActive(true);
   }
 
   private void disableLink(AnchorListItem link) {
     if (link != null) {
       link.setActive(false);
+    }
+  }
+
+  private void activateLink(AnchorListItem link) {
+    if (link != null) {
+      link.setActive(true);
     }
   }
 
