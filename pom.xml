@@ -309,7 +309,7 @@
                     <!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
                     <compileReport>true</compileReport>
                     <compilerMetrics>true</compilerMetrics>
-                    <module>net.rushashki.shashki64.Shashki64</module>
+                    <module>net.rushashki.social.Shashki64</module>
                     <logLevel>INFO</logLevel>
                     <!--<style>${gwt.style}</style>-->
 
