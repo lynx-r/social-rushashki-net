@@ -9,6 +9,7 @@
             padding-top: 20px;
             padding-bottom: 15px;
             padding-left: 10px;
+            position: relative;
         }
 
         .block {
@@ -20,6 +21,8 @@
         }
 
         .sidebar-column {
+            position: relative;
+            height: 100%;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main-view}">

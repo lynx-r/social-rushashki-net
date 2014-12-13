@@ -16,7 +16,7 @@ import net.rushashki.shashki64.client.view.BasicView;
  */
 public class BasicActivity extends AbstractActivity {
 
-  private final com.google.web.bindery.event.shared.EventBus eventBus;
+  protected final com.google.web.bindery.event.shared.EventBus eventBus;
   protected ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   protected String token;
   protected PlaceController placeController;

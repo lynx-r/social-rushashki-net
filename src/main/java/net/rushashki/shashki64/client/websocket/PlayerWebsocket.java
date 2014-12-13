@@ -7,6 +7,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.event.OnGetPlayerListEvent;
+import net.rushashki.shashki64.client.event.OnWebsocketPlayerMessageEvent;
 import net.rushashki.shashki64.client.util.ShashkiLogger;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.shashki64.shared.model.Shashist;
@@ -26,7 +27,7 @@ import java.util.logging.Level;
  * Date: 07.12.14
  * Time: 11:39
  */
-public class PlayerWebSocket extends WebSocketListenerAdapter {
+public class PlayerWebsocket extends WebSocketListenerAdapter {
   private final ShashkiLogger logger;
   private WebSocket webSocket;
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
@@ -35,7 +36,7 @@ public class PlayerWebSocket extends WebSocketListenerAdapter {
   private Shashist player;
   private final String PLAYER_WEBSOCKET_URL = "ws://localhost:8080/ws/echo";
 
-  public PlayerWebSocket(Shashist shashist) {
+  public PlayerWebsocket(Shashist shashist) {
     this.player = shashist;
     this.webSocket = WebSocket.newWebSocketIfSupported();
     this.constants = shashkiGinjector.getShashkiConstants();
@@ -49,6 +50,15 @@ public class PlayerWebSocket extends WebSocketListenerAdapter {
 
     webSocket.setListener(this);
     webSocket.connect(PLAYER_WEBSOCKET_URL);
+
+    eventBus.addHandler(OnWebsocketPlayerMessageEvent.TYPE, (event) -> {
+      PlayerMessage playerMessage = event.getPlayerMessage();
+
+      MessageFactory chatFactory = GWT.create(MessageFactory.class);
+      AutoBean<PlayerMessage> bean = chatFactory.create(PlayerMessage.class, playerMessage);
+      String message = AutoBeanCodex.encode(bean).getPayload();
+      webSocket.send(message);
+    });
   }
 
   @Override
@@ -86,6 +96,9 @@ public class PlayerWebSocket extends WebSocketListenerAdapter {
 
   @Override
   public void onClose(@Nonnull WebSocket webSocket, boolean wasClean, int code, String reason) {
+    if (!webSocket.isConnected()) {
+      return;
+    }
     PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
     try {
       playerMessage.setSender(player);

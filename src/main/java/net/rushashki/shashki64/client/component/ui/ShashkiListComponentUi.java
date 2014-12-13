@@ -32,7 +32,7 @@ public class ShashkiListComponentUi extends Composite {
     List<ShashkiViewComponentUi> plays = new ArrayList<>();
 
     PlayDto playDto;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 4; i++) {
       playDto = new PlayDto("test" + i, "master" + i, "bachelor" + i);
       ShashkiViewComponentUi shashkiViewComponentUi = new ShashkiViewComponentUi(playDto);
       plays.add(shashkiViewComponentUi);

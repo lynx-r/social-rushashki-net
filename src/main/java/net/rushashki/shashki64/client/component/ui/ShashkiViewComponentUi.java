@@ -9,7 +9,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import net.rushashki.shashki64.client.event.OnGetProfileEvent;
+import net.rushashki.shashki64.shared.model.Shashist;
 import net.rushashki.shashki64.shared.model.dto.PlayDto;
 import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
 
@@ -19,9 +24,10 @@ import net.rushashki.shashki64.shashki.BoardBackgroundLayer;
  * Date: 29.11.14
  * Time: 0:38
  */
-public class ShashkiViewComponentUi extends Composite implements ClickHandler {
+public class ShashkiViewComponentUi extends BasicComponent implements ClickHandler {
   private static ShashkiUiBinder ourUiBinder = GWT.create(ShashkiUiBinder.class);
-  private final LienzoPanel lienzoPanel;
+  private LienzoPanel lienzoPanel;
+  private Shashist player;
 
   @UiField
   HTMLPanel shashki;
@@ -61,12 +67,24 @@ public class ShashkiViewComponentUi extends Composite implements ClickHandler {
 
     lienzoPanel.addClickHandler(this);
 
-    Scheduler.get().scheduleFinally(() -> {
+    eventBus.addHandler(OnGetProfileEvent.TYPE, (event) -> {
+      this.player = event.getProfile();
       sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
       sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
       // 20 текст Нотация
       notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
     });
+
+    if (player == null) {
+      Scheduler.get().scheduleFinally(() -> {
+        if (this.getOffsetWidth() > 0) {
+          sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
+          sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
+          // 20 текст Нотация
+          notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
+        }
+      });
+    }
   }
 
   @Override

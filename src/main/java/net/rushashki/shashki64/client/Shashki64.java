@@ -20,7 +20,7 @@ import net.rushashki.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
-import net.rushashki.shashki64.client.websocket.PlayerWebSocket;
+import net.rushashki.shashki64.client.websocket.PlayerWebsocket;
 import net.rushashki.shashki64.shared.model.Shashist;
 import net.rushashki.shashki64.shared.resources.Resources;
 
@@ -71,11 +71,11 @@ public class Shashki64 implements EntryPoint {
       @Override
       public void onSuccess(Shashist shashist) {
         if (shashist != null) {
-          new PlayerWebSocket(shashist);
+          new PlayerWebsocket(shashist);
         }
-        eventBus.fireEvent(new OnGetProfileEvent(shashist));
-
         RootPanel.get("content").add((IsWidget) appWidget);
+
+        eventBus.fireEvent(new OnGetProfileEvent(shashist));
       }
     });
 
