@@ -36,7 +36,7 @@ public class PlayerWebSocket {
   private ShashistService shashistService;
 
   private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
-  private long MAX_IDLE_TIMEOUT = 1000 * 60 * 1;
+  private long MAX_IDLE_TIMEOUT = 1000 * 10 * 1;
 
   @OnOpen
   public void onOpen(Session session) {
@@ -61,8 +61,19 @@ public class PlayerWebSocket {
   }
 
   private void handleDisconnectPlayer(PlayerMessage message) {
-    peers.remove(message.getSender());
+    Shashist shashist = message.getSender();
+
+    ShashistEntity shashistEntity = shashistService.find(shashist.getId());
+    shashistEntity.setPlaying(false);
+    shashistEntity.setOnline(false);
+    shashistService.edit(shashistEntity);
+
+    shashistEntity.setPlaying(false);
+    shashistEntity.setOnline(false);
+
     updatePlayerList();
+
+    peers.remove(shashist);
   }
 
   private void handleNewPlayer(PlayerMessage message, Session session) {
@@ -96,8 +107,9 @@ public class PlayerWebSocket {
     shashist.setOnline(false);
     shashist.setPlaying(false);
 
-    peers.values().remove(session);
     updatePlayerList();
+
+    peers.values().remove(session);
   }
 
   private void handleUpdatePlayerList() {
@@ -114,7 +126,9 @@ public class PlayerWebSocket {
     MessageFactory messageFactory = AutoBeanFactorySource.create(MessageFactory.class);
     PlayerMessage playerMessage = messageFactory.playerMessage().as();
     playerMessage.setType(PlayerMessage.MessageType.USER_LIST_UPDATE);
+
     playerMessage.setPlayerList(new ArrayList<>(peers.keySet()));
+
     for (Session peer : peers.values()) {
       sendMessage(peer, playerMessage);
     }
