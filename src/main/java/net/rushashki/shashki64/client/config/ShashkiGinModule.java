@@ -38,6 +38,7 @@ public class ShashkiGinModule extends AbstractGinModule {
     bind(SignInView.class).to(SignInViewUi.class).in(Singleton.class);
     bind(ProfileView.class).to(ProfileViewUi.class).in(Singleton.class);
     bind(SettingsView.class).to(SettingsViewUi.class).in(Singleton.class);
+    bind(NotFoundView.class).to(NotFoundViewUi.class).in(Singleton.class);
 
     bind(ProfileServiceAsync.class).in(Singleton.class);
   }

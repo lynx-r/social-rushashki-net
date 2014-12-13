@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import net.rushashki.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.shashki64.client.event.OnNavbarReloadEvent;
 import net.rushashki.shashki64.client.view.BasicView;
+import net.rushashki.shashki64.shared.locale.ShashkiConstants;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,11 +22,13 @@ public class BasicActivity extends AbstractActivity {
   protected String token;
   protected PlaceController placeController;
   protected BasicView view;
+  protected ShashkiConstants constants;
 
   public BasicActivity(String token) {
     this.token = token;
     this.eventBus = shashkiGinjector.getEventBus();
     this.placeController = shashkiGinjector.getPlaceController();
+    this.constants = shashkiGinjector.getShashkiConstants();
   }
 
   @Override

@@ -52,6 +52,9 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
     webSocket.connect(PLAYER_WEBSOCKET_URL);
 
     eventBus.addHandler(OnWebsocketPlayerMessageEvent.TYPE, (event) -> {
+      if (!webSocket.isConnected()) {
+        return;
+      }
       PlayerMessage playerMessage = event.getPlayerMessage();
 
       MessageFactory chatFactory = GWT.create(MessageFactory.class);
@@ -96,9 +99,6 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
 
   @Override
   public void onClose(@Nonnull WebSocket webSocket, boolean wasClean, int code, String reason) {
-    if (!webSocket.isConnected()) {
-      return;
-    }
     PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
     try {
       playerMessage.setSender(player);

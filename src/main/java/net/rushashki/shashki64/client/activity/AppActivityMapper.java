@@ -47,7 +47,7 @@ public class AppActivityMapper implements ActivityMapper {
         return new SettingsActivity((SettingsPlace) place);
       }
     }
-    return null;
+    return new NotFoundActivity();
   }
 
 }

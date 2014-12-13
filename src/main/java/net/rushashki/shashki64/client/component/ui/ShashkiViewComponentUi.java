@@ -69,26 +69,27 @@ public class ShashkiViewComponentUi extends BasicComponent implements ClickHandl
 
     eventBus.addHandler(OnGetProfileEvent.TYPE, (event) -> {
       this.player = event.getProfile();
-      sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
-      sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
-      // 20 текст Нотация
-      notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
+      alignNotationPanel(shashkiSide);
     });
 
     if (player == null) {
       Scheduler.get().scheduleFinally(() -> {
-        if (this.getOffsetWidth() > 0) {
-          sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
-          sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
-          // 20 текст Нотация
-          notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
-        }
+          alignNotationPanel(shashkiSide);
       });
     }
   }
 
+  private void alignNotationPanel(int shashkiSide) {
+    if (this.getOffsetWidth() > 0) {
+      sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
+      sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
+      // 20 текст Нотация
+      notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
+    }
+  }
+
   @Override
-  public void onClick(ClickEvent clickEvent) {
+  public void onClick(ClickEvent clickEvent){
     INSTANCE.removeStyleName("focused");
     addStyleName("focused");
     RootPanel.get().getElement().setScrollTop(this.getElement().getAbsoluteTop() - 50);

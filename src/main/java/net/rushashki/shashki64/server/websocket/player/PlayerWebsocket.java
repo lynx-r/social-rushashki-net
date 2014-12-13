@@ -36,7 +36,7 @@ public class PlayerWebsocket {
   private ShashistService shashistService;
 
   private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
-  private long MAX_IDLE_TIMEOUT = 1000 * 60 * 1;
+  private long MAX_IDLE_TIMEOUT = 1000 * 30 * 1;
 
   @OnOpen
   public void onOpen(Session session) {
@@ -72,7 +72,6 @@ public class PlayerWebsocket {
     shashist.setPlaying(false);
 
     updatePlayerList();
-
     peers.remove(message.getSender());
   }
 
@@ -107,9 +106,8 @@ public class PlayerWebsocket {
     shashist.setOnline(false);
     shashist.setPlaying(false);
 
-    updatePlayerList();
-
     peers.values().remove(session);
+    updatePlayerList();
   }
 
   private void handleUpdatePlayerList() {

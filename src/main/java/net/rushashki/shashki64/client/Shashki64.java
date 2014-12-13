@@ -57,8 +57,6 @@ public class Shashki64 implements EntryPoint {
     PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
     historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
-    RootPanel.get("content").remove(splashImage);
-
     RootPanel.get("navigation").add(new NavbarComponentUi());
     RootPanel.get("footer").add(new FooterComponentUi());
 
@@ -70,15 +68,16 @@ public class Shashki64 implements EntryPoint {
 
       @Override
       public void onSuccess(Shashist shashist) {
+        RootPanel.get("content").remove(splashImage);
+
+        RootPanel.get("content").add((IsWidget) appWidget);
+        eventBus.fireEvent(new OnGetProfileEvent(shashist));
+        historyHandler.handleCurrentHistory();
+
         if (shashist != null) {
           new PlayerWebsocket(shashist);
         }
-        RootPanel.get("content").add((IsWidget) appWidget);
-
-        eventBus.fireEvent(new OnGetProfileEvent(shashist));
       }
     });
-
-    historyHandler.handleCurrentHistory();
   }
 }

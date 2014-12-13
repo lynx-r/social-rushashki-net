@@ -7,10 +7,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.shashki64.client.util.ShashkiLogger;
-import net.rushashki.shashki64.client.view.PlayLentaView;
-import net.rushashki.shashki64.client.view.ProfileView;
-import net.rushashki.shashki64.client.view.SettingsView;
-import net.rushashki.shashki64.client.view.SignInView;
+import net.rushashki.shashki64.client.view.*;
 import net.rushashki.shashki64.client.view.ui.HomeViewUi;
 import net.rushashki.shashki64.client.view.ui.PlayViewUi;
 import net.rushashki.shashki64.shared.locale.ShashkiConstants;
@@ -46,6 +43,8 @@ public interface ShashkiGinjector extends Ginjector {
   ProfileView getProfileView();
 
   SettingsView getSettingsView();
+
+  NotFoundView getNotFoundView();
 
 
   ProfileServiceAsync getProfileService();

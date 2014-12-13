@@ -3,6 +3,7 @@ package net.rushashki.shashki64.client.component.ui;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -48,18 +49,20 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   private LienzoPanel lienzoPanel;
   private Shashist player;
   private CellList<Shashist> playersCellList;
+  private NotationPanel notationPanel;
 
   public ShashkiPlayComponentUi() {
     initWidget(ourUiBinder.createAndBindUi(this));
     initLienzoPanel();
     initNotationPanel();
-    initCellList();
-
 
     eventBus.addHandler(OnGetProfileEvent.TYPE, event -> {
       player = event.getProfile();
+      alignNotationPanel();
     });
+
     eventBus.addHandler(OnGetPlayerListEvent.TYPE, event -> {
+      initCellList();
       playersCellList.setRowData(event.getPlayerList());
     });
   }
@@ -82,20 +85,23 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   }
 
   private void initNotationPanel() {
-    NotationPanel notationPanel = new NotationPanel();
+    notationPanel = new NotationPanel();
     notationList.add(notationPanel);
 
-//    Scheduler.get().scheduleFinally(new Command() {
-//      @Override
-//      public void execute() {
-//        // 81 - отступы
-//        int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
-//            - playerListColumn.getOffsetWidth() - 81;
-//        privateChatColumn.setWidth(side + "px");
-//        String notationHeight = lienzoPanel.getHeight() - 50 + "px";
-//        notationPanel.setHeight(notationHeight);
-//      }
-//    });
+    if (player == null) {
+      Scheduler.get().scheduleFinally(this::alignNotationPanel);
+    }
+  }
+
+  private void alignNotationPanel() {
+    if (Window.getClientWidth() > 0) {
+      // 81 - отступы
+      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
+          - playerListColumn.getOffsetWidth() - 81;
+      privateChatColumn.setWidth(side + "px");
+      String notationHeight = lienzoPanel.getHeight() - 50 + "px";
+      notationPanel.setHeight(notationHeight);
+    }
   }
 
   private void initCellList() {
@@ -105,21 +111,25 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         if (value != null) {
           if (value.isLoggedIn()) {
             Image img;
-            String playerName = value.getPublicName();
-            if (value.isPlaying()) {
-              img = new Image(Resources.INSTANCE.images().playingIconImage().getSafeUri());
-              img.setTitle(playerName + " играет");
+            String playerPublicName = value.getPublicName();
+            if (player.getPublicName().equals(playerPublicName)) {
+              sb.appendEscaped(playerPublicName);
             } else {
-              if (value.isOnline()) {
-                img = new Image(Resources.INSTANCE.images().onlineIconImage().getSafeUri());
-                img.setTitle(playerName + " в сети");
+              if (value.isPlaying()) {
+                img = new Image(Resources.INSTANCE.images().playingIconImage().getSafeUri());
+                img.setTitle(playerPublicName + " играет");
               } else {
-                img = new Image(Resources.INSTANCE.images().offlineIconImage().getSafeUri());
-                img.setTitle(playerName + " не в сети");
+                if (value.isOnline()) {
+                  img = new Image(Resources.INSTANCE.images().onlineIconImage().getSafeUri());
+                  img.setTitle(playerPublicName + " в сети");
+                } else {
+                  img = new Image(Resources.INSTANCE.images().offlineIconImage().getSafeUri());
+                  img.setTitle(playerPublicName + " не в сети");
+                }
               }
+              sb.appendHtmlConstant(img.getElement().getString());
+              sb.appendEscaped(" " + playerPublicName);
             }
-            sb.appendHtmlConstant(img.getElement().getString());
-            sb.appendEscaped(" " + playerName);
           }
         }
       }
