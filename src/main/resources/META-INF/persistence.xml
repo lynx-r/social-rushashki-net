@@ -7,8 +7,8 @@
         <jta-data-source>java:jboss/datasources/ShashkiDS</jta-data-source>
 
         <class>net.rushashki.shashki64.shared.model.Message</class>
-        <class>net.rushashki.shashki64.shared.model.Shashist</class>
-        <class>net.rushashki.shashki64.shared.model.Friend</class>
+        <class>net.rushashki.shashki64.shared.model.ShashistEntity</class>
+        <class>net.rushashki.shashki64.shared.model.FriendEntity</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>

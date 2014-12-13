@@ -1,6 +1,6 @@
 package net.rushashki.shashki64.server.dao;
 
-import net.rushashki.shashki64.shared.model.GwtPersistableObject;
+import net.rushashki.shashki64.shared.model.PersistableObject;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 15.11.14
  * Time: 16:58
  */
-public interface Dao<E extends GwtPersistableObject> {
+public interface Dao<E extends PersistableObject> {
   public void create(E entity);
 
   public void edit(E entity);

@@ -44,4 +44,5 @@ public interface ShashkiConstants extends Constants {
 
   String settingsToken();
 
+  String webSocketDoesNotSupport();
 }

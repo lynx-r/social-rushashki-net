@@ -1,7 +1,7 @@
 package net.rushashki.shashki64.server.dao.impl;
 
 import net.rushashki.shashki64.server.dao.ShashistDao;
-import net.rushashki.shashki64.shared.model.Shashist;
+import net.rushashki.shashki64.shared.model.ShashistEntity;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -16,13 +16,13 @@ import java.util.List;
  * Time: 0:19
  */
 @Stateless
-public class ShashistDaoImpl extends DaoImpl<Shashist> implements ShashistDao {
+public class ShashistDaoImpl extends DaoImpl<ShashistEntity> implements ShashistDao {
 
   @Inject
   private EntityManager entityManager;
 
   public ShashistDaoImpl() {
-    super(Shashist.class);
+    super(ShashistEntity.class);
   }
 
   @Override
@@ -31,21 +31,22 @@ public class ShashistDaoImpl extends DaoImpl<Shashist> implements ShashistDao {
   }
 
   @Override
-  public Shashist findByVkUid(String uid) {
-    Query query = getEntityManager().createQuery("FROM Shashist WHERE vkUid = :vkUid");
+  public ShashistEntity findByVkUid(String uid) {
+    Query query = getEntityManager().createQuery("FROM ShashistEntity WHERE vkUid = :vkUid");
     query.setParameter("vkUid", uid);
-    return (Shashist) query.getSingleResult();
+    List list = query.getResultList();
+    return list.isEmpty() ? null : (ShashistEntity) list.get(0);
   }
 
   @Override
-  public Shashist findBySessionId(String sessionId) {
-    Query query = getEntityManager().createQuery("FROM Shashist WHERE sessionId = :sessionId");
+  public ShashistEntity findBySessionId(String sessionId) {
+    Query query = getEntityManager().createQuery("FROM ShashistEntity WHERE sessionId = :sessionId");
     query.setParameter("sessionId", sessionId);
     List result = query.getResultList();
     if (result.isEmpty()) {
       return null;
     }
-    return (Shashist) result.get(0);
+    return (ShashistEntity) result.get(0);
   }
 
 }

@@ -1,7 +1,7 @@
 package net.rushashki.shashki64.server.service;
 
 import net.rushashki.shashki64.server.dao.Dao;
-import net.rushashki.shashki64.shared.model.GwtPersistableObject;
+import net.rushashki.shashki64.shared.model.PersistableObject;
 
 import javax.ejb.Stateless;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * Time: 0:07
  */
 @Stateless
-public abstract class BaseService<E extends GwtPersistableObject> {
+public abstract class BaseService<E extends PersistableObject> {
   protected abstract Dao<E> getDao();
 
   public void create(E entity) {

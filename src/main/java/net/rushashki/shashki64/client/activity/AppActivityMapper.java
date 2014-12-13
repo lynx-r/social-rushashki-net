@@ -3,7 +3,11 @@ package net.rushashki.shashki64.client.activity;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
+import com.google.web.bindery.event.shared.EventBus;
+import net.rushashki.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.shashki64.client.event.OnGetProfileEvent;
 import net.rushashki.shashki64.client.place.*;
+import net.rushashki.shashki64.shared.model.Shashist;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,21 +17,37 @@ import net.rushashki.shashki64.client.place.*;
  */
 public class AppActivityMapper implements ActivityMapper {
 
+  private Shashist player;
+  private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
+  private EventBus eventBus;
+
+  public AppActivityMapper() {
+    this.eventBus = shashkiGinjector.getEventBus();
+
+    eventBus.addHandler(OnGetProfileEvent.TYPE, (player) -> {
+      this.player = player.getProfile();
+    });
+  }
+
   @Override
   public Activity getActivity(Place place) {
     if (place instanceof HomePlace) {
       return new HomeActivity((HomePlace) place);
     } else if (place instanceof PlayLentaPlace) {
       return new PlayLentaActivity((PlayLentaPlace) place);
-    } else if (place instanceof PlayPlace) {
-      return new PlayActivity((PlayPlace) place);
     } else if (place instanceof SignInPlace) {
       return new SignInActivity((SignInPlace) place);
-    } else if (place instanceof ProfilePlace) {
-      return new ProfileActivity((ProfilePlace) place);
-    } else if (place instanceof SettingsPlace) {
-      return new SettingsActivity((SettingsPlace) place);
+    }
+    if (player != null) {
+      if (place instanceof PlayPlace) {
+        return new PlayActivity((PlayPlace) place);
+      } else if (place instanceof ProfilePlace) {
+        return new ProfileActivity((ProfilePlace) place);
+      } else if (place instanceof SettingsPlace) {
+        return new SettingsActivity((SettingsPlace) place);
+      }
     }
     return null;
   }
+
 }

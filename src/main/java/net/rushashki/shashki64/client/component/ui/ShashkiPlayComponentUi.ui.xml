@@ -40,7 +40,7 @@
             <b:Button ui:field="playButton" icon="PLAY">
                 <ui:msg description="Играть" key="playButton">Играть</ui:msg>
             </b:Button>
-            <g:ScrollPanel ui:field="playerList"/>
+            <g:ScrollPanel ui:field="playerPanel"/>
             <b:InputGroup>
                 <b:InputGroupAddon icon="SEARCH"/>
                 <b:TextBox placeholder="Поиск игроков" autoComplete="true"/>

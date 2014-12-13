@@ -8,6 +8,12 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+import net.rushashki.shashki64.shared.websocket.message.MessageFactory;
+import net.rushashki.shashki64.shared.websocket.message.PlayerMessage;
 
 import java.io.*;
 
@@ -39,4 +45,17 @@ public class Util {
     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
     return bufferedReader.readLine();
   }
+
+  public static String serializePlayerMessageToJson(PlayerMessage message) {
+    // Retrieve the AutoBean controller
+    AutoBean<PlayerMessage> bean = AutoBeanUtils.getAutoBean(message);
+    return AutoBeanCodex.encode(bean).getPayload();
+  }
+
+  public static PlayerMessage deserializeFromJson(String json) {
+    MessageFactory messageFactory = AutoBeanFactorySource.create(MessageFactory.class);
+    AutoBean<PlayerMessage> playerMessageBean = AutoBeanCodex.decode(messageFactory, PlayerMessage.class, json);
+    return playerMessageBean.as();
+  }
+
 }

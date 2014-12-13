@@ -20,6 +20,7 @@ import net.rushashki.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.shashki64.client.place.HomePlace;
 import net.rushashki.shashki64.client.rpc.ProfileServiceAsync;
+import net.rushashki.shashki64.client.websocket.PlayerWebSocket;
 import net.rushashki.shashki64.shared.model.Shashist;
 import net.rushashki.shashki64.shared.resources.Resources;
 
@@ -59,7 +60,6 @@ public class Shashki64 implements EntryPoint {
     RootPanel.get("content").remove(splashImage);
 
     RootPanel.get("navigation").add(new NavbarComponentUi());
-    RootPanel.get("content").add((IsWidget) appWidget);
     RootPanel.get("footer").add(new FooterComponentUi());
 
     profileService.getProfile(new AsyncCallback<Shashist>() {
@@ -70,7 +70,12 @@ public class Shashki64 implements EntryPoint {
 
       @Override
       public void onSuccess(Shashist shashist) {
+        if (shashist != null) {
+          new PlayerWebSocket(shashist);
+        }
         eventBus.fireEvent(new OnGetProfileEvent(shashist));
+
+        RootPanel.get("content").add((IsWidget) appWidget);
       }
     });
 

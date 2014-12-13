@@ -1,5 +1,9 @@
 package net.rushashki.shashki64.server.servlet;
 
+import net.rushashki.shashki64.server.service.ShashistService;
+import net.rushashki.shashki64.shared.model.ShashistEntity;
+
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +20,16 @@ import java.io.IOException;
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/logout"})
 public class LogoutServlet extends HttpServlet {
 
+  @Inject
+  private ShashistService shashistService;
+
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    ShashistEntity shashistEntity = shashistService.findBySessionId(request.getSession().getId());
+    shashistEntity.setOnline(false);
+    shashistEntity.setPlaying(false);
+    shashistEntity.setOnline(false);
+    shashistService.edit(shashistEntity);
+
     request.getSession().invalidate();
     response.sendRedirect("/");
   }

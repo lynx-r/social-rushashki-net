@@ -17,7 +17,7 @@ import javax.persistence.*;
     @AssociationOverride(name = "pk.friend", joinColumns = @JoinColumn(name = "friend_id", insertable = false, updatable = false)),
     @AssociationOverride(name = "pk.friendOf", joinColumns = @JoinColumn(name = "friend_of_id", insertable = false, updatable = false)) })
 //@EqualsAndHashCode(of = { "pk", "amount" }, callSuper = false)
-public class Friend {
+public class FriendEntity {
 
   @EmbeddedId
   private FriendId pk = new FriendId();
@@ -29,7 +29,7 @@ public class Friend {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Friend friend = (Friend) o;
+    FriendEntity friend = (FriendEntity) o;
 
     if (favorite != friend.favorite) return false;
     if (!pk.equals(friend.pk)) return false;

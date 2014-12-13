@@ -120,26 +120,20 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     profileDropDown.add(dropDownMenu);
   }
 
-  private void addToNavbarPublicLinks() {
-    navLeft.add(homeLink);
-    navLeft.add(playLentaLink);
-  }
-
-  private void addToNavbarPrivateLinks() {
-    navLeft.add(playLink);
-    navRight.add(profileDropDown);
-  }
-
   private void addEvents() {
     eventBus.addHandler(OnNavbarReloadEvent.TYPE, event -> setActive(event.getToken()));
     eventBus.addHandler(OnGetProfileEvent.TYPE, profileEvent -> {
       Shashist shashist = profileEvent.getProfile();
       if (shashist != null) {
-        addToNavbarPublicLinks();
-        addToNavbarPrivateLinks();
+        navLeft.add(homeLink);
+        navLeft.add(playLentaLink);
+        navLeft.add(playLink);
+        navRight.add(profileDropDown);
         profileDropDown.setIcon(IconType.USER);
         profileDropDown.setText(shashist.getPublicName());
       } else {
+        navLeft.add(homeLink);
+        navLeft.add(playLentaLink);
         navRight.add(signInLink);
       }
     });

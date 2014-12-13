@@ -11,7 +11,7 @@ import javax.persistence.*;
  * Time: 16:03
  */
 @MappedSuperclass
-public class GwtPersistableObject implements IsSerializable {
+public class GwtPersistableObject implements PersistableObject, IsSerializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +20,13 @@ public class GwtPersistableObject implements IsSerializable {
   @Version
   private Integer version;
 
+  @Override
   public Long getId() {
-    return this.id;
+    return id;
   }
 
+  @Override
   public Integer getVersion() {
-    return this.version;
+    return version;
   }
-
 }

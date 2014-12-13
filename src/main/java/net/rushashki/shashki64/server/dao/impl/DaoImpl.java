@@ -1,7 +1,7 @@
 package net.rushashki.shashki64.server.dao.impl;
 
 import net.rushashki.shashki64.server.dao.Dao;
-import net.rushashki.shashki64.shared.model.GwtPersistableObject;
+import net.rushashki.shashki64.shared.model.PersistableObject;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 15.11.14
  * Time: 17:00
  */
-public abstract class DaoImpl<E extends GwtPersistableObject> implements Dao<E> {
+public abstract class DaoImpl<E extends PersistableObject> implements Dao<E> {
   private Class<E> entityClass;
 
   public DaoImpl(Class<E> entityClass) {

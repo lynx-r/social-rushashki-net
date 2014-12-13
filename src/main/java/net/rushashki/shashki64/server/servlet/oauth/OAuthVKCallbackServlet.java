@@ -13,7 +13,7 @@ import net.rushashki.shashki64.server.config.ConfigHelper;
 import net.rushashki.shashki64.server.config.OAuthClient;
 import net.rushashki.shashki64.server.service.ShashistService;
 import net.rushashki.shashki64.server.util.Util;
-import net.rushashki.shashki64.shared.model.Shashist;
+import net.rushashki.shashki64.shared.model.ShashistEntity;
 
 import javax.inject.Inject;
 import javax.json.*;
@@ -61,31 +61,31 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
     JsonNumber uid = array.getJsonNumber("uid");
     String vkUid = uid.toString();
 
-    Shashist shashist = shashistService.findByVkUid(vkUid);
-    if (shashist == null) {
+    ShashistEntity shashistEntity = shashistService.findByVkUid(vkUid);
+    if (shashistEntity == null) {
       JsonString firstName = array.getJsonString("first_name");
       JsonString lastName = array.getJsonString("last_name");
-      shashist = new Shashist();
-      shashist.setVkUid(vkUid);
-      shashist.setFirstName(firstName.getString());
-      shashist.setLastName(lastName.getString());
+      shashistEntity = new ShashistEntity();
+      shashistEntity.setVkUid(vkUid);
+      shashistEntity.setFirstName(firstName.getString());
+      shashistEntity.setLastName(lastName.getString());
     }
 
     HttpSession session = req.getSession();
-    if (shashist.getSessionId() == null
-        || !shashist.getSessionId().equals(session.getId())) {
-      shashist.setSessionId(session.getId());
-      if (shashist.getId() == null) {
-        shashistService.create(shashist);
+    if (shashistEntity.getSessionId() == null
+        || !shashistEntity.getSessionId().equals(session.getId())) {
+      shashistEntity.setSessionId(session.getId());
+      if (shashistEntity.getId() == null) {
+        shashistService.create(shashistEntity);
       } else {
-        shashistService.edit(shashist);
+        shashistService.edit(shashistEntity);
       }
     }
 
     req.getSession().setAttribute("isAuthenticated", true);
     req.getSession().setAttribute("authProvider", "vk");
-    req.getSession().setAttribute("firstName", shashist.getFirstName());
-    req.getSession().setAttribute("lastName", shashist.getLastName());
+    req.getSession().setAttribute("firstName", shashistEntity.getFirstName());
+    req.getSession().setAttribute("lastName", shashistEntity.getLastName());
 
     resp.sendRedirect("/");
   }

@@ -1,8 +1,8 @@
 package net.rushashki.shashki64.client.rpc;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.google.gwt.core.client.GWT;
 import net.rushashki.shashki64.shared.model.Shashist;
 
 /**
