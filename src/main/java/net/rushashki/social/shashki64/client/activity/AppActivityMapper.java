@@ -24,7 +24,7 @@ public class AppActivityMapper implements ActivityMapper {
   public AppActivityMapper() {
     this.eventBus = shashkiGinjector.getEventBus();
 
-    eventBus.addHandler(OnGetProfileEvent.TYPE, (event) -> {
+    eventBus.addHandler(OnGetProfileEvent.TYPE, event -> {
       this.player = event.getProfile();
     });
   }

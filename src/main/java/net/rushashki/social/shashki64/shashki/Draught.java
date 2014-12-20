@@ -4,6 +4,8 @@ package net.rushashki.social.shashki64.shashki;
 import com.ait.lienzo.client.core.animation.AnimationProperties;
 import com.ait.lienzo.client.core.animation.AnimationProperty;
 import com.ait.lienzo.client.core.animation.AnimationTweener;
+import com.ait.lienzo.client.core.event.NodeMouseDownEvent;
+import com.ait.lienzo.client.core.event.NodeMouseDownHandler;
 import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Star;
@@ -18,86 +20,90 @@ import com.ait.lienzo.shared.core.types.ColorName;
  * Time: 21:08
  */
 public class Draught extends Group {
-  private final int deskSide;
-  private static Draught selectedDraught;
-  private Board board;
+    private final int deskSide;
+    private static Draught selectedDraught;
+    private Board board;
 
-  private int row;
-  private int col;
-  private boolean white;
+    private int row;
+    private int col;
+    private boolean white;
 
-  private Circle mainCircle = new Circle(0);
-  private Circle innerCircle1 = new Circle(0);
-  private Circle innerCircle2 = new Circle(0);
-  private Circle innerCircle3 = new Circle(0);
-  private Star queenStar = new Star(5, 0, 0);
+    private Circle mainCircle = new Circle(0);
+    private Circle innerCircle1 = new Circle(0);
+    private Circle innerCircle2 = new Circle(0);
+    private Circle innerCircle3 = new Circle(0);
+    private Star queenStar = new Star(5, 0, 0);
 
-  private int rows;
-  private int cols;
+    private int rows;
+    private int cols;
 
-  private boolean queen;
+    private boolean queen;
 
-  private Draught currentDraught;
+    private Draught currentDraught;
 
-  public Draught(int deskSide, int rows, int cols, int row, int col, boolean white) {
-    this.deskSide = deskSide;
-    this.row = row;
-    this.col = col;
-    this.rows = rows;
-    this.cols = cols;
-    this.white = white;
+    public Draught(int deskSide, int rows, int cols, int row, int col, boolean white) {
+        this.deskSide = deskSide;
+        this.row = row;
+        this.col = col;
+        this.rows = rows;
+        this.cols = cols;
+        this.white = white;
 
 //    this.setDraggable(true);
-    this.setListening(true);
+        this.setListening(true);
 
-    this.setAlpha(.8);
-    this.add(mainCircle);
-    this.add(innerCircle1);
-    this.add(innerCircle2);
-    this.add(innerCircle3);
+        this.setAlpha(.8);
+        this.add(mainCircle);
+        this.add(innerCircle1);
+        this.add(innerCircle2);
+        this.add(innerCircle3);
 
-    queenStar.setFillColor(white ? ColorName.BLUE : ColorName.RED);
+        queenStar.setFillColor(white ? ColorName.BLUE : ColorName.RED);
 
-    Circle[] circles = {mainCircle, innerCircle1, innerCircle2, innerCircle3};
+        Circle[] circles = {mainCircle, innerCircle1, innerCircle2, innerCircle3};
 
-    int i = 0;
-    for (Circle circle : circles) {
-      if (i % 2 == 0) {
-        circle.setShadow(new Shadow(Color.fromColorString("#000"), 6, 0, 4));
-      } else {
-        circle.setShadow(new Shadow(Color.fromColorString("#000"), 6, 0, -4));
-      }
-      i++;
-      circle.setFillColor(white ? ColorName.WHITE : Color.fromColorString("#555"));
-    }
+        int i = 0;
+        for (Circle circle : circles) {
+            if (i % 2 == 0) {
+                circle.setShadow(new Shadow(Color.fromColorString("#000"), 6, 0, 4));
+            } else {
+                circle.setShadow(new Shadow(Color.fromColorString("#000"), 6, 0, -4));
+            }
+            i++;
+            circle.setFillColor(white ? ColorName.WHITE : Color.fromColorString("#555"));
+        }
 
-    updateShape();
+        updateShape();
 
-    addNodeMouseDownHandler(nodeMouseDownEvent -> {
-      if (!isValidStroke()) {
-        return;
-      }
+        // TODO: Not Compile
+        addNodeMouseDownHandler(new NodeMouseDownHandler() {
+            @Override
+            public void onNodeMouseDown(NodeMouseDownEvent nodeMouseDownEvent) {
+                if (!isValidStroke()) {
+                    return;
+                }
 
-      board = (Board) getParent();
-      currentDraught = (Draught) nodeMouseDownEvent.getSource();
+                board = (Board) getParent();
+                currentDraught = (Draught) nodeMouseDownEvent.getSource();
 
-      if (selectedDraught != null) {
-        AnimationProperties props = new AnimationProperties();
-        props.push(AnimationProperty.Properties.SCALE(1));
+                if (selectedDraught != null) {
+                    AnimationProperties props = new AnimationProperties();
+                    props.push(AnimationProperty.Properties.SCALE(1));
 
-        selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
-      }
+                    selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
+                }
 
-      AnimationProperties props = new AnimationProperties();
-      props.push(AnimationProperty.Properties.SCALE(1.3));
+                AnimationProperties props = new AnimationProperties();
+                props.push(AnimationProperty.Properties.SCALE(1.3));
 
-      currentDraught.animate(AnimationTweener.LINEAR, props, 100);
+                currentDraught.animate(AnimationTweener.LINEAR, props, 100);
 
-      selectedDraught = currentDraught;
+                selectedDraught = currentDraught;
 
-      board.resetDeskDrawing();
-      board.highlightAllowedMoves(selectedDraught);
-    });
+                board.resetDeskDrawing();
+                board.highlightAllowedMoves(selectedDraught);
+            }
+        });
 
 //    addNodeMouseUpHandler(nodeMouseUpEvent -> {
 //      Board board = (Board) getParent();
@@ -157,91 +163,91 @@ public class Draught extends Group {
 //        board.getBackgroundLayer().resetDeskDrawing();
 //      }
 //    });
-  }
-
-  public boolean isWhite() {
-    return white;
-  }
-
-  public void setWhite(boolean white) {
-    this.white = white;
-  }
-
-  public void updateShape() {
-    double x = col * deskSide / rows;
-    double y = row * deskSide / cols;
-    double squareSize = deskSide / rows;
-    this.setX(x + squareSize / 2 + 20);
-    this.setY(y + squareSize / 2);
-
-    double radius = squareSize / 2 - 5;
-
-    mainCircle.setRadius(radius);
-    innerCircle1.setRadius(radius - radius / 4);
-    if (isQueen()) {
-      this.remove(innerCircle2);
-      this.remove(innerCircle3);
-
-      this.add(queenStar);
-      queenStar.setInnerRadius(radius - radius / 1.3);
-      queenStar.setOuterRadius(radius - radius / 2);
-    } else {
-      if (!getChildNodes().contains(innerCircle2)) {
-        this.add(innerCircle2);
-      }
-      if (!getChildNodes().contains(innerCircle3)) {
-        this.add(innerCircle3);
-      }
-
-      if (this.getChildNodes().contains(queenStar)) {
-        this.remove(queenStar);
-      }
-
-      innerCircle2.setRadius(radius - radius / 2);
-      innerCircle3.setRadius(radius - radius / 1.3);
     }
-  }
 
-  public int getRow() {
-    return row;
-  }
+    public boolean isWhite() {
+        return white;
+    }
 
-  public int getCol() {
-    return col;
-  }
+    public void setWhite(boolean white) {
+        this.white = white;
+    }
 
-  public void setQueen(boolean queen) {
-    this.queen = queen;
-    updateShape();
-  }
+    public void updateShape() {
+        double x = col * deskSide / rows;
+        double y = row * deskSide / cols;
+        double squareSize = deskSide / rows;
+        this.setX(x + squareSize / 2 + 20);
+        this.setY(y + squareSize / 2);
 
-  public boolean isQueen() {
-    return queen;
-  }
+        double radius = squareSize / 2 - 5;
 
-  private boolean isValidStroke() {
-    Board board = (Board) getParent();
-    return board.myTurn() && isWhite() == board.isWhite() && !board.isEmulate();
-  }
+        mainCircle.setRadius(radius);
+        innerCircle1.setRadius(radius - radius / 4);
+        if (isQueen()) {
+            this.remove(innerCircle2);
+            this.remove(innerCircle3);
 
-  private boolean isAllowed(Square newSquare) {
-    return newSquare.getAlpha() < 1.0;
-  }
+            this.add(queenStar);
+            queenStar.setInnerRadius(radius - radius / 1.3);
+            queenStar.setOuterRadius(radius - radius / 2);
+        } else {
+            if (!getChildNodes().contains(innerCircle2)) {
+                this.add(innerCircle2);
+            }
+            if (!getChildNodes().contains(innerCircle3)) {
+                this.add(innerCircle3);
+            }
 
-  public void setPosition(int row, int col) {
-    this.row = row;
-    this.col = col;
-  }
+            if (this.getChildNodes().contains(queenStar)) {
+                this.remove(queenStar);
+            }
 
-  public void setRow(int row) {
-    this.row = row;
-  }
+            innerCircle2.setRadius(radius - radius / 2);
+            innerCircle3.setRadius(radius - radius / 1.3);
+        }
+    }
 
-  public void setCol(int col) {
-    this.col = col;
-  }
+    public int getRow() {
+        return row;
+    }
 
-  public static Draught getSelectedDraught() {
-    return selectedDraught;
-  }
+    public int getCol() {
+        return col;
+    }
+
+    public void setQueen(boolean queen) {
+        this.queen = queen;
+        updateShape();
+    }
+
+    public boolean isQueen() {
+        return queen;
+    }
+
+    private boolean isValidStroke() {
+        Board board = (Board) getParent();
+        return board.myTurn() && isWhite() == board.isWhite() && !board.isEmulate();
+    }
+
+    private boolean isAllowed(Square newSquare) {
+        return newSquare.getAlpha() < 1.0;
+    }
+
+    public void setPosition(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
+    public static Draught getSelectedDraught() {
+        return selectedDraught;
+    }
 }

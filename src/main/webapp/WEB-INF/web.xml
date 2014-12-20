@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <display-name>SocialRushashkiNet</display-name>
     <servlet>
-        <servlet-name>net.rushashki.social.Shashki64 ProfileService</servlet-name>
+        <servlet-name>net.rushashki.social.shashki64.Shashki64 ProfileService</servlet-name>
         <servlet-class>net.rushashki.social.shashki64.server.rpc.ProfileServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>net.rushashki.social.Shashki64 ProfileService</servlet-name>
-        <url-pattern>/net.rushashki.social.Shashki64/ProfileService</url-pattern>
+        <servlet-name>net.rushashki.social.shashki64.Shashki64 ProfileService</servlet-name>
+        <url-pattern>/net.rushashki.social.shashki64.Shashki64/ProfileService</url-pattern>
     </servlet-mapping>
 
     <!--<error-page>-->

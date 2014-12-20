@@ -67,7 +67,7 @@ public class ShashkiViewComponentUi extends BasicComponent implements ClickHandl
 
     lienzoPanel.addClickHandler(this);
 
-    eventBus.addHandler(OnGetProfileEvent.TYPE, (event) -> {
+    eventBus.addHandler(OnGetProfileEvent.TYPE, event -> {
       this.player = event.getProfile();
       alignNotationPanel(shashkiSide);
     });

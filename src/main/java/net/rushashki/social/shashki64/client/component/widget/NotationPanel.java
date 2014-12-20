@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.OnNotationStrokeEvent;
+import net.rushashki.social.shashki64.client.event.OnNotationStrokeEventHandler;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,10 +24,13 @@ public class NotationPanel extends ScrollPanel {
     stepCounter = 1;
     this.eventBus = shashkiGinjector.getEventBus();
 
-    eventBus.addHandler(OnNotationStrokeEvent.TYPE, event -> {
-      this.appendStroke(event.getStroke());
+    // TODO: Not Compile
+    eventBus.addHandler(OnNotationStrokeEvent.TYPE, new OnNotationStrokeEventHandler() {
+      @Override
+      public void onNotationStroke(OnNotationStrokeEvent event) {
+        NotationPanel.this.appendStroke(event.getStroke());
+      }
     });
-
     Scheduler.get().scheduleFinally(() -> {
       this.setWidth("80px");
     });
