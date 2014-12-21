@@ -149,7 +149,7 @@ public class Draught extends Group {
 //              + (isWhite() ? "" : "\n")
 //          );
 //          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
-//              clientFactory.getProfile().getUserId(), clientFactory.getOpponentId(),
+//              clientFactory.getClientFactory().getUserId(), clientFactory.getOpponentId(),
 //              startSquare.toSend(), newSquare.toSend(), captured);
 //        } else { // translate circle on initial position when we try to move it on incorrect place
 //          double mouseDeltaX = mouseStartX - nodeDragEndEvent.getX(); // + mainWindowController.getSceneOffsetX();

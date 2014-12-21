@@ -8,6 +8,6 @@ import com.google.gwt.event.shared.EventHandler;
  * Date: 06.12.14
  * Time: 7:42
  */
-public interface OnGetProfileEventHandler extends EventHandler {
-  void onOnGetProfile(OnGetProfileEvent event);
+public interface OnClientFactoryEventHandler extends EventHandler {
+  void onOnClientFactory(OnClientFactoryEvent event);
 }

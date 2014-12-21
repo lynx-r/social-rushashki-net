@@ -762,7 +762,7 @@ public class Board extends Layer {
             + (isWhite() ? "" : "<br />");
         eventBus.fireEvent(new OnNotationStrokeEvent(stroke));
 //          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
-//              clientFactory.getProfile().getUserId(), clientFactory.getOpponentId(),
+//              clientFactory.getClientFactory().getUserId(), clientFactory.getOpponentId(),
 //              startSquare.toSend(), newSquare.toSend(), captured);
         AnimationProperties props = new AnimationProperties();
         props.push(AnimationProperty.Properties.X(square.getCenterX()));

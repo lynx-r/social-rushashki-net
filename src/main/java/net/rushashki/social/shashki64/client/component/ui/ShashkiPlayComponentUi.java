@@ -13,14 +13,20 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
 import net.rushashki.social.shashki64.client.event.OnGetPlayerListEvent;
 import net.rushashki.social.shashki64.client.event.OnGetPlayerListEventHandler;
-import net.rushashki.social.shashki64.client.event.OnGetProfileEvent;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.Label;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,6 +49,10 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     @UiField
     HTMLPanel notationList;
     @UiField
+    Button playButton;
+    @UiField
+    Label offlineHintLabel;
+    @UiField
     HTMLPanel playerListColumn;
     @UiField
     ScrollPanel playerPanel;
@@ -52,24 +62,44 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     private CellList<Shashist> playersCellList;
     private NotationPanel notationPanel;
 
-    public ShashkiPlayComponentUi() {
+    public ShashkiPlayComponentUi(Shashist player, List<Shashist> playerList) {
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        this.player = player;
+
         initLienzoPanel();
         initNotationPanel();
+        initCellList();
 
-        eventBus.addHandler(OnGetProfileEvent.TYPE, event -> {
-            player = event.getProfile();
-            alignNotationPanel();
-        });
+        if (playerList != null) {
+            setPlayerList(playerList);
+        }
 
         // TODO: Not Compile
         eventBus.addHandler(OnGetPlayerListEvent.TYPE, new OnGetPlayerListEventHandler() {
             @Override
             public void onOnGetPlayerList(OnGetPlayerListEvent event) {
-                initCellList();
-                playersCellList.setRowData(event.getPlayerList());
+                setPlayerList(event.getPlayerList());
             }
         });
+
+        eventBus.addHandler(OnClientFactoryEvent.TYPE, new OnClientFactoryEventHandler() {
+            @Override
+            public void onOnClientFactory(OnClientFactoryEvent event) {
+                Shashist shashist = event.getClientFactory().getPlayer();
+                if (shashist.getSystemId().equals(player.getSystemId()) && !shashist.isOnline()) {
+                    playButton.setActive(true);
+                    playButton.setBlock(true);
+                    playButton.addStyleName("btn-danger");
+                    playButton.setIcon(IconType.BAN);
+                    offlineHintLabel.setText(constants.updatePageToPlay());
+                }
+            }
+        });
+    }
+
+    private void setPlayerList(List<Shashist> playerList) {
+        playersCellList.setRowData(playerList);
     }
 
     private void initLienzoPanel() {
@@ -93,9 +123,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         notationPanel = new NotationPanel();
         notationList.add(notationPanel);
 
-        if (player == null) {
-            Scheduler.get().scheduleFinally(this::alignNotationPanel);
-        }
+        Scheduler.get().scheduleFinally(this::alignNotationPanel);
     }
 
     private void alignNotationPanel() {
@@ -117,7 +145,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
                     if (value.isLoggedIn()) {
                         Image img;
                         String playerPublicName = value.getPublicName();
-                        if (player.getPublicName().equals(playerPublicName)) {
+                        if (player.getSystemId().equals(value.getSystemId())) {
                             sb.appendEscaped(playerPublicName);
                         } else {
                             if (value.isPlaying()) {

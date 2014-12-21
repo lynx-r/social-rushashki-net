@@ -50,7 +50,7 @@ public class PlayerMessageDecoder implements Decoder.Text<PlayerMessage> {
     PlayerMessage playerMessage = Util.deserializeFromJson(s);
     return playerMessage.getType().equals(PlayerMessage.MessageType.CHAT_MESSAGE)
 
-        || playerMessage.getType().equals(PlayerMessage.MessageType.REGISTER_PLAYER)
+        || playerMessage.getType().equals(PlayerMessage.MessageType.PLAYER_REGISTER)
         || playerMessage.getType().equals(PlayerMessage.MessageType.USER_LIST_UPDATE)
 
         || playerMessage.getType().equals(PlayerMessage.MessageType.PLAY_INVITE)

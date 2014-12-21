@@ -14,7 +14,7 @@ import net.rushashki.social.shashki64.client.activity.AppActivityMapper;
 import net.rushashki.social.shashki64.client.component.ui.FooterComponentUi;
 import net.rushashki.social.shashki64.client.component.ui.NavbarComponentUi;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnGetProfileEvent;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
 import net.rushashki.social.shashki64.client.page.BasePage;
 import net.rushashki.social.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.social.shashki64.client.place.AppPlaceHistoryMapper;
@@ -36,6 +36,7 @@ public class Shashki64 implements EntryPoint {
 
   private HomePlace defaultPlace = new HomePlace("Home");
 
+  private ClientFactory clientFactory = GWT.create(ClientFactory.class);
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   private EventBus eventBus;
   private ProfileServiceAsync profileService;
@@ -70,13 +71,14 @@ public class Shashki64 implements EntryPoint {
       public void onSuccess(Shashist shashist) {
         RootPanel.get("content").remove(splashImage);
 
+        clientFactory.setPlayer(shashist);
         RootPanel.get("content").add((IsWidget) appWidget);
-        eventBus.fireEvent(new OnGetProfileEvent(shashist));
+        eventBus.fireEvent(new OnClientFactoryEvent(clientFactory));
         historyHandler.handleCurrentHistory();
 
-        if (shashist != null) {
-          new PlayerWebsocket(shashist);
-        }
+//        if (shashist != null) {
+//          new PlayerWebsocket(clientFactory);
+//        }
       }
     });
   }

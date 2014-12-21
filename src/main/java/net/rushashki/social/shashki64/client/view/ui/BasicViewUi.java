@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.client.view.ui;
 
 import com.google.gwt.user.client.ui.Composite;
+import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.BasicView;
@@ -12,7 +13,7 @@ import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
  * Date: 24.11.14
  * Time: 23:02
  */
-public class BasicViewUi extends Composite {
+public abstract class BasicViewUi extends Composite implements BasicView {
 
   protected final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
 
@@ -21,10 +22,27 @@ public class BasicViewUi extends Composite {
 
   protected String token;
   protected BasicView.Presenter presenter;
+  private ClientFactory clientFactory;
 
   public BasicViewUi() {
     logger = shashkiGinjector.getLogger();
     constants = shashkiGinjector.getShashkiConstants();
   }
+
+  @Override
+  public ClientFactory getClientFactory() {
+    return clientFactory;
+  }
+
+  @Override
+  public void setClientFactory(ClientFactory clientFactory) {
+    this.clientFactory = clientFactory;
+  }
+
+  @Override
+  public abstract void setToken(String token);
+
+  @Override
+  public abstract void setPresenter(Presenter presenter);
 
 }

@@ -10,6 +10,8 @@ import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.*;
 import net.rushashki.social.shashki64.client.view.ui.*;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
+import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.ShashistEntity;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

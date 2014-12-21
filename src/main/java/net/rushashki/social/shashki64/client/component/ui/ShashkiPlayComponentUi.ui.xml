@@ -37,9 +37,12 @@
             <c:ChatPrivateComponentUi ui:field="privateChat"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="playerListColumn" addStyleNames="{style.player-list}">
-            <b:Button ui:field="playButton" icon="PLAY">
-                <ui:msg description="Играть" key="playButton">Играть</ui:msg>
-            </b:Button>
+            <span>
+                <b:Button ui:field="playButton" icon="PLAY" styleName="btn btn-default">
+                    <ui:msg description="Играть" key="playButton">Играть</ui:msg>
+                </b:Button>
+                <b:Label ui:field="offlineHintLabel" styleName="text-warning"/>
+            </span>
             <g:ScrollPanel ui:field="playerPanel"/>
             <b:InputGroup>
                 <b:InputGroupAddon icon="SEARCH"/>

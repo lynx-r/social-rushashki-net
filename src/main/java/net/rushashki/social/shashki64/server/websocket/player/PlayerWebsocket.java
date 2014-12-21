@@ -36,7 +36,7 @@ public class PlayerWebsocket {
   private ShashistService shashistService;
 
   private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
-  private long MAX_IDLE_TIMEOUT = 1000 * 30 * 1;
+  private long MAX_IDLE_TIMEOUT = 1000 * 20 * 1;
 
   @OnOpen
   public void onOpen(Session session) {
@@ -46,10 +46,10 @@ public class PlayerWebsocket {
   @OnMessage
   public void onMessage(Session session, PlayerMessage message) {
     switch (message.getType()) {
-      case REGISTER_PLAYER:
+      case PLAYER_REGISTER:
         handleNewPlayer(message, session);
         break;
-      case DISCONNECT_PLAYER:
+      case PLAYER_DISCONNECT:
         handleDisconnectPlayer(message);
       case USER_LIST_UPDATE:
         handleUpdatePlayerList();
@@ -94,8 +94,6 @@ public class PlayerWebsocket {
 
   @OnClose
   public void onClose(Session session) {
-    System.out.println("User disconnected");
-
     Shashist shashist = peers.keySet().stream().filter(sh -> peers.get(sh) == session).findFirst().get();
     ShashistEntity shashistEntity = shashistService.find(shashist.getId());
 
@@ -107,7 +105,6 @@ public class PlayerWebsocket {
     shashist.setPlaying(false);
 
     peers.values().remove(session);
-    updatePlayerList();
   }
 
   private void handleUpdatePlayerList() {

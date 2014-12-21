@@ -8,7 +8,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.component.NavbarComponent;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnGetProfileEvent;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
 import net.rushashki.social.shashki64.client.event.OnNavbarReloadEvent;
 import net.rushashki.social.shashki64.client.event.OnNavbarReloadEventHandler;
 import net.rushashki.social.shashki64.client.place.*;
@@ -130,19 +131,23 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
             }
         });
 
-        eventBus.addHandler(OnGetProfileEvent.TYPE, profileEvent -> {
-            Shashist shashist = profileEvent.getProfile();
-            if (shashist != null) {
-                navLeft.add(homeLink);
-                navLeft.add(playLentaLink);
-                navLeft.add(playLink);
-                navRight.add(profileDropDown);
-                profileDropDown.setIcon(IconType.USER);
-                profileDropDown.setText(shashist.getPublicName());
-            } else {
-                navLeft.add(homeLink);
-                navLeft.add(playLentaLink);
-                navRight.add(signInLink);
+        // TODO: Not Compile
+        eventBus.addHandler(OnClientFactoryEvent.TYPE, new OnClientFactoryEventHandler() {
+            @Override
+            public void onOnClientFactory(OnClientFactoryEvent event) {
+                Shashist shashist = event.getClientFactory().getPlayer();
+                if (shashist != null) {
+                    navLeft.add(homeLink);
+                    navLeft.add(playLentaLink);
+                    navLeft.add(playLink);
+                    navRight.add(profileDropDown);
+                    profileDropDown.setIcon(IconType.USER);
+                    profileDropDown.setText(shashist.getPublicName());
+                } else {
+                    navLeft.add(homeLink);
+                    navLeft.add(playLentaLink);
+                    navRight.add(signInLink);
+                }
             }
         });
     }

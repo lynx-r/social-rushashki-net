@@ -24,7 +24,6 @@ public interface PlayerMessage extends Message {
 
     CHAT_MESSAGE,
     USER_LIST_UPDATE,
-    REGISTER_PLAYER,
     PLAY_INVITE,
     PLAY_ACCEPT_INVITE,
     PLAY_START,
@@ -33,7 +32,9 @@ public interface PlayerMessage extends Message {
     PLAY_LEFT,
     PLAY_PROPOSE_DRAW,
     PLAY_ACCEPT_DRAW,
-    DISCONNECT_PLAYER;
+    PLAYER_REGISTER,
+    PLAYER_DISCONNECT,
+    PLAYER_OFFLINE;
 
   }
 

@@ -13,7 +13,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import net.rushashki.social.shashki64.client.event.OnGetProfileEvent;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.model.dto.PlayDto;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
@@ -67,9 +68,13 @@ public class ShashkiViewComponentUi extends BasicComponent implements ClickHandl
 
     lienzoPanel.addClickHandler(this);
 
-    eventBus.addHandler(OnGetProfileEvent.TYPE, event -> {
-      this.player = event.getProfile();
-      alignNotationPanel(shashkiSide);
+    // TODO: Not Compile
+    eventBus.addHandler(OnClientFactoryEvent.TYPE, new OnClientFactoryEventHandler() {
+      @Override
+      public void onOnClientFactory(OnClientFactoryEvent event) {
+        ShashkiViewComponentUi.this.player = event.getClientFactory().getPlayer();
+        alignNotationPanel(shashkiSide);
+      }
     });
 
     if (player == null) {

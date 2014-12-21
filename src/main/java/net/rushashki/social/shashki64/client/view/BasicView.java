@@ -2,6 +2,7 @@ package net.rushashki.social.shashki64.client.view;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
+import net.rushashki.social.shashki64.client.ClientFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +11,10 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Time: 16:09
  */
 public interface BasicView extends IsWidget {
+
+  ClientFactory getClientFactory();
+
+  void setClientFactory(ClientFactory clientFactory);
 
   void setToken(String token);
 

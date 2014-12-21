@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import net.rushashki.social.shashki64.client.place.PlayPlace;
 import net.rushashki.social.shashki64.client.view.PlayView;
+import net.rushashki.social.shashki64.client.view.ui.PlayViewUi;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +17,7 @@ public class PlayActivity extends BasicActivity implements PlayView.Presenter {
 
   public PlayActivity(PlayPlace playPlace) {
     super(playPlace.getToken());
-    this.view = shashkiGinjector.getPlayView();
+    this.view = new PlayViewUi(playPlace.getClientFactory());
   }
 
   @Override

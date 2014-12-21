@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.client.place;
 
 import com.google.gwt.place.shared.Place;
+import net.rushashki.social.shashki64.client.ClientFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,6 +12,7 @@ import com.google.gwt.place.shared.Place;
 public class BasicPlace extends Place {
 
   private String token;
+  private ClientFactory clientFactory;
 
   public BasicPlace(String token) {
     this.token = token;
@@ -20,4 +22,11 @@ public class BasicPlace extends Place {
     return token;
   }
 
+  public void setClientFactory(ClientFactory clientFactory) {
+    this.clientFactory = clientFactory;
+  }
+
+  public ClientFactory getClientFactory() {
+    return clientFactory;
+  }
 }

@@ -5,9 +5,11 @@ import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.event.shared.EventBus;
+import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
 import net.rushashki.social.shashki64.client.event.OnGetPlayerListEvent;
-import net.rushashki.social.shashki64.client.event.OnWebsocketPlayerMessageEvent;
+import net.rushashki.social.shashki64.client.event.OnPlayerMessageEvent;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.social.shashki64.shared.model.Shashist;
@@ -35,9 +37,12 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
   private EventBus eventBus;
   private Shashist player;
   private final String PLAYER_WEBSOCKET_URL = "ws://localhost:8080/ws/echo";
+  private ClientFactory clientFactory;
 
-  public PlayerWebsocket(Shashist shashist) {
-    this.player = shashist;
+  public PlayerWebsocket(ClientFactory clientFactory) {
+    this.clientFactory = clientFactory;
+    this.player = clientFactory.getPlayer();
+
     this.webSocket = WebSocket.newWebSocketIfSupported();
     this.constants = shashkiGinjector.getShashkiConstants();
     this.eventBus = shashkiGinjector.getEventBus();
@@ -51,7 +56,7 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
     webSocket.setListener(this);
     webSocket.connect(PLAYER_WEBSOCKET_URL);
 
-    eventBus.addHandler(OnWebsocketPlayerMessageEvent.TYPE, (event) -> {
+    eventBus.addHandler(OnPlayerMessageEvent.TYPE, event -> {
       if (!webSocket.isConnected()) {
         return;
       }
@@ -73,7 +78,7 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
       logger.log(Level.SEVERE, "Invalid uid");
       return;
     }
-    playerMessage.setType(PlayerMessage.MessageType.REGISTER_PLAYER);
+    playerMessage.setType(PlayerMessage.MessageType.PLAYER_REGISTER);
 
     MessageFactory chatFactory = GWT.create(MessageFactory.class);
     AutoBean<PlayerMessage> bean = chatFactory.create(PlayerMessage.class, playerMessage);
@@ -94,21 +99,21 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
   }
 
   private void handleUpdatePlayerList(List<Shashist> playerList) {
+    clientFactory.setPlayerList(playerList);
     eventBus.fireEvent(new OnGetPlayerListEvent(playerList));
   }
 
-  @Override
-  public void onClose(@Nonnull WebSocket webSocket, boolean wasClean, int code, String reason) {
-    PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
-    try {
-      playerMessage.setSender(player);
-    } catch (Exception e) {
-      return;
-    }
-    playerMessage.setType(PlayerMessage.MessageType.DISCONNECT_PLAYER);
-    MessageFactory chatFactory = GWT.create(MessageFactory.class);
-    AutoBean<PlayerMessage> bean = chatFactory.create(PlayerMessage.class, playerMessage);
-    String message = AutoBeanCodex.encode(bean).getPayload();
-    webSocket.send(message);
+//  @Override
+//  public void onClose(@Nonnull WebSocket webSocket, boolean wasClean, int code, String reason) {
+//    if (webSocket.equals(this.webSocket)) {
+//      clientFactory.getPlayer().setOnline(false);
+//      eventBus.fireEvent(new OnClientFactoryEvent(clientFactory));
+//      player = null;
+//    }
+//  }
+
+  public boolean isDisconnected() {
+    return player == null;
   }
+
 }

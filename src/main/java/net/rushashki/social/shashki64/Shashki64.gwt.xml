@@ -14,6 +14,11 @@
   <inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
   <inherits name='com.ait.lienzo.Lienzo' />
 
+  <!-- Use ClientFactoryImpl by default -->
+  <replace-with class="net.rushashki.social.shashki64.client.ClientFactoryImpl">
+    <when-type-is class="net.rushashki.social.shashki64.client.ClientFactory"/>
+  </replace-with>
+
   <entry-point class='net.rushashki.social.shashki64.client.Shashki64'/>
   <servlet path="/ProfileService" class="net.rushashki.social.shashki64.server.rpc.ProfileServiceImpl"/>
 
