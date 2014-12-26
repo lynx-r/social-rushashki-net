@@ -103,14 +103,19 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
     eventBus.fireEvent(new OnGetPlayerListEvent(playerList));
   }
 
-//  @Override
-//  public void onClose(@Nonnull WebSocket webSocket, boolean wasClean, int code, String reason) {
-//    if (webSocket.equals(this.webSocket)) {
-//      clientFactory.getPlayer().setOnline(false);
-//      eventBus.fireEvent(new OnClientFactoryEvent(clientFactory));
-//      player = null;
-//    }
-//  }
+  @Override
+  public void onClose(@Nonnull WebSocket webSocket, boolean wasClean, int code, String reason) {
+    if (webSocket.equals(this.webSocket)) {
+      clientFactory.getPlayer().setOnline(false);
+      eventBus.fireEvent(new OnClientFactoryEvent(clientFactory));
+      player = null;
+    }
+  }
+
+  @Override
+  public void onError(@Nonnull WebSocket webSocket) {
+    Window.alert("Socket error!");
+  }
 
   public boolean isDisconnected() {
     return player == null;
