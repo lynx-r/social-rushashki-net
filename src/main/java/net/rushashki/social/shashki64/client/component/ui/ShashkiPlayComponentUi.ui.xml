@@ -38,8 +38,8 @@
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="playerListColumn" addStyleNames="{style.player-list}">
             <span>
-                <b:Button ui:field="playButton" icon="PLAY" styleName="btn btn-default btn-block">
-                    <ui:msg description="Играть" key="playButton">Играть</ui:msg>
+                <b:Button ui:field="connectPlayButton" icon="REFRESH" styleName="btn btn-default btn-primary btn-block">
+                    <ui:msg description="Подключиться" key="connectPlayButton">Подключиться</ui:msg>
                 </b:Button>
                 <b:Label ui:field="offlineHintLabel" styleName="text-warning"/>
             </span>

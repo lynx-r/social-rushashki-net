@@ -18,7 +18,6 @@ import net.rushashki.social.shashki64.client.websocket.PlayerWebsocket;
 public class PlayViewUi extends BasicViewUi implements PlayView {
 
   private static PlayViewImplUiBinder ourUiBinder = GWT.create(PlayViewImplUiBinder.class);
-  private static PlayerWebsocket playerWebsocket;
 
   @UiField(provided = true)
   ShashkiPlayComponentUi shashkiPlay;
@@ -28,11 +27,7 @@ public class PlayViewUi extends BasicViewUi implements PlayView {
   }
 
   public PlayViewUi(ClientFactory clientFactory) {
-    if (playerWebsocket == null) {
-      playerWebsocket = new PlayerWebsocket(clientFactory);
-    } else if (playerWebsocket.isDisconnected()) {
-      playerWebsocket = new PlayerWebsocket(clientFactory);
-    }
+    new PlayerWebsocket(clientFactory);
     shashkiPlay = new ShashkiPlayComponentUi(clientFactory.getPlayer(), clientFactory.getPlayerList());
     initWidget(ourUiBinder.createAndBindUi(this));
   }

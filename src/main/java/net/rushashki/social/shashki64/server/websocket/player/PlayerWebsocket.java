@@ -41,7 +41,7 @@ public class PlayerWebsocket {
 
   @OnOpen
   public void onOpen(Session session) {
-    System.out.println("New connection");
+    System.out.println("New connection " + session.getId());
     session.setMaxIdleTimeout(MAX_IDLE_TIMEOUT);
   }
 
@@ -89,6 +89,7 @@ public class PlayerWebsocket {
     shashist.setOnline(true);
 
     peers.put(shashist, session);
+    System.out.println("Register new player: " + shashist.getSystemId() + " " + session.getId() + " " + session.getMaxIdleTimeout());
     updatePlayerList();
   }
 
@@ -104,6 +105,7 @@ public class PlayerWebsocket {
     shashist.setOnline(false);
     shashist.setPlaying(false);
 
+    System.out.println("Disconnected: " + shashist.getSystemId() + " " + session.getId());
     peers.values().remove(session);
   }
 

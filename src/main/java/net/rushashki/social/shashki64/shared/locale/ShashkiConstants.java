@@ -46,5 +46,5 @@ public interface ShashkiConstants extends Constants {
 
   String webSocketDoesNotSupport();
 
-  String updatePageToPlay();
+  String reconnect();
 }

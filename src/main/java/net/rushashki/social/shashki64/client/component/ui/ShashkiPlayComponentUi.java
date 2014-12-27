@@ -4,6 +4,8 @@ import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -13,10 +15,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
-import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
-import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
-import net.rushashki.social.shashki64.client.event.OnGetPlayerListEvent;
-import net.rushashki.social.shashki64.client.event.OnGetPlayerListEventHandler;
+import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 import net.rushashki.social.shashki64.shashki.Board;
@@ -24,6 +23,7 @@ import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Label;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     @UiField
     HTMLPanel notationList;
     @UiField
-    Button playButton;
+    Button connectPlayButton;
     @UiField
     Label offlineHintLabel;
     @UiField
@@ -75,6 +75,16 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             setPlayerList(playerList);
         }
 
+        connectPlayButton.addClickHandler(clickEvent -> {
+            switch (connectPlayButton.getIcon()) {
+                case REFRESH:
+                    connectPlayButton.setType(ButtonType.DEFAULT);
+                    connectPlayButton.setIcon(IconType.PLAY);
+                    eventBus.fireEvent(new OnConnectToPlayEvent());
+                    break;
+            }
+        });
+
         // TODO: Not Compile
         eventBus.addHandler(OnGetPlayerListEvent.TYPE, new OnGetPlayerListEventHandler() {
             @Override
@@ -83,17 +93,21 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             }
         });
 
-        eventBus.addHandler(OnClientFactoryEvent.TYPE, new OnClientFactoryEventHandler() {
+        eventBus.addHandler(OnConnectedToPlayEvent.TYPE, new OnConnectedToPlayEventHandler() {
             @Override
-            public void onOnClientFactory(OnClientFactoryEvent event) {
-                Shashist shashist = event.getClientFactory().getPlayer();
-                if (shashist.getSystemId().equals(player.getSystemId()) && !shashist.isOnline()) {
-                    playButton.setActive(true);
-                    playButton.setBlock(true);
-                    playButton.addStyleName("btn-danger");
-                    playButton.setIcon(IconType.BAN);
-                    offlineHintLabel.setText(constants.updatePageToPlay());
-                }
+            public void onOnConnectedToPlay(OnConnectedToPlayEvent event) {
+                connectPlayButton.setText(constants.play());
+            }
+        });
+
+        eventBus.addHandler(OnDisconnectFromPlayEvent.TYPE, new OnDisconnectFromPlayEventHandler() {
+            @Override
+            public void onOnDisconnectFromPlay(OnDisconnectFromPlayEvent event) {
+                connectPlayButton.setActive(true);
+                connectPlayButton.setBlock(true);
+                connectPlayButton.addStyleName("btn-danger");
+                connectPlayButton.setIcon(IconType.REFRESH);
+                connectPlayButton.setText(constants.reconnect());
             }
         });
     }
