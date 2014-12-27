@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.shared.locale;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,4 +48,30 @@ public interface ShashkiConstants extends Constants {
   String webSocketDoesNotSupport();
 
   String reconnect();
+
+  String close();
+
+  String error();
+
+  String info();
+
+  String captionGame();
+
+  String next();
+
+  String cancel();
+
+  String chooseYourColor();
+
+  String white();
+
+  String black();
+
+  String waitResponse();
+
+  String yes();
+
+  String no();
+
+  String confirm();
 }

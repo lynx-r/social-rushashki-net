@@ -107,7 +107,8 @@ public class PlayerWebsocket {
 
   private void handleChatPrivateMessage(PlayerMessage message) {
     Shashist receiver = message.getReceiver();
-    Shashist shashist = peers.keySet().stream().filter(s -> s.getSystemId().equals(receiver.getSystemId())).findAny().get();
+    Shashist shashist = peers.keySet().stream()
+        .filter(s -> s.getSystemId().equals(receiver.getSystemId())).findFirst().get();
     Session session = peers.get(shashist);
     sendMessage(session, message);
   }

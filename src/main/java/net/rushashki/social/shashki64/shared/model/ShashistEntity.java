@@ -223,7 +223,14 @@ public class ShashistEntity extends GwtPersistableObject implements Shashist {
 
   @Override
   public String getPublicName() {
-    return getPlayerName() == null ? getFullName() : getPlayerName();
+    if (getPlayerName() == null) {
+      String fullName = getFullName().trim();
+      if (fullName.isEmpty()) {
+        return getEmail().split("@")[0];
+      }
+      return fullName;
+    }
+    return getPlayerName();
   }
 
   @Override
