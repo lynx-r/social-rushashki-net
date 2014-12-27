@@ -1,7 +1,7 @@
 package net.rushashki.social.shashki64.client.websocket;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.websockets.client.WebSocket;
 import com.google.gwt.websockets.client.WebSocketCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -46,8 +46,6 @@ public class PlayerWebsocket implements WebSocketCallback {
     eventBus.addHandler(OnConnectToPlayEvent.TYPE, event -> {
       webSocket = new WebSocket(this);
       webSocket.connect(PLAYER_WEBSOCKET_URL);
-
-      eventBus.fireEvent(new OnConnectedToPlayEvent());
     });
 
     eventBus.addHandler(OnPlayerMessageEvent.TYPE, event -> {
@@ -68,18 +66,15 @@ public class PlayerWebsocket implements WebSocketCallback {
   @Override
   public void onConnect() {
     PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
-    try {
-      playerMessage.setSender(player);
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, "Invalid uid");
-      return;
-    }
+    playerMessage.setSender(player);
     playerMessage.setType(PlayerMessage.MessageType.PLAYER_REGISTER);
 
     MessageFactory chatFactory = GWT.create(MessageFactory.class);
     AutoBean<PlayerMessage> bean = chatFactory.create(PlayerMessage.class, playerMessage);
     String message = AutoBeanCodex.encode(bean).getPayload();
     webSocket.send(message);
+
+    eventBus.fireEvent(new OnConnectedToPlayEvent());
   }
 
   @Override

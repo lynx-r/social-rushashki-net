@@ -23,6 +23,7 @@ public interface PlayerMessage extends Message {
   public enum MessageType {
 
     CHAT_MESSAGE,
+    CHAT_PRIVATE_MESSAGE,
     USER_LIST_UPDATE,
     PLAY_INVITE,
     PLAY_ACCEPT_INVITE,

@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shared.model.Shashist;
@@ -44,6 +45,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     HTMLPanel shashkiColumn;
     @UiField
     HTMLPanel privateChatColumn;
+    @UiField(provided = true)
+    ChatPrivateComponentUi privateChat;
     @UiField
     HTMLPanel notationColumn;
     @UiField
@@ -62,17 +65,18 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     private CellList<Shashist> playersCellList;
     private NotationPanel notationPanel;
 
-    public ShashkiPlayComponentUi(Shashist player, List<Shashist> playerList) {
+    public ShashkiPlayComponentUi(ClientFactory clientFactory) {
+        privateChat = new ChatPrivateComponentUi(clientFactory);
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        this.player = player;
+        this.player = clientFactory.getPlayer();
 
         initLienzoPanel();
         initNotationPanel();
         initCellList();
 
-        if (playerList != null) {
-            setPlayerList(playerList);
+        if (clientFactory.getPlayerList() != null) {
+            setPlayerList(clientFactory.getPlayerList());
         }
 
         connectPlayButton.addClickHandler(clickEvent -> {

@@ -28,7 +28,7 @@ public class PlayViewUi extends BasicViewUi implements PlayView {
 
   public PlayViewUi(ClientFactory clientFactory) {
     new PlayerWebsocket(clientFactory);
-    shashkiPlay = new ShashkiPlayComponentUi(clientFactory.getPlayer(), clientFactory.getPlayerList());
+    shashkiPlay = new ShashkiPlayComponentUi(clientFactory);
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 

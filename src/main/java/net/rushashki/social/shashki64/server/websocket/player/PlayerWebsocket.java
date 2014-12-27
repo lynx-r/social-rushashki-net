@@ -15,6 +15,10 @@ import javax.inject.Singleton;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,7 +36,7 @@ public class PlayerWebsocket {
   @Inject
   private ShashistService shashistService;
 
-//  private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
+  private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
   private long MAX_IDLE_TIMEOUT = 1000 * 20 * 1;
 
   @OnOpen
@@ -47,31 +51,19 @@ public class PlayerWebsocket {
       case PLAYER_REGISTER:
         handleNewPlayer(message, session);
         break;
-//      case PLAYER_DISCONNECT:
-//        handleDisconnectPlayer(message);
-//      case USER_LIST_UPDATE:
-//        handleUpdatePlayerList();
-//        break;
       case CHAT_MESSAGE:
-        handleChatMessage(message);
+        handleChatMessage(session, message);
+      case CHAT_PRIVATE_MESSAGE:
+        handleChatPrivateMessage(message);
         break;
     }
   }
 
-//  private void handleDisconnectPlayer(PlayerMessage message) {
-//    Shashist shashist = message.getSender();
-//
-//    ShashistEntity shashistEntity = shashistService.find(shashist.getId());
-//    shashistEntity.setOnline(false);
-//    shashistEntity.setPlaying(false);
-//    shashistService.edit(shashistEntity);
-//
-//    shashist.setOnline(false);
-//    shashist.setPlaying(false);
-//
-//    updatePlayerList();
-//    peers.remove(message.getSender());
-//  }
+  private void handleChatMessage(Session session, PlayerMessage message) {
+    session.getOpenSessions().stream().filter(Session::isOpen).forEach(peer -> {
+      sendMessage(peer, message);
+    });
+  }
 
   private void handleNewPlayer(PlayerMessage message, Session session) {
     Shashist shashist = message.getSender();
@@ -84,47 +76,44 @@ public class PlayerWebsocket {
     shashist.setLoggedIn(true);
     shashist.setOnline(true);
 
-//    peers.put(shashist, session);
-    System.out.println("Register new player: " + shashist.getSystemId() + " " + session.getId() + " " + session.getMaxIdleTimeout());
+    peers.put(shashist, session);
+    System.out.println("Register new player: " + shashist.getSystemId() + " " + session.getId());
     updatePlayerList(session);
   }
 
   @OnClose
   public void onClose(Session session) {
-//    Shashist shashist = peers.keySet().stream().filter(sh -> peers.get(sh) == session).findFirst().get();
-//    ShashistEntity shashistEntity = shashistService.find(shashist.getId());
+    Shashist shashist = peers.keySet().stream().filter(sh -> peers.get(sh) == session).findFirst().get();
+    ShashistEntity shashistEntity = shashistService.find(shashist.getId());
 
-//    shashistEntity.setOnline(false);
-//    shashistEntity.setPlaying(false);
-//    shashistService.edit(shashistEntity);
+    shashistEntity.setOnline(false);
+    shashistEntity.setPlaying(false);
+    shashistService.edit(shashistEntity);
 
-//    shashist.setOnline(false);
-//    shashist.setPlaying(false);
+    shashist.setOnline(false);
+    shashist.setPlaying(false);
 
-    System.out.println("Disconnected: " + " " + session.getId());
-//    peers.values().remove(session);
+    System.out.println("Disconnected: " + shashist.getSystemId() + " " + session.getId());
+    peers.values().remove(session);
+    updatePlayerList(session);
   }
 
   @OnError
-  public void onError(Throwable t) {
-    t.printStackTrace();
+  public void onError(Throwable throwable) {
+    throwable.printStackTrace();
   }
 
-//  private void handleUpdatePlayerList() {
-//    updatePlayerList();
-//  }
-
-  private void handleChatMessage(PlayerMessage message) {
+  private void handleChatPrivateMessage(PlayerMessage message) {
     Shashist receiver = message.getReceiver();
-//    Session session = peers.get(receiver);
-//    sendMessage(session, message);
+    Session session = peers.get(receiver);
+    sendMessage(session, message);
   }
 
   private void updatePlayerList(Session session) {
     MessageFactory messageFactory = AutoBeanFactorySource.create(MessageFactory.class);
     PlayerMessage playerMessage = messageFactory.playerMessage().as();
     playerMessage.setType(PlayerMessage.MessageType.USER_LIST_UPDATE);
-//    playerMessage.setPlayerList(new ArrayList<>(peers.keySet()));
+    playerMessage.setPlayerList(new ArrayList<>(peers.keySet()));
     session.getOpenSessions().stream().filter(Session::isOpen).forEach(peer -> {
       sendMessage(peer, playerMessage);
     });
