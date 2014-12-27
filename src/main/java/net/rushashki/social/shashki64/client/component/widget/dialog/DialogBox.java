@@ -16,12 +16,11 @@ import org.gwtbootstrap3.client.ui.Button;
  * Time: 14:12
  */
 public class DialogBox extends BasicDialogBox {
-  private static DialogBox instance = null;
   private ScrollPanel contentScrollPanel;
   private HTML contentHTML;
   private final VerticalPanel panel = new VerticalPanel();
 
-  private DialogBox(String header, String content) {
+  public DialogBox(String header, String content) {
     setText(header);
 
     contentScrollPanel = new ScrollPanel();
@@ -47,24 +46,6 @@ public class DialogBox extends BasicDialogBox {
     add(panel);
 
     center();
-  }
-
-  public static void error(String message) {
-    if (instance == null) {
-      instance = new DialogBox(constants.error(), message);
-    } else {
-      instance.setContent(message);
-    }
-    instance.show();
-  }
-
-  public static void info(String message) {
-    if (instance == null) {
-      instance = new DialogBox(constants.info(), message);
-    } else {
-      instance.setContent(message);
-    }
-    instance.show();
   }
 
   public void setContent(String content) {

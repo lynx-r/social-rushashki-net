@@ -10,16 +10,20 @@ import net.rushashki.social.shashki64.shared.model.Shashist;
  */
 public interface Message {
 
-  public Shashist getSender();
+  Shashist getSender();
 
-  public void setSender(Shashist sender);
+  void setSender(Shashist sender);
 
-  public Shashist getReceiver();
+  Shashist getReceiver();
 
-  public void setReceiver(Shashist receiver);
+  void setReceiver(Shashist receiver);
 
-  public String getMessage();
+  String getMessage();
 
-  public void setMessage(String message);
+  void setMessage(String message);
+
+  String getData();
+
+  void setData(String data);
 
 }

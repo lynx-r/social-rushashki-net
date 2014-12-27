@@ -11,7 +11,7 @@ import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
  * Time: 23:17
  */
 public class BasicDialogBox extends DialogBox {
-  protected static ShashkiConstants constants;
+  protected ShashkiConstants constants;
 
   public BasicDialogBox() {
     ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;

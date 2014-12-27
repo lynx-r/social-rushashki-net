@@ -17,6 +17,7 @@ public class PlayerMessageImpl implements PlayerMessage {
   private String message = "";
   private MessageType type;
   private List<Shashist> playerList = new ArrayList<>();
+  private String data;
 
   @Override
   public Shashist getSender() {
@@ -46,6 +47,16 @@ public class PlayerMessageImpl implements PlayerMessage {
   @Override
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  @Override
+  public String getData() {
+    return data;
+  }
+
+  @Override
+  public void setData(String data) {
+    this.data = data;
   }
 
   @Override

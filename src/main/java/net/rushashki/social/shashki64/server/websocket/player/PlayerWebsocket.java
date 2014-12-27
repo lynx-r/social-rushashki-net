@@ -55,6 +55,7 @@ public class PlayerWebsocket {
         handleChatMessage(session, message);
         break;
       case PLAY_INVITE:
+      case PLAY_ACCEPT_INVITE:
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(message);
         break;

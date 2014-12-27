@@ -102,7 +102,6 @@ public abstract class InviteDialogBox extends BasicDialogBox {
       @Override
       public void onClick(ClickEvent event) {
         hide();
-        canceled();
         timerCounterTimer.cancel();
         waitResponseTimer.cancel();
         submitButton.setEnabled(true);
@@ -135,5 +134,4 @@ public abstract class InviteDialogBox extends BasicDialogBox {
 
   public abstract void submitted(boolean white);
 
-  public abstract void canceled();
 }

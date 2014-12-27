@@ -19,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 public class Util {
 
   private MessageFactory messageFactory = GWT.create(MessageFactory.class);
+  public static final String MESSAGE_SEPARATOR = " > ";
 
   public PlayerMessage makePlayerMessage() {
     AutoBean<PlayerMessage> playerMessageAutoBean = messageFactory.playerMessage();

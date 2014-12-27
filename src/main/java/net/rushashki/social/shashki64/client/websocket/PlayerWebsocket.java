@@ -9,14 +9,17 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.ClientFactory;
+import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmPlayDialogBox;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
+import net.rushashki.social.shashki64.client.util.Util;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
 import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
 import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessageImpl;
+import org.apache.xpath.operations.Bool;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -52,16 +55,54 @@ public class PlayerWebsocket implements WebSocketCallback {
     eventBus.addHandler(OnPlayerMessageEvent.TYPE, event -> {
       PlayerMessage playerMessage = event.getPlayerMessage();
 
-      MessageFactory chatFactory = GWT.create(MessageFactory.class);
-      AutoBean<PlayerMessage> bean = chatFactory.create(PlayerMessage.class, playerMessage);
-      String message = AutoBeanCodex.encode(bean).getPayload();
-      webSocket.send(message);
+      sendPlayerMessage(playerMessage);
     });
+  }
+
+  private void sendPlayerMessage(PlayerMessage playerMessage) {
+    MessageFactory chatFactory = GWT.create(MessageFactory.class);
+    AutoBean<PlayerMessage> bean = chatFactory.create(PlayerMessage.class, playerMessage);
+    String message = AutoBeanCodex.encode(bean).getPayload();
+    webSocket.send(message);
   }
 
   private void handleUpdatePlayerList(List<Shashist> playerList) {
     clientFactory.setPlayerList(playerList);
     eventBus.fireEvent(new OnGetPlayerListEvent(playerList));
+  }
+
+  private void handlePlayInvite(PlayerMessage playerMessage) {
+    ConfirmPlayDialogBox confirmPlayDialogBox = new ConfirmPlayDialogBox() {
+      @Override
+      public void submitted() {
+        clientFactory.setOpponent(playerMessage.getSender());
+
+        PlayerMessage message = GWT.create(PlayerMessageImpl.class);
+        message.setSender(playerMessage.getReceiver());
+        message.setReceiver(playerMessage.getSender());
+        message.setType(PlayerMessage.MessageType.PLAY_ACCEPT_INVITE);
+
+        message.setData(Boolean.TRUE.toString());
+
+        sendPlayerMessage(message);
+
+        eventBus.fireEvent(new OnStartPlayEvent());
+      }
+
+      @Override
+      public void canceled() {
+        PlayerMessage message = GWT.create(PlayerMessageImpl.class);
+        message.setSender(playerMessage.getReceiver());
+        message.setReceiver(playerMessage.getSender());
+        message.setType(PlayerMessage.MessageType.PLAY_ACCEPT_INVITE);
+
+        message.setData(Boolean.FALSE.toString());
+
+        sendPlayerMessage(message);
+      }
+    };
+    confirmPlayDialogBox.show(playerMessage.getMessage(), playerMessage.getSender(),
+        Boolean.valueOf(playerMessage.getData()));
   }
 
   @Override
@@ -70,10 +111,7 @@ public class PlayerWebsocket implements WebSocketCallback {
     playerMessage.setSender(player);
     playerMessage.setType(PlayerMessage.MessageType.PLAYER_REGISTER);
 
-    MessageFactory chatFactory = GWT.create(MessageFactory.class);
-    AutoBean<PlayerMessage> bean = chatFactory.create(PlayerMessage.class, playerMessage);
-    String message = AutoBeanCodex.encode(bean).getPayload();
-    webSocket.send(message);
+    sendPlayerMessage(playerMessage);
 
     eventBus.fireEvent(new OnConnectedToPlayEvent());
   }
@@ -93,8 +131,27 @@ public class PlayerWebsocket implements WebSocketCallback {
         handleUpdatePlayerList(playerMessage.getPlayerList());
         break;
       case PLAY_INVITE:
-        Window.alert("me invited! " + playerMessage.getSender().getPublicName());
+        handlePlayInvite(playerMessage);
         break;
+      case PLAY_ACCEPT_INVITE:
+        handlePlayAcceptInvite(playerMessage);
+        break;
+      case CHAT_PRIVATE_MESSAGE:
+        handleChatPrivateMessage(playerMessage);
+    }
+  }
+
+  private void handleChatPrivateMessage(PlayerMessage playerMessage) {
+    eventBus.fireEvent(new OnChatMessageEvent(playerMessage.getMessage()));
+  }
+
+  private void handlePlayAcceptInvite(PlayerMessage playerMessage) {
+    if (Boolean.valueOf(playerMessage.getData())) {
+      clientFactory.setOpponent(playerMessage.getSender());
+      eventBus.fireEvent(new OnStartPlayEvent());
+    } else {
+      clientFactory.setOpponent(null);
+      eventBus.fireEvent(new OnRejectPlayEvent());
     }
   }
 }

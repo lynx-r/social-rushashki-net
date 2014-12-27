@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
+import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialogBox;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
@@ -68,6 +69,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   private CellList<Shashist> playersCellList;
   private SingleSelectionModel<Shashist> playerSelectionModel;
   private NotationPanel notationPanel;
+  private InviteDialogBox inviteDialogBox;
 
   public ShashkiPlayComponentUi(ClientFactory clientFactory) {
     privateChat = new ChatPrivateComponentUi(clientFactory);
@@ -95,12 +97,23 @@ public class ShashkiPlayComponentUi extends BasicComponent {
           case PLAY:
             clientFactory.setOpponent(playerSelectionModel.getSelectedObject());
 
-            PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
-            playerMessage.setSender(clientFactory.getPlayer());
-            playerMessage.setReceiver(clientFactory.getOpponent());
-            playerMessage.setType(PlayerMessage.MessageType.PLAY_INVITE);
+            inviteDialogBox = new InviteDialogBox() {
+              @Override
+              public void submitted(boolean white) {
+                PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
+                playerMessage.setSender(clientFactory.getPlayer());
+                playerMessage.setReceiver(clientFactory.getOpponent());
+                playerMessage.setType(PlayerMessage.MessageType.PLAY_INVITE);
 
-            eventBus.fireEvent(new OnPlayerMessageEvent(playerMessage));
+                playerMessage.setMessage(constants.inviteMessage(clientFactory.getPlayer().getPublicName(),
+                    String.valueOf(white ? constants.black() : constants.white())));
+                playerMessage.setData(String.valueOf(!white));
+
+                eventBus.fireEvent(new OnPlayerMessageEvent(playerMessage));
+              }
+            };
+            inviteDialogBox.show(constants.inviteToPlay(clientFactory.getOpponent().getPublicName(),
+                constants.draughts()));
             break;
         }
       }
@@ -129,6 +142,22 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         connectPlayButton.addStyleName("btn-danger");
         connectPlayButton.setIcon(IconType.REFRESH);
         connectPlayButton.setText(constants.reconnect());
+      }
+    });
+
+    eventBus.addHandler(OnStartPlayEvent.TYPE, new OnStartPlayEventHandler() {
+      @Override
+      public void onOnStartPlay(OnStartPlayEvent event) {
+        if (inviteDialogBox != null) {
+          inviteDialogBox.hide();
+        }
+      }
+    });
+
+    eventBus.addHandler(OnRejectPlayEvent.TYPE, new OnRejectPlayEventHandler() {
+      @Override
+      public void onOnRejectPlay(OnRejectPlayEvent event) {
+        inviteDialogBox.hide();
       }
     });
   }

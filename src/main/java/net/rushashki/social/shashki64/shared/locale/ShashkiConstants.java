@@ -1,7 +1,9 @@
 package net.rushashki.social.shashki64.shared.locale;
 
 import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import net.rushashki.social.shashki64.shared.model.Shashist;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +11,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
  * Date: 23.11.14
  * Time: 20:13
  */
-public interface ShashkiConstants extends Constants {
+public interface ShashkiConstants extends Messages {
 
   String home();
 
@@ -74,4 +76,12 @@ public interface ShashkiConstants extends Constants {
   String no();
 
   String confirm();
+
+  String inviteMessage(String inviting, String color);
+
+  String inviteToPlay(String opponent, String playType);
+
+  String draughts();
+
+  String atFirstStartPlay();
 }
