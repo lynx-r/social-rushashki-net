@@ -59,47 +59,16 @@ public class ShashistEntity extends GwtPersistableObject implements Shashist {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    ShashistEntity shashist = (ShashistEntity) o;
+    ShashistEntity that = (ShashistEntity) o;
 
-    if (loggedIn != shashist.loggedIn) return false;
-    if (online != shashist.online) return false;
-    if (playing != shashist.playing) return false;
-    if (visitCounter != shashist.visitCounter) return false;
-    if (authProvider != null ? !authProvider.equals(shashist.authProvider) : shashist.authProvider != null)
-      return false;
-    if (email != null ? !email.equals(shashist.email) : shashist.email != null) return false;
-    if (firstName != null ? !firstName.equals(shashist.firstName) : shashist.firstName != null) return false;
-    if (friendOf != null ? !friendOf.equals(shashist.friendOf) : shashist.friendOf != null) return false;
-    if (friends != null ? !friends.equals(shashist.friends) : shashist.friends != null) return false;
-    if (lastName != null ? !lastName.equals(shashist.lastName) : shashist.lastName != null) return false;
-    if (lastVisited != null ? !lastVisited.equals(shashist.lastVisited) : shashist.lastVisited != null) return false;
-    if (middleName != null ? !middleName.equals(shashist.middleName) : shashist.middleName != null) return false;
-    if (playerName != null ? !playerName.equals(shashist.playerName) : shashist.playerName != null) return false;
-    if (registerDate != null ? !registerDate.equals(shashist.registerDate) : shashist.registerDate != null)
-      return false;
-    if (vkUid != null ? !vkUid.equals(shashist.vkUid) : shashist.vkUid != null) return false;
+    if (!sessionId.equals(that.sessionId)) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = vkUid != null ? vkUid.hashCode() : 0;
-    result = 31 * result + (email != null ? email.hashCode() : 0);
-    result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-    result = 31 * result + (middleName != null ? middleName.hashCode() : 0);
-    result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-    result = 31 * result + (playerName != null ? playerName.hashCode() : 0);
-    result = 31 * result + (authProvider != null ? authProvider.hashCode() : 0);
-    result = 31 * result + (friends != null ? friends.hashCode() : 0);
-    result = 31 * result + (friendOf != null ? friendOf.hashCode() : 0);
-    result = 31 * result + (loggedIn ? 1 : 0);
-    result = 31 * result + (playing ? 1 : 0);
-    result = 31 * result + (online ? 1 : 0);
-    result = 31 * result + (registerDate != null ? registerDate.hashCode() : 0);
-    result = 31 * result + (lastVisited != null ? lastVisited.hashCode() : 0);
-    result = 31 * result + visitCounter;
-    return result;
+    return sessionId.hashCode();
   }
 
   @Override

@@ -2,6 +2,8 @@ package net.rushashki.social.shashki64.client.component.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -29,14 +31,17 @@ public class ChatPrivateComponentUi extends BasicComponent {
   public ChatPrivateComponentUi(ClientFactory clientFactory) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
-    messageInputTextBox.addKeyPressHandler(keyPressEvent -> {
-      if (keyPressEvent.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER && !messageInputTextBox.getText().isEmpty()) {
-        PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
-        playerMessage.setSender(clientFactory.getPlayer());
-        playerMessage.setType(PlayerMessage.MessageType.PLAYER_REGISTER);
+    messageInputTextBox.addKeyPressHandler(new KeyPressHandler() {
+      @Override
+      public void onKeyPress(KeyPressEvent keyPressEvent) {
+        if (keyPressEvent.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER && !messageInputTextBox.getText().isEmpty()) {
+          PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
+          playerMessage.setSender(clientFactory.getPlayer());
+          playerMessage.setType(PlayerMessage.MessageType.PLAYER_REGISTER);
 
-        eventBus.fireEvent(new OnPlayerMessageEvent(playerMessage));
-        messageInputTextBox.setText("");
+          eventBus.fireEvent(new OnPlayerMessageEvent(playerMessage));
+          messageInputTextBox.setText("");
+        }
       }
     });
   }

@@ -37,7 +37,7 @@ public class PlayerWebsocket {
   private ShashistService shashistService;
 
   private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
-  private long MAX_IDLE_TIMEOUT = 1000 * 20 * 1;
+  private final long MAX_IDLE_TIMEOUT = 1000 * 60 * 15;
 
   @OnOpen
   public void onOpen(Session session) {
@@ -53,6 +53,8 @@ public class PlayerWebsocket {
         break;
       case CHAT_MESSAGE:
         handleChatMessage(session, message);
+        break;
+      case PLAY_INVITE:
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(message);
         break;
@@ -105,7 +107,8 @@ public class PlayerWebsocket {
 
   private void handleChatPrivateMessage(PlayerMessage message) {
     Shashist receiver = message.getReceiver();
-    Session session = peers.get(receiver);
+    Shashist shashist = peers.keySet().stream().filter(s -> s.getSystemId().equals(receiver.getSystemId())).findAny().get();
+    Session session = peers.get(shashist);
     sendMessage(session, message);
   }
 

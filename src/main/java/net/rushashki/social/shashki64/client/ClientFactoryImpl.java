@@ -13,6 +13,7 @@ import java.util.List;
 public class ClientFactoryImpl implements ClientFactory {
 
     private Shashist player;
+    private Shashist opponent;
     private List<Shashist> playerList;
 
     @Override
@@ -33,6 +34,16 @@ public class ClientFactoryImpl implements ClientFactory {
     @Override
     public void setPlayerList(List<Shashist> playerList) {
         this.playerList = playerList;
+    }
+
+    @Override
+    public Shashist getOpponent() {
+        return opponent;
+    }
+
+    @Override
+    public void setOpponent(Shashist opponent) {
+        this.opponent = opponent;
     }
 
 }

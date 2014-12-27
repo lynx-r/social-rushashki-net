@@ -2,6 +2,7 @@ package net.rushashki.social.shashki64.client.websocket;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.websockets.client.WebSocket;
 import com.google.gwt.websockets.client.WebSocketCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -90,6 +91,9 @@ public class PlayerWebsocket implements WebSocketCallback {
     switch (playerMessage.getType()) {
       case USER_LIST_UPDATE:
         handleUpdatePlayerList(playerMessage.getPlayerList());
+        break;
+      case PLAY_INVITE:
+        Window.alert("me invited! " + playerMessage.getSender().getPublicName());
         break;
     }
   }

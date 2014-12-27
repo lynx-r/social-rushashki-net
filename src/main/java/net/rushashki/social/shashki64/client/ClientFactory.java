@@ -20,4 +20,7 @@ public interface ClientFactory {
 
     void setPlayerList(List<Shashist> playerList);
 
+    Shashist getOpponent();
+
+    void setOpponent(Shashist opponent);
 }
