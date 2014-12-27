@@ -36,7 +36,7 @@ public class PlayerWebsocket extends WebSocketListenerAdapter {
   private ShashkiConstants constants;
   private EventBus eventBus;
   private Shashist player;
-  private final String PLAYER_WEBSOCKET_URL = "ws://localhost:8080/ws/echo";
+  private final String PLAYER_WEBSOCKET_URL = "ws://localhost:8080/ws/play";
   private ClientFactory clientFactory;
 
   public PlayerWebsocket(ClientFactory clientFactory) {

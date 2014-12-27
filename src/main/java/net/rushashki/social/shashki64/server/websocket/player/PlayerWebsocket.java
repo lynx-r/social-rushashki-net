@@ -3,6 +3,8 @@ package net.rushashki.social.shashki64.server.websocket.player;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import net.rushashki.social.shashki64.server.service.ShashistService;
 import net.rushashki.social.shashki64.server.util.Util;
+import net.rushashki.social.shashki64.server.websocket.player.message.PlayerMessageDecoder;
+import net.rushashki.social.shashki64.server.websocket.player.message.PlayerMessageEncoder;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.model.ShashistEntity;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
@@ -25,9 +27,9 @@ import java.util.Map;
  * Time: 12:05
  */
 @Singleton
-@ServerEndpoint(value = "/ws/echo"
-//    decoders = {PlayerMessageDecoder.class},
-//    encoders = {PlayerMessageEncoder.class}
+@ServerEndpoint(value = "/ws/play",
+    decoders = {PlayerMessageDecoder.class},
+    encoders = {PlayerMessageEncoder.class}
 )
 public class PlayerWebsocket {
 
@@ -39,31 +41,25 @@ public class PlayerWebsocket {
 
   @OnOpen
   public void onOpen(Session session) {
-    session.setMaxIdleTimeout(MAX_IDLE_TIMEOUT);
     System.out.println("New connection");
+    session.setMaxIdleTimeout(MAX_IDLE_TIMEOUT);
   }
 
   @OnMessage
-  public void onMessage(Session session, String message) {
-    RemoteEndpoint.Basic remoteEndpoint = session.getBasicRemote();
-    try {
-      remoteEndpoint.sendText("echo " + message);
-    } catch (IOException e) {
-      e.printStackTrace();
+  public void onMessage(Session session, PlayerMessage message) {
+    switch (message.getType()) {
+      case PLAYER_REGISTER:
+        handleNewPlayer(message, session);
+        break;
+      case PLAYER_DISCONNECT:
+        handleDisconnectPlayer(message);
+      case USER_LIST_UPDATE:
+        handleUpdatePlayerList();
+        break;
+      case CHAT_MESSAGE:
+        handleChatMessage(message);
+        break;
     }
-//    switch (message.getType()) {
-//      case PLAYER_REGISTER:
-//        handleNewPlayer(message, session);
-//        break;
-//      case PLAYER_DISCONNECT:
-//        handleDisconnectPlayer(message);
-//      case USER_LIST_UPDATE:
-//        handleUpdatePlayerList();
-//        break;
-//      case CHAT_MESSAGE:
-//        handleChatMessage(message);
-//        break;
-//    }
   }
 
   private void handleDisconnectPlayer(PlayerMessage message) {
@@ -82,8 +78,6 @@ public class PlayerWebsocket {
   }
 
   private void handleNewPlayer(PlayerMessage message, Session session) {
-    session.setMaxIdleTimeout(MAX_IDLE_TIMEOUT);
-
     Shashist shashist = message.getSender();
     ShashistEntity shashistEntity = shashistService.find(shashist.getId());
 

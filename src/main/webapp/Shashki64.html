@@ -7,36 +7,8 @@
 <body>
 <script type="text/javascript" language="javascript"
         src="net.rushashki.social.shashki64.Shashki64/net.rushashki.social.shashki64.Shashki64.nocache.js"></script>
-<!--<div id="navigation"></div>-->
-<!--<div id="content" class="container-fluid"></div>-->
-<!--<footer id="footer" class="footer"></footer>-->
-<form>
-    <label for="textMessage">Message</label><input id="textMessage">
-    <input onclick="sendMessage(); return false;" value="Send Message" type="button">
-</form>
-<br />
-<label for="messageTextArea">Chat</label><textarea id="messageTextArea"></textarea>
-<script>
-    var webSocket = new WebSocket("ws://localhost:8080/ws/echo");
-    var textMessage = document.getElementById("textMessage");
-    var messageTextArea = document.getElementById("messageTextArea");
-    webSocket.onmessage = function (message) {
-        onMessage(message);
-    };
-    webSocket.onclose = function (message) {
-        onClose(message);
-    };
-    function sendMessage() {
-        webSocket.send(textMessage.value);
-        messageTextArea.value += "sent " + textMessage.value + "\n";
-        textMessage.value = "";
-    }
-    function onMessage(message) {
-        messageTextArea.value += "received " + message.data + "\n";
-    }
-    function onClose(message) {
-        messageTextArea.value += "disconnected...\n";
-    }
-</script>
+<div id="navigation"></div>
+<div id="content" class="container-fluid"></div>
+<footer id="footer" class="footer"></footer>
 </body>
 </html>
