@@ -4,11 +4,13 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import net.rushashki.social.shashki64.shared.resources.Resources;
-import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.ButtonGroup;
+import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.RadioButton;
+import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +19,7 @@ import org.gwtbootstrap3.client.ui.*;
  * Time: 21:15
  */
 public abstract class InviteDialogBox extends BasicDialogBox {
-  private final Label inviteLabel = new Label();
+  private final HTML inviteLabel = new HTML();
   private final RadioButton whiteRadio;
   private final Button submitButton;
   private final Button cancelButton;
@@ -40,15 +42,17 @@ public abstract class InviteDialogBox extends BasicDialogBox {
     Label label = new Label(constants.chooseYourColor());
     panel.add(label);
 
-
-    ButtonGroup group = new ButtonGroup();
+    FlowPanel radioGroup = new FlowPanel();
     whiteRadio = new RadioButton(constants.white());
+    whiteRadio.setName("rb-color");
+    whiteRadio.getElement().getStyle().setMargin(10, Style.Unit.PX);
     RadioButton blackRadio = new RadioButton(constants.black());
+    blackRadio.setName("rb-color");
     whiteRadio.setValue(true);
 
-    group.add(whiteRadio);
-    group.add(blackRadio);
-    panel.add(group);
+    radioGroup.add(whiteRadio);
+    radioGroup.add(blackRadio);
+    panel.add(radioGroup);
 
     final Image waitImage = new Image(Resources.INSTANCE.images().busyIconImage());
     waitMessage.setVisible(false);
@@ -70,7 +74,7 @@ public abstract class InviteDialogBox extends BasicDialogBox {
     };
     panel.add(waitMessage);
 
-    group = new ButtonGroup();
+    ButtonGroup group = new ButtonGroup();
     group.add(cancelButton);
     group.add(submitButton);
     submitButton.addStyleName("btn-primary");
@@ -98,6 +102,7 @@ public abstract class InviteDialogBox extends BasicDialogBox {
         submitButton.setEnabled(false);
       }
     });
+
     cancelButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
@@ -113,7 +118,7 @@ public abstract class InviteDialogBox extends BasicDialogBox {
   }
 
   public void show(String message) {
-    inviteLabel.setText(message);
+    inviteLabel.setHTML(message);
     show();
     center();
   }

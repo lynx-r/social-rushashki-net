@@ -7,7 +7,17 @@
     <g:HTMLPanel>
         <h1><ui:msg description="Settings" key="lkSettings">Настройки</ui:msg></h1>
         <b:Panel>
-            <b:Heading size="H3" text=""/>
+            <b:PanelHeader>
+                <b:Heading size="H3" text="Персональные">
+                    <ui:attribute name="text" description="PrivateSettings"/>
+                </b:Heading>
+            </b:PanelHeader>
+            <b:PanelBody>
+                <g:HTMLPanel>
+                    <b:TextBox ui:field="playerNameTextBox"/>
+                    <b:Button ui:field="submitPlayerNameButton" text="Сохранить"/>
+                </g:HTMLPanel>
+            </b:PanelBody>
         </b:Panel>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -10,9 +10,14 @@
   <inherits name="com.google.gwt.i18n.I18N"/>
   <inherits name="com.google.gwt.logging.Logging"/>
 
+  <!-- Third party -->
   <inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
   <inherits name='com.ait.lienzo.Lienzo' />
   <inherits name="com.google.gwt.websockets.WebSockets"/>
+
+  <!-- Inherit css based theme -->
+  <inherits name='com.google.gwt.user.theme.chrome.Chrome'/>
+  <!--<inherits name='com.google.gwt.user.theme.standard.Standard'/>-->
 
   <!-- Use ClientFactoryImpl by default -->
   <replace-with class="net.rushashki.social.shashki64.client.ClientFactoryImpl">
