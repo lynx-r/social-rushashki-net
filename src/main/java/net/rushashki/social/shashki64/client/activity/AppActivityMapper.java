@@ -40,7 +40,9 @@ public class AppActivityMapper implements ActivityMapper {
     if (place instanceof HomePlace) {
       return new HomeActivity((HomePlace) basicPlace);
     } else if (place instanceof PlayTapePlace) {
-      return new PlayLentaActivity((PlayTapePlace) basicPlace);
+      return new PlayTapeActivity((PlayTapePlace) basicPlace);
+    } else if (place instanceof AboutUsPlace) {
+      return new AboutUsActivity((AboutUsPlace) basicPlace);
     } else if (place instanceof SignInPlace) {
       return new SignInActivity((SignInPlace) basicPlace);
     }

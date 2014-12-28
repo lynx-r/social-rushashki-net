@@ -12,10 +12,10 @@ import net.rushashki.social.shashki64.client.view.PlayTapeView;
  * Date: 30.11.14
  * Time: 12:41
  */
-public class PlayLentaActivity extends BasicActivity implements PlayTapeView.Presenter {
-  public PlayLentaActivity(PlayTapePlace playTapePlace) {
+public class PlayTapeActivity extends BasicActivity implements PlayTapeView.Presenter {
+  public PlayTapeActivity(PlayTapePlace playTapePlace) {
     super(playTapePlace.getToken());
-    this.view = shashkiGinjector.getPlayLentaView();
+    this.view = shashkiGinjector.getPlayTapeView();
   }
 
   @Override

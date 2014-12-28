@@ -34,7 +34,7 @@ public interface ShashkiGinjector extends Ginjector {
 
   HomeViewUi getHomeView();
 
-  PlayTapeView getPlayLentaView();
+  PlayTapeView getPlayTapeView();
 
   PlayViewUi getPlayView();
 
@@ -43,6 +43,8 @@ public interface ShashkiGinjector extends Ginjector {
   ProfileView getProfileView();
 
   SettingsView getSettingsView();
+
+  AboutUsView getAboutUsView();
 
   NotFoundView getNotFoundView();
 

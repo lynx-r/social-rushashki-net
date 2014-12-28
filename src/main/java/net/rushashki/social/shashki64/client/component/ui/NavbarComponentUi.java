@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.client.component.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -45,6 +46,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     private AnchorListItem settingsLink;
     private ProfileServiceAsync profileService;
     private AnchorListItem profileDropDown;
+    private AnchorListItem aboutUsLink;
 
     public NavbarComponentUi() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -73,6 +75,14 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
             disableLink(prevActiveLink);
             prevActiveLink = playTapeLink;
             placeController.goTo(new PlayTapePlace(constants.playTapeToken()));
+        });
+
+        aboutUsLink = new AnchorListItem(constants.aboutUs());
+        aboutUsLink.setIcon(IconType.INFO);
+        aboutUsLink.addClickHandler(event -> {
+            disableLink(prevActiveLink);
+            prevActiveLink = aboutUsLink;
+            placeController.goTo(new AboutUsPlace(constants.aboutUsToken()));
         });
 
         playLink = new AnchorListItem(constants.play());
@@ -140,12 +150,14 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
                     navLeft.add(homeLink);
                     navLeft.add(playTapeLink);
                     navLeft.add(playLink);
+                    navLeft.add(aboutUsLink);
                     navRight.add(profileDropDown);
                     profileDropDown.setIcon(IconType.USER);
                     profileDropDown.setText(shashist.getPublicName());
                 } else {
                     navLeft.add(homeLink);
                     navLeft.add(playTapeLink);
+                    navLeft.add(aboutUsLink);
                     navRight.add(signInLink);
                 }
             }
@@ -160,6 +172,8 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
                 prevActiveLink = playTapeLink;
             } else if (token.equals(constants.playToken())) {
                 prevActiveLink = playLink;
+            } else if (token.equals(constants.aboutUsToken())) {
+                prevActiveLink = aboutUsLink;
             } else if (token.equals(constants.signInToken())) {
                 prevActiveLink = signInLink;
             } else if (token.equals(constants.profileToken())) {

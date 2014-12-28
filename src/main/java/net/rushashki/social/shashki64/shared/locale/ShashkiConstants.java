@@ -84,4 +84,9 @@ public interface ShashkiConstants extends Messages {
   String draughts();
 
   String atFirstStartPlay();
+
+  String aboutUs();
+
+  String aboutUsToken();
+
 }

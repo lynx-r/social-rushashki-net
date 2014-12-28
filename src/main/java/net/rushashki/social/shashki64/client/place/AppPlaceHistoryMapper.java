@@ -10,6 +10,7 @@ import com.google.gwt.place.shared.WithTokenizers;
  * Time: 14:50
  */
 @WithTokenizers({HomePlace.Tokenizer.class, PlayTapePlace.Tokenizer.class, PlayPlace.Tokenizer.class,
-    SignInPlace.Tokenizer.class, ProfilePlace.Tokenizer.class, SettingsPlace.Tokenizer.class})
+    SignInPlace.Tokenizer.class, ProfilePlace.Tokenizer.class, SettingsPlace.Tokenizer.class,
+    AboutUsPlace.Tokenizer.class})
 public interface AppPlaceHistoryMapper extends PlaceHistoryMapper {
 }
