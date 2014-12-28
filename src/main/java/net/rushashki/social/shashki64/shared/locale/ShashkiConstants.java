@@ -33,9 +33,9 @@ public interface ShashkiConstants extends Messages {
 
   String jumbotronSubGreeting();
 
-  String playLenta();
+  String playTape();
 
-  String playLentaToken();
+  String playTapeToken();
 
   String profile();
 

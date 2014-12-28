@@ -11,7 +11,6 @@ import net.rushashki.social.shashki64.client.view.*;
 import net.rushashki.social.shashki64.client.view.ui.HomeViewUi;
 import net.rushashki.social.shashki64.client.view.ui.PlayViewUi;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
-import net.rushashki.social.shashki64.shared.model.Shashist;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +34,7 @@ public interface ShashkiGinjector extends Ginjector {
 
   HomeViewUi getHomeView();
 
-  PlayLentaView getPlayLentaView();
+  PlayTapeView getPlayLentaView();
 
   PlayViewUi getPlayView();
 

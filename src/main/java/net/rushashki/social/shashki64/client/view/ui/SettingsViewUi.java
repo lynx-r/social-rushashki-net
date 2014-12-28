@@ -12,6 +12,7 @@ import net.rushashki.social.shashki64.client.view.SettingsView;
  * Time: 11:40
  */
 public class SettingsViewUi extends BasicViewUi implements SettingsView {
+
   private static SettingsViewUiUiBinder ourUiBinder = GWT.create(SettingsViewUiUiBinder.class);
 
   public SettingsViewUi() {
@@ -30,4 +31,5 @@ public class SettingsViewUi extends BasicViewUi implements SettingsView {
 
   interface SettingsViewUiUiBinder extends UiBinder<HTMLPanel, SettingsViewUi> {
   }
+
 }

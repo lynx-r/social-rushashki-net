@@ -40,7 +40,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     private AnchorListItem homeLink;
     private AnchorListItem playLink;
     private AnchorListItem signInLink;
-    private AnchorListItem playLentaLink;
+    private AnchorListItem playTapeLink;
     private AnchorListItem profileLink;
     private AnchorListItem settingsLink;
     private ProfileServiceAsync profileService;
@@ -67,12 +67,12 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
             placeController.goTo(new HomePlace(constants.homeToken()));
         });
 
-        playLentaLink = new AnchorListItem(constants.playLenta());
-        playLentaLink.setIcon(IconType.LIST);
-        playLentaLink.addClickHandler(event -> {
+        playTapeLink = new AnchorListItem(constants.playTape());
+        playTapeLink.setIcon(IconType.LIST);
+        playTapeLink.addClickHandler(event -> {
             disableLink(prevActiveLink);
-            prevActiveLink = playLentaLink;
-            placeController.goTo(new PlayLentaPlace(constants.playLentaToken()));
+            prevActiveLink = playTapeLink;
+            placeController.goTo(new PlayTapePlace(constants.playTapeToken()));
         });
 
         playLink = new AnchorListItem(constants.play());
@@ -138,14 +138,14 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
                 Shashist shashist = event.getClientFactory().getPlayer();
                 if (shashist != null) {
                     navLeft.add(homeLink);
-                    navLeft.add(playLentaLink);
+                    navLeft.add(playTapeLink);
                     navLeft.add(playLink);
                     navRight.add(profileDropDown);
                     profileDropDown.setIcon(IconType.USER);
                     profileDropDown.setText(shashist.getPublicName());
                 } else {
                     navLeft.add(homeLink);
-                    navLeft.add(playLentaLink);
+                    navLeft.add(playTapeLink);
                     navRight.add(signInLink);
                 }
             }
@@ -156,8 +156,8 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         if (prevActiveLink == null) {
             if (token.equals(constants.homeToken())) {
                 prevActiveLink = homeLink;
-            } else if (token.equals(constants.playLentaToken())) {
-                prevActiveLink = playLentaLink;
+            } else if (token.equals(constants.playTapeToken())) {
+                prevActiveLink = playTapeLink;
             } else if (token.equals(constants.playToken())) {
                 prevActiveLink = playLink;
             } else if (token.equals(constants.signInToken())) {

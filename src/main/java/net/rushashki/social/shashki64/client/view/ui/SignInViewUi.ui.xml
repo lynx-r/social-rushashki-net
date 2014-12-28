@@ -5,8 +5,6 @@
              ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
     <ui:style>
-        .vertical-align {
-        }
         .align-horizontal {
             margin: 0 auto;
             display: table;

@@ -39,8 +39,8 @@ public class AppActivityMapper implements ActivityMapper {
     basicPlace.setClientFactory(clientFactory);
     if (place instanceof HomePlace) {
       return new HomeActivity((HomePlace) basicPlace);
-    } else if (place instanceof PlayLentaPlace) {
-      return new PlayLentaActivity((PlayLentaPlace) basicPlace);
+    } else if (place instanceof PlayTapePlace) {
+      return new PlayLentaActivity((PlayTapePlace) basicPlace);
     } else if (place instanceof SignInPlace) {
       return new SignInActivity((SignInPlace) basicPlace);
     }

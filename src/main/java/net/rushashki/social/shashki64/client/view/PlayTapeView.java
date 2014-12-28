@@ -6,5 +6,5 @@ package net.rushashki.social.shashki64.client.view;
  * Date: 30.11.14
  * Time: 12:44
  */
-public interface PlayLentaView extends BasicView {
+public interface PlayTapeView extends BasicView {
 }
