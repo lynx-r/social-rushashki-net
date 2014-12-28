@@ -89,4 +89,9 @@ public interface ShashkiConstants extends Messages {
 
   String aboutUsToken();
 
+  String profileUpdated();
+
+  String errorWhileProfileUpdate();
+
+  String tooLongPlayerName();
 }

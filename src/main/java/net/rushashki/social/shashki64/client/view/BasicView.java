@@ -3,6 +3,7 @@ package net.rushashki.social.shashki64.client.view;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
 import net.rushashki.social.shashki64.client.ClientFactory;
+import net.rushashki.social.shashki64.shared.model.Shashist;
 
 /**
  * Created with IntelliJ IDEA.

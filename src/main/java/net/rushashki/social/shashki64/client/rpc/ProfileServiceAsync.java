@@ -10,7 +10,11 @@ import net.rushashki.social.shashki64.shared.model.Shashist;
  * Time: 20:03
  */
 public interface ProfileServiceAsync {
+
   void isAuthenticated(AsyncCallback<Boolean> async);
 
   void getProfile(AsyncCallback<Shashist> async);
+
+  void saveProfile(Shashist profile, AsyncCallback<Void> async);
+
 }

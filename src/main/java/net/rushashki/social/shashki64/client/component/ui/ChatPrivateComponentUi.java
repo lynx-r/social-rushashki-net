@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import net.rushashki.social.shashki64.client.ClientFactory;
@@ -39,7 +40,15 @@ public class ChatPrivateComponentUi extends BasicComponent {
     eventBus.addHandler(OnChatMessageEvent.TYPE, new OnChatMessageEventHandler() {
       @Override
       public void onOnChatMessage(OnChatMessageEvent event) {
-        chatPanel.add(new Label(event.getMessage()));
+        String message = event.getMessage();
+        String publicName = clientFactory.getPlayer().getPublicName();
+        HTML messageStyled = new HTML(message);
+        if (message.substring(0, message.indexOf(">") - 1).equals(publicName)) {
+          messageStyled.setStyleName("chat-my-message");
+        } else if (message.substring(message.indexOf(">")).contains(publicName)) {
+          messageStyled.setStyleName("chat-refer-me");
+        }
+        chatPanel.add(messageStyled);
       }
     });
 

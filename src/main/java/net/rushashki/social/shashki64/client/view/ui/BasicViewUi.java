@@ -1,8 +1,11 @@
 package net.rushashki.social.shashki64.client.view.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.social.shashki64.client.rpc.ProfileService;
+import net.rushashki.social.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.BasicView;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
@@ -22,11 +25,13 @@ public abstract class BasicViewUi extends Composite implements BasicView {
 
   protected String token;
   protected BasicView.Presenter presenter;
+  protected ProfileServiceAsync profileService;
   private ClientFactory clientFactory;
 
   public BasicViewUi() {
     logger = shashkiGinjector.getLogger();
     constants = shashkiGinjector.getShashkiConstants();
+    profileService = shashkiGinjector.getProfileService();
   }
 
   @Override

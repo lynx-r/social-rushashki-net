@@ -31,6 +31,7 @@ import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -142,6 +143,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         connectPlayButton.addStyleName("btn-danger");
         connectPlayButton.setIcon(IconType.REFRESH);
         connectPlayButton.setText(constants.reconnect());
+
+        playersCellList.setRowData(new ArrayList<>());
       }
     });
 

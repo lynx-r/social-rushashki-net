@@ -18,6 +18,8 @@ public interface ProfileService extends RemoteService {
 
   public Shashist getProfile();
 
+  public void saveProfile(Shashist profile);
+
   /**
    * Utility/Convenience class.
    * Use ProfileService.App.getInstance() to access static instance of ProfileServiceAsync

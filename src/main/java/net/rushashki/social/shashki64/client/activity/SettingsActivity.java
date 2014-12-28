@@ -17,6 +17,7 @@ public class SettingsActivity extends BasicActivity implements SettingsView.Pres
   public SettingsActivity(SettingsPlace place) {
     super(place.getToken());
     this.view = shashkiGinjector.getSettingsView();
+    ((SettingsView) view).setPlayer(place.getClientFactory().getPlayer());
   }
 
   @Override

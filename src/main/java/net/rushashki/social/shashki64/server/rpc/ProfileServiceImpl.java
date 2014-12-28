@@ -4,6 +4,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import net.rushashki.social.shashki64.client.rpc.ProfileService;
 import net.rushashki.social.shashki64.server.service.ShashistService;
 import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.ShashistEntity;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -33,5 +34,15 @@ public class ProfileServiceImpl extends RemoteServiceServlet implements ProfileS
       return shashistService.findBySessionId(session.getId());
     }
     return null;
+  }
+
+  @Override
+  public void saveProfile(Shashist profile) {
+    ShashistEntity shashistEntity = shashistService.find(profile.getId());
+    shashistEntity.setOnline(profile.isOnline());
+    shashistEntity.setPlaying(profile.isPlaying());
+    shashistEntity.setLoggedIn(profile.isLoggedIn());
+    shashistEntity.setPlayerName(profile.getPlayerName());
+    shashistService.edit(shashistEntity);
   }
 }

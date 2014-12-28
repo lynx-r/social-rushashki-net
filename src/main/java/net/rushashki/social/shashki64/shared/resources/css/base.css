@@ -20,3 +20,11 @@ body {
 .focused {
     background-color: lightyellow;
 }
+
+.chat-my-message {
+    background-color: lightblue;
+}
+
+.chat-refer-me {
+    background-color: lightcoral;
+}
