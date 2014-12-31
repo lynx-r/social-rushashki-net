@@ -107,7 +107,7 @@
 //
 //    notationPanel.add(new Label(constants.notationTitle()));
 //    notationPanel.add(notationScroll);
-//    notationPanel.addStyleName("player-notation");
+//    notationPanel.addStyleName("game-notation");
 //    checkersPanel.add(notationPanel);
 //
 //    HorizontalPanel controlsPanel = new HorizontalPanel();
@@ -124,7 +124,7 @@
 //    controlsPanel.add(closeButton);
 //    controlsPanel.setCellHorizontalAlignment(closeButton, HasAlignment.ALIGN_RIGHT);
 //    controlsPanel.setWidth("100%");
-//    controlsPanel.addStyleName("player-controls");
+//    controlsPanel.addStyleName("game-controls");
 //
 //    verticalPanel.add(checkersPanel);
 //    verticalPanel.add(controlsPanel);
@@ -136,7 +136,7 @@
 //      }
 //    });
 //
-//    verticalPanel.addStyleName("player-window");
+//    verticalPanel.addStyleName("game-window");
 //    add(verticalPanel);
 //    center();
 //  }

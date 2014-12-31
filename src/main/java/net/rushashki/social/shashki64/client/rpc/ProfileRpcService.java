@@ -11,23 +11,25 @@ import net.rushashki.social.shashki64.shared.model.Shashist;
  * Date: 05.12.14
  * Time: 20:03
  */
-@RemoteServiceRelativePath("ProfileService")
-public interface ProfileService extends RemoteService {
+@RemoteServiceRelativePath("ProfileRpcService")
+public interface ProfileRpcService extends RemoteService {
 
   public Boolean isAuthenticated();
 
-  public Shashist getProfile();
+  public Shashist getProfile(Long shashistId);
+
+  Shashist getAuthProfile();
 
   public void saveProfile(Shashist profile);
 
   /**
    * Utility/Convenience class.
-   * Use ProfileService.App.getInstance() to access static instance of ProfileServiceAsync
+   * Use ProfileRpcService.App.getInstance() to access static instance of ProfileRpcServiceAsync
    */
   public static class App {
-    private static final ProfileServiceAsync ourInstance = (ProfileServiceAsync) GWT.create(ProfileService.class);
+    private static final ProfileRpcServiceAsync ourInstance = (ProfileRpcServiceAsync) GWT.create(ProfileRpcService.class);
 
-    public static ProfileServiceAsync getInstance() {
+    public static ProfileRpcServiceAsync getInstance() {
       return ourInstance;
     }
   }

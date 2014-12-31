@@ -3,6 +3,8 @@ package net.rushashki.social.shashki64.shared.websocket.message;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import net.rushashki.social.shashki64.shared.model.Game;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 /**
@@ -12,6 +14,11 @@ import net.rushashki.social.shashki64.shared.model.Shashist;
  * Time: 16:37
  */
 public interface MessageFactory extends AutoBeanFactory {
-  AutoBean<PlayerMessage> playerMessage();
+
+  AutoBean<Game> game();
+
+  AutoBean<GameMessage> gameMessage();
+
   AutoBean<Shashist> shashist();
+
 }

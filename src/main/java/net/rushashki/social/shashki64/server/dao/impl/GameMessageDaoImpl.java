@@ -1,8 +1,8 @@
 package net.rushashki.social.shashki64.server.dao.impl;
 
 import net.rushashki.social.shashki64.server.dao.PlayerMessageDao;
-import net.rushashki.social.shashki64.shared.model.entity.PlayerMessageEntity;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
+import net.rushashki.social.shashki64.shared.model.entity.GameMessageEntity;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -18,13 +18,13 @@ import java.util.List;
  * Time: 21:55
  */
 @Stateless
-public class PlayerMessageDaoImpl extends DaoImpl<PlayerMessageEntity> implements PlayerMessageDao {
+public class GameMessageDaoImpl extends DaoImpl<GameMessageEntity> implements PlayerMessageDao {
 
   @Inject
   private EntityManager entityManager;
 
-  public PlayerMessageDaoImpl() {
-    super(PlayerMessageEntity.class);
+  public GameMessageDaoImpl() {
+    super(GameMessageEntity.class);
   }
 
   @Override
@@ -33,19 +33,19 @@ public class PlayerMessageDaoImpl extends DaoImpl<PlayerMessageEntity> implement
   }
 
   @Override
-  public List<PlayerMessage> findLastMessages(int countLast, Long playerId, Long opponentId) {
+  public List<GameMessage> findLastMessages(int countLast, Long playerId, Long opponentId) {
     Query query = getEntityManager().createQuery(
         "SELECT m " +
-            " FROM PlayerMessageEntity m " +
+            " FROM GameMessageEntity m " +
             " JOIN FETCH m.sender " +
             " JOIN FETCH m.receiver " +
             " WHERE ((m.sender.id = :senderId AND m.receiver.id = :receiverId) " +
             " OR (m.receiver.id = :senderId AND m.sender.id = :receiverId)) " +
-            " AND m.type = :messageType " +
+            " AND m.messageType = :messageType " +
             " ORDER BY m.sentDate DESC");
     query.setParameter("senderId", playerId);
     query.setParameter("receiverId", opponentId);
-    query.setParameter("messageType", PlayerMessage.MessageType.CHAT_PRIVATE_MESSAGE);
+    query.setParameter("messageType", GameMessage.MessageType.CHAT_PRIVATE_MESSAGE);
 
     query.setMaxResults(countLast);
 

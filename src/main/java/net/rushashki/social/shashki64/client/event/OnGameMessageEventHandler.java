@@ -8,6 +8,6 @@ import com.google.gwt.event.shared.EventHandler;
  * Date: 13.12.14
  * Time: 12:38
  */
-public interface OnPlayerMessageEventHandler extends EventHandler {
-  void onOnPlayerMessage(OnPlayerMessageEvent event);
+public interface OnGameMessageEventHandler extends EventHandler {
+  void onOnPlayerMessage(OnGameMessageEvent event);
 }

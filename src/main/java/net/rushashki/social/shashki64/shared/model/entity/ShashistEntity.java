@@ -21,22 +21,29 @@ public class ShashistEntity extends PersistableObjectImpl implements Shashist {
 
   @Column(name = "session_id")
   private String sessionId;
+
   @Column(name = "vk_uid")
   private String vkUid;
+
   @Email
   private String email;
+
   @Column(name = "first_name")
   private String firstName;
+
   @Column(name = "last_name")
   private String lastName;
+
   @Column(name = "player_name")
   private String playerName;
+
   @Column(name = "auth_provider")
   private String authProvider;
 
   @GwtTransient
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.friendOf", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<FriendEntity> friends;
+
   @GwtTransient
   @Column(name = "fiends_of")
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.friend", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -44,10 +51,27 @@ public class ShashistEntity extends PersistableObjectImpl implements Shashist {
 
   @GwtTransient
   @OneToMany(mappedBy = "receiver")
-  private Set<PlayerMessageEntity> receivedMessages;
+  private Set<GameMessageEntity> receivedPlayerMessages;
+
   @GwtTransient
   @OneToMany(mappedBy = "sender")
-  private Set<PlayerMessageEntity> sentMessages;
+  private Set<GameMessageEntity> sentPlayerMessages;
+
+  @GwtTransient
+  @OneToMany(mappedBy = "receiver")
+  private Set<GameMessageEntity> receivedGameMessages;
+
+  @GwtTransient
+  @OneToMany(mappedBy = "sender")
+  private Set<GameMessageEntity> sentGameMessages;
+
+  @GwtTransient
+  @OneToMany(mappedBy = "playerWhite")
+  private Set<GameEntity> whiteRoleGames;
+
+  @GwtTransient
+  @OneToMany(mappedBy = "playerBlack")
+  private Set<GameEntity> blackRoleGames;
 
   @Column(name = "logged_in")
   private boolean loggedIn;
@@ -173,23 +197,41 @@ public class ShashistEntity extends PersistableObjectImpl implements Shashist {
   }
 
   @Override
-  public Set<PlayerMessageEntity> getReceivedMessages() {
-    return receivedMessages;
+  public Set<GameMessageEntity> getReceivedPlayerMessages() {
+    return receivedPlayerMessages;
   }
 
   @Override
-  public void setReceivedMessages(Set<PlayerMessageEntity> playerMessageEntities) {
-    this.receivedMessages = playerMessageEntities;
+  public void setReceivedPlayerMessages(Set<GameMessageEntity> playerMessageEntities) {
+    this.receivedPlayerMessages = playerMessageEntities;
   }
 
   @Override
-  public Set<PlayerMessageEntity> getSentMessages() {
-    return sentMessages;
+  public Set<GameMessageEntity> getSentPlayerMessages() {
+    return sentPlayerMessages;
   }
 
   @Override
-  public void setSentMessages(Set<PlayerMessageEntity> playerMessageEntities) {
-    this.sentMessages = playerMessageEntities;
+  public void setSentPlayerMessages(Set<GameMessageEntity> playerMessageEntities) {
+    this.sentPlayerMessages = playerMessageEntities;
+  }
+
+  @Override
+  public Set<GameMessageEntity> getReceivedGameMessages() {
+    return receivedGameMessages;
+  }
+
+  @Override
+  public void setReceivedGameMessages(Set<GameMessageEntity> receivedGameMessages) {
+    this.receivedGameMessages = receivedGameMessages;
+  }
+
+  public Set<GameMessageEntity> getSentGameMessages() {
+    return sentGameMessages;
+  }
+
+  public void setSentGameMessages(Set<GameMessageEntity> sentGameMessages) {
+    this.sentGameMessages = sentGameMessages;
   }
 
   @Override
@@ -252,6 +294,21 @@ public class ShashistEntity extends PersistableObjectImpl implements Shashist {
     this.visitCounter = visitCounter;
   }
 
+  public Set<GameEntity> getWhiteRoleGames() {
+    return whiteRoleGames;
+  }
+
+  public void setWhiteRoleGames(Set<GameEntity> whiteRoleGames) {
+    this.whiteRoleGames = whiteRoleGames;
+  }
+
+  public Set<GameEntity> getBlackRoleGames() {
+    return blackRoleGames;
+  }
+
+  public void setBlackRoleGames(Set<GameEntity> blackRoleGames) {
+    this.blackRoleGames = blackRoleGames;
+  }
 
   @Override
   public String getPublicName() {
@@ -284,4 +341,11 @@ public class ShashistEntity extends PersistableObjectImpl implements Shashist {
     return hashId;
   }
 
+  public ShashistEntity copy(Shashist shashist) {
+    this.setOnline(shashist.isOnline());
+    this.setPlaying(shashist.isPlaying());
+    this.setLoggedIn(shashist.isLoggedIn());
+    this.setPlayerName(shashist.getPlayerName());
+    return this;
+  }
 }

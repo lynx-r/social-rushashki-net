@@ -69,6 +69,8 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
       shashistEntity.setVkUid(vkUid);
       shashistEntity.setFirstName(firstName.getString());
       shashistEntity.setLastName(lastName.getString());
+    } else {
+      shashistEntity.setVisitCounter(shashistEntity.getVisitCounter() + 1);
     }
 
     HttpSession session = req.getSession();
@@ -82,10 +84,10 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
       }
     }
 
-    req.getSession().setAttribute("isAuthenticated", true);
-    req.getSession().setAttribute("authProvider", "vk");
-    req.getSession().setAttribute("firstName", shashistEntity.getFirstName());
-    req.getSession().setAttribute("lastName", shashistEntity.getLastName());
+//    req.getSession().setAttribute("isAuthenticated", true);
+//    req.getSession().setAttribute("authProvider", "vk");
+//    req.getSession().setAttribute("firstName", shashistEntity.getFirstName());
+//    req.getSession().setAttribute("lastName", shashistEntity.getLastName());
 
     resp.sendRedirect("/");
   }

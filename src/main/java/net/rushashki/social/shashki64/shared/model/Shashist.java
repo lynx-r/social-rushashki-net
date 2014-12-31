@@ -1,7 +1,7 @@
 package net.rushashki.social.shashki64.shared.model;
 
 import net.rushashki.social.shashki64.shared.model.entity.FriendEntity;
-import net.rushashki.social.shashki64.shared.model.entity.PlayerMessageEntity;
+import net.rushashki.social.shashki64.shared.model.entity.GameMessageEntity;
 
 import java.util.Date;
 import java.util.Set;
@@ -46,13 +46,17 @@ public interface Shashist extends PersistableObject {
 
   public void setFriendOf(Set<FriendEntity> friendOf);
 
-  public Set<PlayerMessageEntity> getReceivedMessages();
+  public Set<GameMessageEntity> getReceivedPlayerMessages();
 
-  public void setReceivedMessages(Set<PlayerMessageEntity> playerMessageEntities);
+  public void setReceivedPlayerMessages(Set<GameMessageEntity> playerMessageEntities);
 
-  public Set<PlayerMessageEntity> getSentMessages();
+  public Set<GameMessageEntity> getSentPlayerMessages();
 
-  public void setSentMessages(Set<PlayerMessageEntity> playerMessageEntities);
+  public void setSentPlayerMessages(Set<GameMessageEntity> playerMessageEntities);
+
+  Set<GameMessageEntity> getReceivedGameMessages();
+
+  void setReceivedGameMessages(Set<GameMessageEntity> receivedGameMessages);
 
   public boolean isLoggedIn();
 

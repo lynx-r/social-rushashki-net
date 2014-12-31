@@ -25,8 +25,9 @@
   </replace-with>
 
   <entry-point class='net.rushashki.social.shashki64.client.Shashki64'/>
-  <servlet path="/ProfileService" class="net.rushashki.social.shashki64.server.rpc.ProfileServiceImpl"/>
-  <servlet path="/PlayerMessageService" class="net.rushashki.social.shashki64.server.rpc.PlayerMessageServiceImpl"/>
+  <servlet path="/ProfileRpcService" class="net.rushashki.social.shashki64.server.rpc.ProfileRpcServiceImpl"/>
+  <servlet path="/GameMessageRpcService" class="net.rushashki.social.shashki64.server.rpc.GameMessageRpcServiceImpl"/>
+  <servlet path="/GameRpcService" class="net.rushashki.social.shashki64.server.rpc.GameRpcServiceImpl"/>
 
   <!--<set-property name="user.agent" value="gecko1_8"/>-->
   <set-property name="user.agent" value="safari"/>

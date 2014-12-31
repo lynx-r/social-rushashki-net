@@ -1,7 +1,7 @@
 package net.rushashki.social.shashki64.shared.model.entity;
 
 import net.rushashki.social.shashki64.shared.model.Shashist;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,21 +14,38 @@ import java.util.List;
  * Time: 15:49
  */
 @Entity
-@Table(name = "player_message")
-public class PlayerMessageEntity extends PersistableObjectImpl implements PlayerMessage {
+@Table(name = "game_message")
+public class GameMessageEntity extends PersistableObjectImpl implements GameMessage {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "sender_id")
   private ShashistEntity sender;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "receiver_id")
   private ShashistEntity receiver;
+
   private String message;
+
   @Enumerated(EnumType.STRING)
-  private MessageType type;
+  @Column(name = "message_type")
+  private MessageType messageType;
+
   private String data;
+
   @Column(name = "sent_date")
   private Date sentDate;
+
+  @Column(name = "start_step")
+  private String startStep;
+
+  @Column(name = "end_step")
+  private String endStep;
+
+  private String captured;
+
+  @Column(name = "game_id")
+  private Long gameId;
 
   @Override
   public Shashist getSender() {
@@ -87,13 +104,13 @@ public class PlayerMessageEntity extends PersistableObjectImpl implements Player
   }
 
   @Override
-  public MessageType getType() {
-    return type;
+  public MessageType getMessageType() {
+    return messageType;
   }
 
   @Override
-  public void setType(MessageType type) {
-    this.type = type;
+  public void setMessageType(MessageType messageType) {
+    this.messageType = messageType;
   }
 
   @Override
@@ -103,6 +120,46 @@ public class PlayerMessageEntity extends PersistableObjectImpl implements Player
 
   @Override
   public void setPlayerList(List<Shashist> playerList) {
+  }
+
+  @Override
+  public String getStartStep() {
+    return startStep;
+  }
+
+  @Override
+  public void setStartStep(String startStep) {
+    this.startStep = startStep;
+  }
+
+  @Override
+  public String getEndStep() {
+    return endStep;
+  }
+
+  @Override
+  public void setEndStep(String endStep) {
+    this.endStep = endStep;
+  }
+
+  @Override
+  public String getCaptured() {
+    return captured;
+  }
+
+  @Override
+  public void setCaptured(String captured) {
+    this.captured = captured;
+  }
+
+  @Override
+  public Long getGameId() {
+    return gameId;
+  }
+
+  @Override
+  public void setGameId(Long gameId) {
+    this.gameId = gameId;
   }
 
 }

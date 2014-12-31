@@ -1,16 +1,16 @@
-package net.rushashki.social.shashki64.server.websocket.player;
+package net.rushashki.social.shashki64.server.websocket.game;
 
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
-import net.rushashki.social.shashki64.server.service.PlayerMessageService;
+import net.rushashki.social.shashki64.server.service.GameMessageService;
 import net.rushashki.social.shashki64.server.service.ShashistService;
 import net.rushashki.social.shashki64.server.util.Util;
-import net.rushashki.social.shashki64.server.websocket.player.message.PlayerMessageDecoder;
-import net.rushashki.social.shashki64.server.websocket.player.message.PlayerMessageEncoder;
+import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageDecoder;
+import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageEncoder;
 import net.rushashki.social.shashki64.shared.model.Shashist;
-import net.rushashki.social.shashki64.shared.model.entity.PlayerMessageEntity;
+import net.rushashki.social.shashki64.shared.model.entity.GameMessageEntity;
 import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,18 +26,18 @@ import java.util.*;
  * Time: 12:05
  */
 @Singleton
-@ServerEndpoint(value = "/ws/play",
-    decoders = {PlayerMessageDecoder.class},
-    encoders = {PlayerMessageEncoder.class}
+@ServerEndpoint(value = "/ws/game",
+    decoders = {GameMessageDecoder.class},
+    encoders = {GameMessageEncoder.class}
 )
-public class PlayerWebsocket {
+public class GameWebsocket {
 
   private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
   private final long MAX_IDLE_TIMEOUT = 1000 * 60 * 15;
   @Inject
   private ShashistService shashistService;
   @Inject
-  private PlayerMessageService playerMessageService;
+  private GameMessageService gameMessageService;
 
   @OnOpen
   public void onOpen(Session session) {
@@ -46,8 +46,8 @@ public class PlayerWebsocket {
   }
 
   @OnMessage
-  public void onMessage(Session session, PlayerMessage message) {
-    switch (message.getType()) {
+  public void onMessage(Session session, GameMessage message) {
+    switch (message.getMessageType()) {
       case PLAYER_REGISTER:
         handleNewPlayer(message, session);
         break;
@@ -55,20 +55,21 @@ public class PlayerWebsocket {
         handleChatMessage(session, message);
         break;
       case PLAY_INVITE:
-      case PLAY_ACCEPT_INVITE:
+      case PLAY_REJECT_INVITE:
+      case PLAY_START:
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(message);
         break;
     }
   }
 
-  private void handleChatMessage(Session session, PlayerMessage message) {
+  private void handleChatMessage(Session session, GameMessage message) {
     session.getOpenSessions().stream().filter(Session::isOpen).forEach(peer -> {
       sendMessage(peer, message);
     });
   }
 
-  private void handleNewPlayer(PlayerMessage message, Session session) {
+  private void handleNewPlayer(GameMessage message, Session session) {
     Shashist shashist = message.getSender();
     ShashistEntity shashistEntity = shashistService.find(shashist.getId());
 
@@ -80,7 +81,7 @@ public class PlayerWebsocket {
     shashist.setOnline(true);
 
     peers.put(shashist, session);
-    System.out.println("Register new player: " + shashist.getSystemId() + " " + session.getId());
+    System.out.println("Register new game: " + shashist.getSystemId() + " " + session.getId());
     updatePlayerList(session);
   }
 
@@ -106,7 +107,7 @@ public class PlayerWebsocket {
     throwable.printStackTrace();
   }
 
-  private void handleChatPrivateMessage(PlayerMessage message) {
+  private void handleChatPrivateMessage(GameMessage message) {
     Shashist receiver = message.getReceiver();
     Shashist shashist = peers.keySet().stream()
         .filter(s -> s.getSystemId().equals(receiver.getSystemId())).findFirst().get();
@@ -116,30 +117,30 @@ public class PlayerWebsocket {
     ShashistEntity shashistReceiver = shashistService.find(message.getReceiver().getId());
     ShashistEntity shashistSender = shashistService.find(message.getSender().getId());
 
-    PlayerMessageEntity playerMessageEntity = new PlayerMessageEntity();
-    playerMessageEntity.setType(message.getType());
-    playerMessageEntity.setData(message.getData());
-    playerMessageEntity.setMessage(message.getMessage());
+    GameMessageEntity gameMessageEntity = new GameMessageEntity();
+    gameMessageEntity.setMessageType(message.getMessageType());
+    gameMessageEntity.setData(message.getData());
+    gameMessageEntity.setMessage(message.getMessage());
 
-    playerMessageEntity.setReceiver(shashistReceiver);
-    playerMessageEntity.setSender(shashistSender);
+    gameMessageEntity.setReceiver(shashistReceiver);
+    gameMessageEntity.setSender(shashistSender);
 
-    playerMessageEntity.setSentDate(new Date());
+    gameMessageEntity.setSentDate(new Date());
 
-    playerMessageService.create(playerMessageEntity);
+    gameMessageService.create(gameMessageEntity);
   }
 
   private void updatePlayerList(Session session) {
     MessageFactory messageFactory = AutoBeanFactorySource.create(MessageFactory.class);
-    PlayerMessage playerMessage = messageFactory.playerMessage().as();
-    playerMessage.setType(PlayerMessage.MessageType.USER_LIST_UPDATE);
-    playerMessage.setPlayerList(new ArrayList<>(peers.keySet()));
+    GameMessage gameMessage = messageFactory.gameMessage().as();
+    gameMessage.setMessageType(GameMessage.MessageType.USER_LIST_UPDATE);
+    gameMessage.setPlayerList(new ArrayList<>(peers.keySet()));
     session.getOpenSessions().stream().filter(Session::isOpen).forEach(peer -> {
-      sendMessage(peer, playerMessage);
+      sendMessage(peer, gameMessage);
     });
   }
 
-  private void sendMessage(Session session, PlayerMessage message) {
+  private void sendMessage(Session session, GameMessage message) {
     RemoteEndpoint.Basic remote = session.getBasicRemote();
     if (remote != null) {
       try {

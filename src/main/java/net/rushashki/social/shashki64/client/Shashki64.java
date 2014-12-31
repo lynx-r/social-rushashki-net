@@ -19,8 +19,7 @@ import net.rushashki.social.shashki64.client.page.BasePage;
 import net.rushashki.social.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.social.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.social.shashki64.client.place.HomePlace;
-import net.rushashki.social.shashki64.client.rpc.ProfileServiceAsync;
-import net.rushashki.social.shashki64.client.websocket.PlayerWebsocket;
+import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 
@@ -39,7 +38,7 @@ public class Shashki64 implements EntryPoint {
   private ClientFactory clientFactory = GWT.create(ClientFactory.class);
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   private EventBus eventBus;
-  private ProfileServiceAsync profileService;
+  private ProfileRpcServiceAsync profileService;
   private BasePage appWidget = new BasePageUi();
 
   public void onModuleLoad() {
@@ -61,7 +60,7 @@ public class Shashki64 implements EntryPoint {
     RootPanel.get("navigation").add(new NavbarComponentUi());
     RootPanel.get("footer").add(new FooterComponentUi());
 
-    profileService.getProfile(new AsyncCallback<Shashist>() {
+    profileService.getAuthProfile(new AsyncCallback<Shashist>() {
       @Override
       public void onFailure(Throwable throwable) {
 

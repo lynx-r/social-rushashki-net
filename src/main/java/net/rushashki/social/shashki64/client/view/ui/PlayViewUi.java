@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.ui.ShashkiPlayComponentUi;
 import net.rushashki.social.shashki64.client.view.PlayView;
-import net.rushashki.social.shashki64.client.websocket.PlayerWebsocket;
+import net.rushashki.social.shashki64.client.websocket.GameWebsocket;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,7 +27,7 @@ public class PlayViewUi extends BasicViewUi implements PlayView {
   }
 
   public PlayViewUi(ClientFactory clientFactory) {
-    new PlayerWebsocket(clientFactory);
+    new GameWebsocket(clientFactory);
     shashkiPlay = new ShashkiPlayComponentUi(clientFactory);
     initWidget(ourUiBinder.createAndBindUi(this));
   }

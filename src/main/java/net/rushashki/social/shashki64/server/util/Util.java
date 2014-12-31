@@ -13,7 +13,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
 
 import java.io.*;
 
@@ -46,15 +46,15 @@ public class Util {
     return bufferedReader.readLine();
   }
 
-  public static String serializePlayerMessageToJson(PlayerMessage message) {
+  public static String serializePlayerMessageToJson(GameMessage message) {
     // Retrieve the AutoBean controller
-    AutoBean<PlayerMessage> bean = AutoBeanUtils.getAutoBean(message);
+    AutoBean<GameMessage> bean = AutoBeanUtils.getAutoBean(message);
     return AutoBeanCodex.encode(bean).getPayload();
   }
 
-  public static PlayerMessage deserializeFromJson(String json) {
+  public static GameMessage deserializeFromJson(String json) {
     MessageFactory messageFactory = AutoBeanFactorySource.create(MessageFactory.class);
-    AutoBean<PlayerMessage> playerMessageBean = AutoBeanCodex.decode(messageFactory, PlayerMessage.class, json);
+    AutoBean<GameMessage> playerMessageBean = AutoBeanCodex.decode(messageFactory, GameMessage.class, json);
     return playerMessageBean.as();
   }
 

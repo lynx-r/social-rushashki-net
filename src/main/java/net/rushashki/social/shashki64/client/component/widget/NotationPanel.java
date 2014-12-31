@@ -37,7 +37,6 @@ public class NotationPanel extends ScrollPanel {
   }
 
   public void appendStroke(String stroke) {
-    Window.alert(stroke);
     String text = this.getElement().getInnerText();
     if (stroke.contains(":")) {
       String firstStep = stroke.split(":")[0];

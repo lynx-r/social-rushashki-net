@@ -10,6 +10,15 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class OnStartPlayEvent extends GwtEvent<OnStartPlayEventHandler> {
   public static Type<OnStartPlayEventHandler> TYPE = new Type<OnStartPlayEventHandler>();
+  private final boolean white;
+
+  public OnStartPlayEvent(boolean white) {
+    this.white = white;
+  }
+
+  public boolean isWhite() {
+    return white;
+  }
 
   public Type<OnStartPlayEventHandler> getAssociatedType() {
     return TYPE;

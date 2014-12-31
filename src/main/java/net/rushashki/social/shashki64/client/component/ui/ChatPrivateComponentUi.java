@@ -6,18 +6,15 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.client.util.Util;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessageImpl;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import org.gwtbootstrap3.client.ui.TextBox;
 
 import java.util.List;
@@ -44,19 +41,18 @@ public class ChatPrivateComponentUi extends BasicComponent {
     eventBus.addHandler(OnStartPlayEvent.TYPE, new OnStartPlayEventHandler() {
       @Override
       public void onOnStartPlay(OnStartPlayEvent event) {
-        playerMessageService.getLastPlayerMessages(200, clientFactory.getPlayer().getId(),
-            clientFactory.getOpponent().getId(), new AsyncCallback<List<PlayerMessage>>() {
+        gameMessageService.getLastPlayerMessages(200, clientFactory.getPlayer().getId(),
+            clientFactory.getOpponent().getId(), new AsyncCallback<List<GameMessage>>() {
           @Override
           public void onFailure(Throwable throwable) {
             throwable.printStackTrace();
-            Window.alert(throwable.getLocalizedMessage());
           }
 
           @Override
-          public void onSuccess(List<PlayerMessage> playerMessages) {
+          public void onSuccess(List<GameMessage> gameMessages) {
             chatPanel.clear();
-            for (PlayerMessage playerMessage : playerMessages) {
-              chatPanelAddMessage(playerMessage.getMessage(), PREV_MESSAGE);
+            for (GameMessage gameMessage : gameMessages) {
+              chatPanelAddMessage(gameMessage.getMessage(), PREV_MESSAGE);
             }
           }
         });
@@ -81,18 +77,18 @@ public class ChatPrivateComponentUi extends BasicComponent {
             dialogBox.show();
             return;
           }
-          PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
-          playerMessage.setSender(clientFactory.getPlayer());
-          playerMessage.setReceiver(clientFactory.getOpponent());
-          playerMessage.setType(PlayerMessage.MessageType.CHAT_PRIVATE_MESSAGE);
+          GameMessage gameMessage = GWT.create(GameMessageDto.class);
+          gameMessage.setSender(clientFactory.getPlayer());
+          gameMessage.setReceiver(clientFactory.getOpponent());
+          gameMessage.setMessageType(GameMessage.MessageType.CHAT_PRIVATE_MESSAGE);
 
           String message = clientFactory.getPlayer().getPublicName()
               + Util.MESSAGE_SEPARATOR + messageInputTextBox.getText();
 
-          playerMessage.setMessage(message);
+          gameMessage.setMessage(message);
 
           eventBus.fireEvent(new OnChatMessageEvent(message));
-          eventBus.fireEvent(new OnPlayerMessageEvent(playerMessage));
+          eventBus.fireEvent(new OnGameMessageEvent(gameMessage));
 
           messageInputTextBox.setText("");
         }

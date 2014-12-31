@@ -1,7 +1,6 @@
 package net.rushashki.social.shashki64.client.component.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -14,7 +13,6 @@ import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
 import net.rushashki.social.shashki64.client.event.OnNavbarReloadEvent;
 import net.rushashki.social.shashki64.client.event.OnNavbarReloadEventHandler;
 import net.rushashki.social.shashki64.client.place.*;
-import net.rushashki.social.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import org.gwtbootstrap3.client.ui.*;

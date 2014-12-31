@@ -97,4 +97,10 @@ public interface ShashkiConstants extends Messages {
   String invalidCharsInName();
 
   String tooShortPlayerName();
+
+  String playerRejectedPlayRequest(String sender);
+
+  String failedToStartGame();
+
+  String errorWhileGettingProfile();
 }

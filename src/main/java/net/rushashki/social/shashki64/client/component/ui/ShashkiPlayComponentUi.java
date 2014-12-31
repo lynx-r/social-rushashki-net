@@ -4,7 +4,6 @@ import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.widget.LienzoPanel;
-import com.ait.lienzo.shared.core.types.IColor;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -25,8 +24,8 @@ import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialo
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
-import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessageImpl;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
 import org.gwtbootstrap3.client.ui.Button;
@@ -105,16 +104,16 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             inviteDialogBox = new InviteDialogBox() {
               @Override
               public void submitted(boolean white) {
-                PlayerMessage playerMessage = GWT.create(PlayerMessageImpl.class);
-                playerMessage.setSender(clientFactory.getPlayer());
-                playerMessage.setReceiver(clientFactory.getOpponent());
-                playerMessage.setType(PlayerMessage.MessageType.PLAY_INVITE);
+                GameMessage gameMessage = GWT.create(GameMessageDto.class);
+                gameMessage.setSender(clientFactory.getPlayer());
+                gameMessage.setReceiver(clientFactory.getOpponent());
+                gameMessage.setMessageType(GameMessage.MessageType.PLAY_INVITE);
 
-                playerMessage.setMessage(constants.inviteMessage(clientFactory.getPlayer().getPublicName(),
+                gameMessage.setMessage(constants.inviteMessage(clientFactory.getPlayer().getPublicName(),
                     String.valueOf(white ? constants.black() : constants.white())));
-                playerMessage.setData(String.valueOf(!white));
+                gameMessage.setData(String.valueOf(!white));
 
-                eventBus.fireEvent(new OnPlayerMessageEvent(playerMessage));
+                eventBus.fireEvent(new OnGameMessageEvent(gameMessage));
               }
             };
             inviteDialogBox.show(constants.inviteToPlay(clientFactory.getOpponent().getPublicName(),
@@ -158,8 +157,9 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         if (inviteDialogBox != null) {
           inviteDialogBox.hide();
         }
-        initDeskPanel(true);
-//        lienzoPanel.add(board);
+        BoardBackgroundLayer backgroundLayer = initDeskPanel(event.isWhite());
+        board = new Board(backgroundLayer, 8, 8, event.isWhite());
+        lienzoPanel.add(board);
       }
     });
 
@@ -202,23 +202,14 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     shashki.add(lienzoPanel);
   }
 
-  private void initDeskPanel(boolean white) {
+  private BoardBackgroundLayer initDeskPanel(boolean white) {
     int lienzoSide = lienzoPanel.getHeight() - 20;
     BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
         lienzoSide, lienzoSide - 30,
         8, 8);
     boardBackgroundLayer.drawCoordinates(white);
     lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
-  }
-
-  private void initLienzoPanel() {
-//    BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
-//        lienzoSide, lienzoSide - 30,
-//        8, 8);
-//    lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
-//    shashki.add(lienzoPanel);
-//
-//    board = new Board(boardBackgroundLayer, 8, 8, true);
+    return boardBackgroundLayer;
   }
 
   private void initNotationPanel() {

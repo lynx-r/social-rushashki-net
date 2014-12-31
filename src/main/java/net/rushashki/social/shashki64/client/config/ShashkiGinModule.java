@@ -5,8 +5,9 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import net.rushashki.social.shashki64.client.rpc.PlayerMessageServiceAsync;
-import net.rushashki.social.shashki64.client.rpc.ProfileServiceAsync;
+import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
+import net.rushashki.social.shashki64.client.rpc.GameMessageRpcServiceAsync;
+import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.*;
 import net.rushashki.social.shashki64.client.view.ui.*;
@@ -42,8 +43,9 @@ public class ShashkiGinModule extends AbstractGinModule {
     bind(AboutUsView.class).to(AboutUsViewUi.class).in(Singleton.class);
     bind(NotFoundView.class).to(NotFoundViewUi.class).in(Singleton.class);
 
-    bind(ProfileServiceAsync.class).in(Singleton.class);
-    bind(PlayerMessageServiceAsync.class).in(Singleton.class);
+    bind(ProfileRpcServiceAsync.class).in(Singleton.class);
+    bind(GameMessageRpcServiceAsync.class).in(Singleton.class);
+    bind(GameRpcServiceAsync.class).in(Singleton.class);
   }
 
   static class PlaceProvider implements Provider<PlaceController> {
