@@ -54,6 +54,7 @@ public class ChatPrivateComponentUi extends BasicComponent {
 
           @Override
           public void onSuccess(List<PlayerMessage> playerMessages) {
+            chatPanel.clear();
             for (PlayerMessage playerMessage : playerMessages) {
               chatPanelAddMessage(playerMessage.getMessage(), PREV_MESSAGE);
             }

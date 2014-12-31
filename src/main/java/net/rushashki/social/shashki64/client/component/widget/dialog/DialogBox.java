@@ -46,6 +46,8 @@ public class DialogBox extends BasicDialogBox {
     add(panel);
 
     center();
+
+    getElement().getStyle().setZIndex(1000);
   }
 
   public void setContent(String content) {

@@ -41,10 +41,11 @@ public class PlayerMessageDaoImpl extends DaoImpl<PlayerMessageEntity> implement
             " JOIN FETCH m.receiver " +
             " WHERE ((m.sender.id = :senderId AND m.receiver.id = :receiverId) " +
             " OR (m.receiver.id = :senderId AND m.sender.id = :receiverId)) " +
-            " AND m.type = 1 " + // type = 1 - обычное сообщение
+            " AND m.type = :messageType " +
             " ORDER BY m.sentDate DESC");
     query.setParameter("senderId", playerId);
     query.setParameter("receiverId", opponentId);
+    query.setParameter("messageType", PlayerMessage.MessageType.CHAT_PRIVATE_MESSAGE);
 
     query.setMaxResults(countLast);
 

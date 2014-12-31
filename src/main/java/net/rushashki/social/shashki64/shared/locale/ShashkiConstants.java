@@ -93,4 +93,8 @@ public interface ShashkiConstants extends Messages {
   String tooLongPlayerName();
 
   String playStartDescription();
+
+  String invalidCharsInName();
+
+  String tooShortPlayerName();
 }

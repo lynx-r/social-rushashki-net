@@ -34,28 +34,34 @@ public class SettingsViewUi extends BasicViewUi implements SettingsView {
     submitPlayerNameButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
-        if (player.getPublicName().equals(playerNameTextBox.getText())) {
+        String newName = playerNameTextBox.getText();
+        if (player.getPublicName().equals(newName)) {
           return;
         }
-        if (playerNameTextBox.getText().length() > 50) {
-          DialogBox dialogBox = new DialogBox(constants.error(), constants.tooLongPlayerName());
-          dialogBox.getElement().getStyle().setZIndex(1000);
-          dialogBox.show();
+        if (newName.length() < 3) {
+          new DialogBox(constants.error(), constants.tooShortPlayerName()).show();
+          return;
         }
-        player.setPlayerName(playerNameTextBox.getText());
+        if (newName.length() > 50) {
+          new DialogBox(constants.error(), constants.tooLongPlayerName()).show();
+          return;
+        }
+        if (!newName.matches("[a-zA-Z0-9а-яА-Я -.]+")) {
+          new DialogBox(constants.error(), constants.invalidCharsInName()).show();
+          return;
+        }
+        player.setPlayerName(newName);
         profileService.saveProfile(player, new AsyncCallback<Void>() {
           @Override
           public void onFailure(Throwable throwable) {
             throwable.printStackTrace();
             DialogBox dialogBox = new DialogBox(constants.error(), constants.errorWhileProfileUpdate());
-            dialogBox.getElement().getStyle().setZIndex(1000);
             dialogBox.show();
           }
 
           @Override
           public void onSuccess(Void aVoid) {
             DialogBox dialogBox = new DialogBox(constants.info(), constants.profileUpdated());
-            dialogBox.getElement().getStyle().setZIndex(1000);
             dialogBox.show();
           }
         });

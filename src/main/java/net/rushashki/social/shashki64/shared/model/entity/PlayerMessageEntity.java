@@ -24,6 +24,7 @@ public class PlayerMessageEntity extends PersistableObjectImpl implements Player
   @JoinColumn(name = "receiver_id")
   private ShashistEntity receiver;
   private String message;
+  @Enumerated(EnumType.STRING)
   private MessageType type;
   private String data;
   @Column(name = "sent_date")

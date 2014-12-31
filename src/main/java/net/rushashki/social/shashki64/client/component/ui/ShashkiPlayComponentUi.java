@@ -158,7 +158,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         if (inviteDialogBox != null) {
           inviteDialogBox.hide();
         }
-        lienzoPanel.add(board);
+        initDeskPanel(true);
+//        lienzoPanel.add(board);
       }
     });
 
@@ -199,6 +200,15 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     }
     lienzoPanel.setBackgroundLayer(initDeskRect);
     shashki.add(lienzoPanel);
+  }
+
+  private void initDeskPanel(boolean white) {
+    int lienzoSide = lienzoPanel.getHeight() - 20;
+    BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
+        lienzoSide, lienzoSide - 30,
+        8, 8);
+    boardBackgroundLayer.drawCoordinates(white);
+    lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
   }
 
   private void initLienzoPanel() {
