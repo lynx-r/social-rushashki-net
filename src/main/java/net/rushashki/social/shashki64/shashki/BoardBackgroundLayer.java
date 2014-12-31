@@ -36,7 +36,6 @@ public class BoardBackgroundLayer extends Layer {
     gameBoard = new Square[rows][cols];
 
     drawDesk();
-    drawCoordinates(true);
   }
 
   private void drawDesk() {

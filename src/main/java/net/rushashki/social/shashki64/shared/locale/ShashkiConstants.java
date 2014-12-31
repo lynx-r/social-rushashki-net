@@ -1,9 +1,6 @@
 package net.rushashki.social.shashki64.shared.locale;
 
-import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import net.rushashki.social.shashki64.shared.model.Shashist;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,4 +91,6 @@ public interface ShashkiConstants extends Messages {
   String errorWhileProfileUpdate();
 
   String tooLongPlayerName();
+
+  String playStartDescription();
 }

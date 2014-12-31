@@ -1,6 +1,10 @@
 package net.rushashki.social.shashki64.client.component.ui;
 
+import com.ait.lienzo.client.core.shape.Layer;
+import com.ait.lienzo.client.core.shape.Rectangle;
+import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.widget.LienzoPanel;
+import com.ait.lienzo.shared.core.types.IColor;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -78,7 +82,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
 
     this.player = clientFactory.getPlayer();
 
-    initLienzoPanel();
+    initEmptyDeskPanel();
     initNotationPanel();
     initCellList();
 
@@ -154,6 +158,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         if (inviteDialogBox != null) {
           inviteDialogBox.hide();
         }
+        lienzoPanel.add(board);
       }
     });
 
@@ -169,21 +174,41 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     playersCellList.setRowData(playerList);
   }
 
-  private void initLienzoPanel() {
+  private void initEmptyDeskPanel() {
     int shashkiSide = Window.getClientHeight() - RootPanel.get("navigation").getOffsetHeight() -
         RootPanel.get("footer").getOffsetHeight();
     shashkiColumn.setWidth(shashkiSide + "px");
 
     lienzoPanel = new LienzoPanel(shashkiSide, shashkiSide);
     int lienzoSide = lienzoPanel.getHeight() - 20;
-    BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
-        lienzoSide, lienzoSide - 30,
-        8, 8);
-    lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
+    Layer initDeskRect = new Layer();
+    Rectangle contour = new Rectangle(lienzoSide, lienzoSide);
+    contour.setX(1);
+    contour.setY(1);
+    initDeskRect.add(contour);
+    String[] descriptions = constants.playStartDescription().split("\n");
+    int y = 0;
+    for (String description : descriptions) {
+      Text greeting = new Text(description, "Times New Roman", 14);
+      greeting.setFillColor("blue");
+      greeting.setStrokeColor("blue");
+      greeting.setY(lienzoSide / 2 - 20 + y);
+      greeting.setX(lienzoSide / 2 - 180);
+      initDeskRect.add(greeting);
+      y += 20;
+    }
+    lienzoPanel.setBackgroundLayer(initDeskRect);
     shashki.add(lienzoPanel);
+  }
 
-    board = new Board(boardBackgroundLayer, 8, 8, true);
-    lienzoPanel.add(board);
+  private void initLienzoPanel() {
+//    BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
+//        lienzoSide, lienzoSide - 30,
+//        8, 8);
+//    lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
+//    shashki.add(lienzoPanel);
+//
+//    board = new Board(boardBackgroundLayer, 8, 8, true);
   }
 
   private void initNotationPanel() {
