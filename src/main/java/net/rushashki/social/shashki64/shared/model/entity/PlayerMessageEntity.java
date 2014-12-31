@@ -1,25 +1,32 @@
-package net.rushashki.social.shashki64.shared.websocket.message;
+package net.rushashki.social.shashki64.shared.model.entity;
 
 import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
 
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 07.12.14
- * Time: 18:56
+ * Date: 15.11.14
+ * Time: 15:49
  */
-public class PlayerMessageImpl implements PlayerMessage {
+@Entity
+@Table(name = "player_message")
+public class PlayerMessageEntity extends PersistableObjectImpl implements PlayerMessage {
 
-  private Shashist sender;
-  private Shashist receiver;
-  private String message = "";
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "sender_id")
+  private ShashistEntity sender;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "receiver_id")
+  private ShashistEntity receiver;
+  private String message;
   private MessageType type;
-  private List<Shashist> playerList = new ArrayList<>();
   private String data;
+  @Column(name = "sent_date")
   private Date sentDate;
 
   @Override
@@ -29,7 +36,10 @@ public class PlayerMessageImpl implements PlayerMessage {
 
   @Override
   public void setSender(Shashist sender) {
-    this.sender = sender;
+  }
+
+  public void setSender(ShashistEntity entity) {
+    this.sender = entity;
   }
 
   @Override
@@ -39,7 +49,10 @@ public class PlayerMessageImpl implements PlayerMessage {
 
   @Override
   public void setReceiver(Shashist receiver) {
-    this.receiver = receiver;
+  }
+
+  public void setReceiver(ShashistEntity entity) {
+    this.receiver = entity;
   }
 
   @Override
@@ -84,22 +97,11 @@ public class PlayerMessageImpl implements PlayerMessage {
 
   @Override
   public List<Shashist> getPlayerList() {
-    return playerList;
+    return null;
   }
 
   @Override
   public void setPlayerList(List<Shashist> playerList) {
-    this.playerList = playerList;
-  }
-
-  @Override
-  public Long getId() {
-    return null;
-  }
-
-  @Override
-  public Integer getVersion() {
-    return null;
   }
 
 }

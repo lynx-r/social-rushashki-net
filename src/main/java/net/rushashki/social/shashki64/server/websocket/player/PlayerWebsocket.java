@@ -1,12 +1,14 @@
 package net.rushashki.social.shashki64.server.websocket.player;
 
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
+import net.rushashki.social.shashki64.server.service.PlayerMessageService;
 import net.rushashki.social.shashki64.server.service.ShashistService;
 import net.rushashki.social.shashki64.server.util.Util;
 import net.rushashki.social.shashki64.server.websocket.player.message.PlayerMessageDecoder;
 import net.rushashki.social.shashki64.server.websocket.player.message.PlayerMessageEncoder;
 import net.rushashki.social.shashki64.shared.model.Shashist;
-import net.rushashki.social.shashki64.shared.model.ShashistEntity;
+import net.rushashki.social.shashki64.shared.model.entity.PlayerMessageEntity;
+import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
 import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
 
@@ -15,10 +17,7 @@ import javax.inject.Singleton;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,11 +32,12 @@ import java.util.Map;
 )
 public class PlayerWebsocket {
 
-  @Inject
-  private ShashistService shashistService;
-
   private static Map<Shashist, Session> peers = Collections.synchronizedMap(new HashMap<>());
   private final long MAX_IDLE_TIMEOUT = 1000 * 60 * 15;
+  @Inject
+  private ShashistService shashistService;
+  @Inject
+  private PlayerMessageService playerMessageService;
 
   @OnOpen
   public void onOpen(Session session) {
@@ -112,6 +112,21 @@ public class PlayerWebsocket {
         .filter(s -> s.getSystemId().equals(receiver.getSystemId())).findFirst().get();
     Session session = peers.get(shashist);
     sendMessage(session, message);
+
+    ShashistEntity shashistReceiver = shashistService.find(message.getReceiver().getId());
+    ShashistEntity shashistSender = shashistService.find(message.getSender().getId());
+
+    PlayerMessageEntity playerMessageEntity = new PlayerMessageEntity();
+    playerMessageEntity.setType(message.getType());
+    playerMessageEntity.setData(message.getData());
+    playerMessageEntity.setMessage(message.getMessage());
+
+    playerMessageEntity.setReceiver(shashistReceiver);
+    playerMessageEntity.setSender(shashistSender);
+
+    playerMessageEntity.setSentDate(new Date());
+
+    playerMessageService.create(playerMessageEntity);
   }
 
   private void updatePlayerList(Session session) {

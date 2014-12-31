@@ -1,9 +1,11 @@
-package net.rushashki.social.shashki64.shared.model;
+package net.rushashki.social.shashki64.shared.model.entity;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import net.rushashki.social.shashki64.shared.model.key.FriendId;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,8 +18,7 @@ import javax.persistence.*;
 @AssociationOverrides({
     @AssociationOverride(name = "pk.friend", joinColumns = @JoinColumn(name = "friend_id", insertable = false, updatable = false)),
     @AssociationOverride(name = "pk.friendOf", joinColumns = @JoinColumn(name = "friend_of_id", insertable = false, updatable = false)) })
-//@EqualsAndHashCode(of = { "pk", "amount" }, callSuper = false)
-public class FriendEntity {
+public class FriendEntity implements IsSerializable {
 
   @EmbeddedId
   private FriendId pk = new FriendId();

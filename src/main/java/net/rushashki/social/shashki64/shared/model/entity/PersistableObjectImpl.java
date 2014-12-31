@@ -1,6 +1,6 @@
-package net.rushashki.social.shashki64.shared.model;
+package net.rushashki.social.shashki64.shared.model.entity;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import net.rushashki.social.shashki64.shared.model.PersistableObject;
 
 import javax.persistence.*;
 
@@ -11,7 +11,7 @@ import javax.persistence.*;
  * Time: 16:03
  */
 @MappedSuperclass
-public class GwtPersistableObject implements PersistableObject, IsSerializable {
+public class PersistableObjectImpl implements PersistableObject {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +29,5 @@ public class GwtPersistableObject implements PersistableObject, IsSerializable {
   public Integer getVersion() {
     return version;
   }
+
 }

@@ -44,7 +44,6 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     private AnchorListItem playTapeLink;
     private AnchorListItem profileLink;
     private AnchorListItem settingsLink;
-    private ProfileServiceAsync profileService;
     private AnchorListItem profileDropDown;
     private AnchorListItem aboutUsLink;
 
@@ -54,7 +53,6 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         this.constants = shashkiGinjector.getShashkiConstants();
         this.placeController = shashkiGinjector.getPlaceController();
         this.eventBus = shashkiGinjector.getEventBus();
-        this.profileService = shashkiGinjector.getProfileService();
 
         addLinks();
         addEvents();

@@ -1,11 +1,8 @@
 package net.rushashki.social.shashki64.shared.model.key;
 
-import net.rushashki.social.shashki64.shared.model.ShashistEntity;
+import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**

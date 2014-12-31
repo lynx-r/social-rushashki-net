@@ -1,7 +1,7 @@
 package net.rushashki.social.shashki64.server.dao.impl;
 
 import net.rushashki.social.shashki64.server.dao.ShashistDao;
-import net.rushashki.social.shashki64.shared.model.ShashistEntity;
+import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

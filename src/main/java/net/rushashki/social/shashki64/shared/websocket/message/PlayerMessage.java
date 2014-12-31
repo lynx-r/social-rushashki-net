@@ -1,5 +1,6 @@
 package net.rushashki.social.shashki64.shared.websocket.message;
 
+import net.rushashki.social.shashki64.shared.model.Message;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import java.util.List;
@@ -33,9 +34,7 @@ public interface PlayerMessage extends Message {
     PLAY_LEFT,
     PLAY_PROPOSE_DRAW,
     PLAY_ACCEPT_DRAW,
-    PLAYER_REGISTER,
-    PLAYER_DISCONNECT,
-    PLAYER_OFFLINE;
+    PLAYER_REGISTER
 
   }
 

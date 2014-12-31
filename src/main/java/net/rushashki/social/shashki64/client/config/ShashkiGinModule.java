@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import net.rushashki.social.shashki64.client.rpc.PlayerMessageServiceAsync;
 import net.rushashki.social.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.*;
@@ -42,6 +43,7 @@ public class ShashkiGinModule extends AbstractGinModule {
     bind(NotFoundView.class).to(NotFoundViewUi.class).in(Singleton.class);
 
     bind(ProfileServiceAsync.class).in(Singleton.class);
+    bind(PlayerMessageServiceAsync.class).in(Singleton.class);
   }
 
   static class PlaceProvider implements Provider<PlaceController> {

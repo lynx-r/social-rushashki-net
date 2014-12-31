@@ -1,8 +1,6 @@
 package net.rushashki.social.shashki64.client.websocket;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.websockets.client.WebSocket;
 import com.google.gwt.websockets.client.WebSocketCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -13,16 +11,13 @@ import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmPlay
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
-import net.rushashki.social.shashki64.client.util.Util;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
 import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessage;
 import net.rushashki.social.shashki64.shared.websocket.message.PlayerMessageImpl;
-import org.apache.xpath.operations.Bool;
 
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,15 +42,21 @@ public class PlayerWebsocket implements WebSocketCallback {
     this.eventBus = shashkiGinjector.getEventBus();
     this.logger = shashkiGinjector.getLogger();
 
-    eventBus.addHandler(OnConnectToPlayEvent.TYPE, event -> {
-      webSocket = new WebSocket(this);
-      webSocket.connect(PLAYER_WEBSOCKET_URL);
+    eventBus.addHandler(OnConnectToPlayEvent.TYPE, new OnConnectToPlayEventHandler() {
+      @Override
+      public void onOnConnectToPlay(OnConnectToPlayEvent event) {
+        webSocket = new WebSocket(PlayerWebsocket.this);
+        webSocket.connect(PLAYER_WEBSOCKET_URL);
+      }
     });
 
-    eventBus.addHandler(OnPlayerMessageEvent.TYPE, event -> {
-      PlayerMessage playerMessage = event.getPlayerMessage();
+    eventBus.addHandler(OnPlayerMessageEvent.TYPE, new OnPlayerMessageEventHandler() {
+      @Override
+      public void onOnPlayerMessage(OnPlayerMessageEvent event) {
+        PlayerMessage playerMessage = event.getPlayerMessage();
 
-      sendPlayerMessage(playerMessage);
+        sendPlayerMessage(playerMessage);
+      }
     });
   }
 

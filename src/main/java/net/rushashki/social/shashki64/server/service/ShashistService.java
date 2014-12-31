@@ -2,7 +2,7 @@ package net.rushashki.social.shashki64.server.service;
 
 import net.rushashki.social.shashki64.server.dao.Dao;
 import net.rushashki.social.shashki64.server.dao.ShashistDao;
-import net.rushashki.social.shashki64.shared.model.ShashistEntity;
+import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,4 +31,5 @@ public class ShashistService extends BaseService<ShashistEntity> {
   public ShashistEntity findBySessionId(String sessionId) {
     return shashistDao.findBySessionId(sessionId);
   }
+
 }

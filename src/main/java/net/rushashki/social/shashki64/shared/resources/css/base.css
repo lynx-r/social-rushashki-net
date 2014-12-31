@@ -28,3 +28,7 @@ body {
 .chat-refer-me {
     background-color: lightcoral;
 }
+
+.chat-prev-messages {
+    background-color: aliceblue;
+}

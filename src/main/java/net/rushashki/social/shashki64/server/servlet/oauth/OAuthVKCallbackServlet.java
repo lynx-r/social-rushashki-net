@@ -13,7 +13,7 @@ import net.rushashki.social.shashki64.server.config.ConfigHelper;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
 import net.rushashki.social.shashki64.server.service.ShashistService;
 import net.rushashki.social.shashki64.server.util.Util;
-import net.rushashki.social.shashki64.shared.model.ShashistEntity;
+import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 import javax.inject.Inject;
 import javax.json.*;

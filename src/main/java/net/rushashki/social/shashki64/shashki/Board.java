@@ -1,6 +1,8 @@
 package net.rushashki.social.shashki64.shashki;
 
 import com.ait.lienzo.client.core.animation.*;
+import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
+import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
@@ -64,8 +66,11 @@ public class Board extends Layer {
     alphMap.put("g", 6);
     alphMap.put("h", 7);
 
-    this.addNodeMouseClickHandler(nodeMouseClickEvent -> {
-      this.moveDraught(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
+    this.addNodeMouseClickHandler(new NodeMouseClickHandler() {
+      @Override
+      public void onNodeMouseClick(NodeMouseClickEvent nodeMouseClickEvent) {
+        Board.this.moveDraught(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
+      }
     });
   }
 

@@ -1,7 +1,7 @@
 package net.rushashki.social.shashki64.server.servlet;
 
 import net.rushashki.social.shashki64.server.service.ShashistService;
-import net.rushashki.social.shashki64.shared.model.ShashistEntity;
+import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;

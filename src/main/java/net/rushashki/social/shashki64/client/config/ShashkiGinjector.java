@@ -5,6 +5,7 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
+import net.rushashki.social.shashki64.client.rpc.PlayerMessageServiceAsync;
 import net.rushashki.social.shashki64.client.rpc.ProfileServiceAsync;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.*;
@@ -50,5 +51,7 @@ public interface ShashkiGinjector extends Ginjector {
 
 
   ProfileServiceAsync getProfileService();
+
+  PlayerMessageServiceAsync getPlayerMessageService();
 
 }

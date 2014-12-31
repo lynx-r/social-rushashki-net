@@ -1,34 +1,33 @@
 package net.rushashki.social.shashki64.shared.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 15.11.14
- * Time: 15:49
+ * Date: 01.10.14
+ * Time: 22:51
  */
-@Entity
-@Table(name = "message")
-public class Message extends GwtPersistableObject {
+public interface Message extends PersistableObject {
 
-  @Size(min = 10, max = 5000)
-  private String message;
+  public Shashist getSender();
 
-  public Message() {}
+  public void setSender(Shashist sender);
 
-  public Message(String message) {
-    this.message = message;
-  }
+  public Shashist getReceiver();
 
-  public String getMessage() {
-    return message;
-  }
+  public void setReceiver(Shashist receiver);
 
-  public void setMessage(String message) {
-    this.message = message;
-  }
+  public String getMessage();
+
+  public void setMessage(String message);
+
+  public String getData();
+
+  public void setData(String data);
+
+  public Date getSentDate();
+
+  public void setSentDate(Date sentDate);
 
 }

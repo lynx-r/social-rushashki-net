@@ -1,4 +1,4 @@
-package net.rushashki.social.shashki64.shared.model.dto;
+package net.rushashki.social.shashki64.shared.dto;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
 

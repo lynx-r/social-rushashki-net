@@ -1,7 +1,8 @@
-package net.rushashki.social.shashki64.shared.model;
+package net.rushashki.social.shashki64.shared.model.entity;
 
 import com.google.gwt.user.client.rpc.GwtTransient;
 import net.rushashki.social.shashki64.client.util.Util;
+import net.rushashki.social.shashki64.shared.model.Shashist;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -16,29 +17,49 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "shashist")
-public class ShashistEntity extends GwtPersistableObject implements Shashist {
+public class ShashistEntity extends PersistableObjectImpl implements Shashist {
 
+  @Column(name = "session_id")
   private String sessionId;
+  @Column(name = "vk_uid")
   private String vkUid;
   @Email
   private String email;
+  @Column(name = "first_name")
   private String firstName;
-  private String middleName;
+  @Column(name = "last_name")
   private String lastName;
+  @Column(name = "player_name")
   private String playerName;
+  @Column(name = "auth_provider")
   private String authProvider;
+
   @GwtTransient
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.friendOf", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.friendOf", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<FriendEntity> friends;
   @GwtTransient
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.friend", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Column(name = "fiends_of")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.friend", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<FriendEntity> friendOf;
+
+  @GwtTransient
+  @OneToMany(mappedBy = "receiver")
+  private Set<PlayerMessageEntity> receivedMessages;
+  @GwtTransient
+  @OneToMany(mappedBy = "sender")
+  private Set<PlayerMessageEntity> sentMessages;
+
+  @Column(name = "logged_in")
   private boolean loggedIn;
   private boolean playing;
   private boolean online;
+  @Column(name = "register_date")
   private Date registerDate;
+  @Column(name = "last_visited")
   private Date lastVisited;
+  @Column(name = "visit_counter")
   private int visitCounter;
+  @Column(name = "hash_id")
   private String hashId;
 
   public ShashistEntity() {
@@ -102,16 +123,6 @@ public class ShashistEntity extends GwtPersistableObject implements Shashist {
   }
 
   @Override
-  public String getMiddleName() {
-    return middleName;
-  }
-
-  @Override
-  public void setMiddleName(String middleName) {
-    this.middleName = middleName;
-  }
-
-  @Override
   public String getLastName() {
     return lastName;
   }
@@ -159,6 +170,26 @@ public class ShashistEntity extends GwtPersistableObject implements Shashist {
   @Override
   public void setFriendOf(Set<FriendEntity> friendOf) {
     this.friendOf = friendOf;
+  }
+
+  @Override
+  public Set<PlayerMessageEntity> getReceivedMessages() {
+    return receivedMessages;
+  }
+
+  @Override
+  public void setReceivedMessages(Set<PlayerMessageEntity> playerMessageEntities) {
+    this.receivedMessages = playerMessageEntities;
+  }
+
+  @Override
+  public Set<PlayerMessageEntity> getSentMessages() {
+    return sentMessages;
+  }
+
+  @Override
+  public void setSentMessages(Set<PlayerMessageEntity> playerMessageEntities) {
+    this.sentMessages = playerMessageEntities;
   }
 
   @Override
@@ -220,6 +251,7 @@ public class ShashistEntity extends GwtPersistableObject implements Shashist {
   public void setVisitCounter(int visitCounter) {
     this.visitCounter = visitCounter;
   }
+
 
   @Override
   public String getPublicName() {

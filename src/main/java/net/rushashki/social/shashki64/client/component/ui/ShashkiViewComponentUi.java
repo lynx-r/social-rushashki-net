@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
 import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
 import net.rushashki.social.shashki64.shared.model.Shashist;
-import net.rushashki.social.shashki64.shared.model.dto.PlayDto;
+import net.rushashki.social.shashki64.shared.dto.PlayDto;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
 
 /**

@@ -1,6 +1,6 @@
 package net.rushashki.social.shashki64.server.dao;
 
-import net.rushashki.social.shashki64.shared.model.ShashistEntity;
+import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 /**
  * Created with IntelliJ IDEA.
