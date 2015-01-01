@@ -1,0 +1,33 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
+
+    <ui:style>
+        .chat-component {
+            position: fixed;
+            width: inherit;
+            padding-right: 30px;
+        }
+        .chat-listing {
+            width: 100%;
+            min-height: 200px;
+
+            margin-bottom: 4px;
+
+            -webkit-box-shadow: 0 0 4px 0 rgba(50, 50, 50, 0.75);
+            -moz-box-shadow: 0 0 4px 0 rgba(50, 50, 50, 0.75);
+            box-shadow: 0 0 4px 0 rgba(50, 50, 50, 0.75);
+
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.chat-component}">
+        <g:HTMLPanel ui:field="chatPanel" addStyleNames="{style.chat-listing}"/>
+        <b:TextBox ui:field="messageInputTextBox" maxLength="500"
+                   placeholder="Введите ваше сообщение и нажмите Enter">
+        </b:TextBox>
+    </g:HTMLPanel>
+</ui:UiBinder>

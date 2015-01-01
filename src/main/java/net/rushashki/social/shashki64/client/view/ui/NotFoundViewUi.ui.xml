@@ -1,0 +1,60 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
+             ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+             ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
+             ui:generateLocales="default">
+
+    <ui:style>
+        .align-horizontal {
+            margin: 0 auto;
+            display: table;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <b:Heading size="H1" text="404 Страница не найдена" subText="или дедоступна">
+            <ui:attribute name="text" description="Page not found"/>
+            <ui:attribute name="subText" description="Or not available"/>
+        </b:Heading>
+
+        <b:Panel>
+            <b:PanelHeader>
+                <b:Heading size="H3" text="Карта сайта">
+                    <ui:attribute name="text" description="Site map"/>
+                </b:Heading>
+            </b:PanelHeader>
+            <b:PanelBody>
+                <b:Row>
+                    <b:Column size="MD_3">
+                        <g:HTMLPanel>
+                            <ui:msg description="Home" key="home">Главная</ui:msg>
+                            <b:Anchor href="/" icon="HOME" iconSize="TIMES5" addStyleNames="{style.align-horizontal}" />
+                        </g:HTMLPanel>
+                    </b:Column>
+
+                    <b:Column size="MD_3">
+                        <g:HTMLPanel>
+                            <ui:msg description="Sign In" key="signIn">Вход</ui:msg>
+                        <b:Anchor href="#SignInPlace:doSignIn" icon="SIGN_IN" iconSize="TIMES5" addStyleNames="{style.align-horizontal}" />
+                        </g:HTMLPanel>
+                    </b:Column>
+
+                    <b:Column size="MD_3">
+                        <g:HTMLPanel>
+                            <ui:msg description="Play tape" key="playTape">Игровая лента</ui:msg>
+                            <b:Anchor href="#PlayTapePlace:doPlayTape" icon="LIST" iconSize="TIMES5" addStyleNames="{style.align-horizontal}" />
+                        </g:HTMLPanel>
+                    </b:Column>
+
+                    <b:Column size="MD_3">
+                        <g:HTMLPanel>
+                            <ui:msg description="About" key="about">О сайте</ui:msg>
+                            <b:Anchor href="#PlayTapePlace:doPlayTape" icon="INFO" iconSize="TIMES5" addStyleNames="{style.align-horizontal}" />
+                        </g:HTMLPanel>
+                    </b:Column>
+                </b:Row>
+            </b:PanelBody>
+        </b:Panel>
+    </g:HTMLPanel>
+</ui:UiBinder>
