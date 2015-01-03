@@ -475,7 +475,7 @@ public class Board extends Layer {
       removedCoords = takenSquare.toSend() + (!jumpMoves.isEmpty() ? ",next" : ",none");
 
       opponentDraughtVector.remove(takenSquare.getOccupant());
-//      removeDraughtFrom(takenSquare);
+      removeDraughtFrom(takenSquare);
 
       capturedSquares = new Vector<>();
     }
@@ -483,10 +483,12 @@ public class Board extends Layer {
     return removedCoords;
   }
 
-  /*public void removeDraughtFrom(final Square takenSquare) {
+  public void removeDraughtFrom(Square takenSquare) {
     final Draught takenDraught = takenSquare.getOccupant();
     takenSquare.setOccupant(null);
-    takenDraught.animate(AnimationTweener.LINEAR, AnimationProperties.create(AnimationProperty.Properties.ALPHA(0)),
+    AnimationProperties props = new AnimationProperties();
+    props.push(AnimationProperty.Properties.ALPHA(0));
+    takenDraught.animate(AnimationTweener.LINEAR, props,
         removeDraughtFade, new IAnimationCallback() {
           @Override
           public void onStart(IAnimation iAnimation, IAnimationHandle iAnimationHandle) {
@@ -500,12 +502,12 @@ public class Board extends Layer {
           public void onClose(IAnimation iAnimation, IAnimationHandle iAnimationHandle) {
             remove(takenDraught);
             if (!isEmulate()) {
-              clientFactory.getEventBus().fireEvent(new OnCheckWinnerEvent());
+//              clientFactory.getEventBus().fireEvent(new OnCheckWinnerEvent());
             }
           }
         });
   }
-*/
+
   public boolean inBounds(int row, int col) {
     return row >= 0 && row < rows && col >= 0 && col < cols;
   }
@@ -694,7 +696,7 @@ public class Board extends Layer {
 
     if (captured != null) {
       mineDraughtVector.remove(captured.getOccupant());
-//      removeDraughtFrom(captured);
+      removeDraughtFrom(captured);
     }
     if (!nextCapture && !isEmulate()) {
       toggleTurn();
