@@ -38,6 +38,7 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
   private ShashistService shashistService;
 
   private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private String hostName;
 
   @Override
   protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential) throws ServletException, IOException {
@@ -99,11 +100,7 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    return Util.getFlow(OAuthClient.API_VK_TOKEN_SERVER_URL,
-        OAuthClient.API_VK_KEY,
-        OAuthClient.API_VK_SECRET,
-        OAuthClient.API_VK_AUTHORIZATION_SERVER_URL,
-        ConfigHelper.CREDENTIAL_STORE_FILE_PATH);
+    return Util.getFlow(hostName, Util.OAuthProvider.VK);
   }
 
   @Override
@@ -115,6 +112,7 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
 
   @Override
   protected String getUserId(HttpServletRequest httpServletRequest) throws ServletException, IOException {
+    hostName = httpServletRequest.getRemoteHost();
     return httpServletRequest.getSession(true).getId();
   }
 

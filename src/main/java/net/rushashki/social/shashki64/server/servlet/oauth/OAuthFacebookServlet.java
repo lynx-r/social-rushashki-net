@@ -3,7 +3,6 @@ package net.rushashki.social.shashki64.server.servlet.oauth;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
 import com.google.api.client.http.GenericUrl;
-import net.rushashki.social.shashki64.server.config.ConfigHelper;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
 import net.rushashki.social.shashki64.server.util.Util;
 
@@ -20,13 +19,11 @@ import java.io.IOException;
  */
 @WebServlet(name = "OAuthFacebookServlet", urlPatterns = {"/OAuthFacebookServlet"})
 public class OAuthFacebookServlet extends AbstractAuthorizationCodeServlet {
+  private String hostName;
+
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    return Util.getFlow(OAuthClient.API_FACEBOOK_TOKEN_SERVER_URL,
-        OAuthClient.API_FACEBOOK_KEY,
-        OAuthClient.API_FACEBOOK_SECRET,
-        OAuthClient.API_FACEBOOK_AUTHORIZATION_SERVER_URL,
-        ConfigHelper.CREDENTIAL_STORE_FILE_PATH);
+    return Util.getFlow(hostName, Util.OAuthProvider.FACEBOOK);
   }
 
   @Override
@@ -38,6 +35,7 @@ public class OAuthFacebookServlet extends AbstractAuthorizationCodeServlet {
 
   @Override
   protected String getUserId(HttpServletRequest httpServletRequest) throws ServletException, IOException {
+    hostName = httpServletRequest.getRemoteHost();
     return httpServletRequest.getSession(true).getId();
   }
 }

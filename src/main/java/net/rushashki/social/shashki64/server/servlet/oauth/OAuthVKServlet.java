@@ -3,7 +3,6 @@ package net.rushashki.social.shashki64.server.servlet.oauth;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
 import com.google.api.client.http.GenericUrl;
-import net.rushashki.social.shashki64.server.config.ConfigHelper;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
 import net.rushashki.social.shashki64.server.util.Util;
 
@@ -21,13 +20,11 @@ import java.io.IOException;
 @WebServlet(name = "OAuthVKServlet", urlPatterns = {"/OAuthVKServlet"})
 public class OAuthVKServlet extends AbstractAuthorizationCodeServlet {
 
+  private String hostName;
+
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    return Util.getFlow(OAuthClient.API_VK_TOKEN_SERVER_URL,
-        OAuthClient.API_VK_KEY,
-        OAuthClient.API_VK_SECRET,
-        OAuthClient.API_VK_AUTHORIZATION_SERVER_URL,
-        ConfigHelper.CREDENTIAL_STORE_FILE_PATH);
+    return Util.getFlow(hostName, Util.OAuthProvider.VK);
   }
 
   @Override
@@ -39,6 +36,7 @@ public class OAuthVKServlet extends AbstractAuthorizationCodeServlet {
 
   @Override
   protected String getUserId(HttpServletRequest httpServletRequest) throws ServletException, IOException {
+    hostName = httpServletRequest.getRemoteHost();
     return httpServletRequest.getSession(true).getId();
   }
 

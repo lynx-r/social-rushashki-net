@@ -9,9 +9,9 @@ package net.rushashki.social.shashki64.server.config;
 public class OAuthClient {
 
   // VK
-  public static final String API_VK_KEY = "4223337";
+  public static final String API_VK_KEY_LOCALHOST = "4223337";
 
-  public static final String API_VK_SECRET = "Ote722Ebyr1XsrMtVPku";
+  public static final String API_VK_SECRET_LOCALHOST = "Ote722Ebyr1XsrMtVPku";
 
   public static final String API_VK_TOKEN_SERVER_URL = "https://api.vk.com/oauth/access_token";
 
@@ -23,9 +23,9 @@ public class OAuthClient {
 
   // Facebook
 
-  public static final String API_FACEBOOK_KEY = "809826612407407";
+  public static final String API_FACEBOOK_KEY_LOCALHOST = "809826612407407";
 
-  public static final String API_FACEBOOK_SECRET = "cd70b8162b08df923c89d4ba6177bc7a";
+  public static final String API_FACEBOOK_SECRET_LOCALHOST = "cd70b8162b08df923c89d4ba6177bc7a";
 
   public static final String API_FACEBOOK_TOKEN_SERVER_URL = "https://graph.facebook.com/oauth/access_token";
 

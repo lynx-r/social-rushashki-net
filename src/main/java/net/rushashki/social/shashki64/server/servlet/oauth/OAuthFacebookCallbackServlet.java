@@ -5,7 +5,6 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeCallbackServlet;
 import com.google.api.client.http.GenericUrl;
-import net.rushashki.social.shashki64.server.config.ConfigHelper;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
 import net.rushashki.social.shashki64.server.util.Util;
 
@@ -23,6 +22,8 @@ import java.io.IOException;
  */
 @WebServlet(name = "OAuthFacebookCallbackServlet", urlPatterns = {"/OAuthFacebookCallbackServlet"})
 public class OAuthFacebookCallbackServlet extends AbstractAuthorizationCodeCallbackServlet {
+  private String hostName;
+
   @Override
   protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential) throws ServletException, IOException {
     resp.sendRedirect("/");
@@ -35,11 +36,7 @@ public class OAuthFacebookCallbackServlet extends AbstractAuthorizationCodeCallb
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    return Util.getFlow(OAuthClient.API_FACEBOOK_TOKEN_SERVER_URL,
-        OAuthClient.API_FACEBOOK_KEY,
-        OAuthClient.API_FACEBOOK_SECRET,
-        OAuthClient.API_FACEBOOK_AUTHORIZATION_SERVER_URL,
-        ConfigHelper.CREDENTIAL_STORE_FILE_PATH);
+    return Util.getFlow(hostName, Util.OAuthProvider.FACEBOOK);
   }
 
   @Override
@@ -51,6 +48,7 @@ public class OAuthFacebookCallbackServlet extends AbstractAuthorizationCodeCallb
 
   @Override
   protected String getUserId(HttpServletRequest httpServletRequest) throws ServletException, IOException {
+    hostName = httpServletRequest.getRemoteHost();
     return httpServletRequest.getSession(true).getId();
   }
 }

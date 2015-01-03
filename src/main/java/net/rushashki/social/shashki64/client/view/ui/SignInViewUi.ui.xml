@@ -31,7 +31,7 @@
                             </b:Column>
 
                             <b:Column size="MD_3">
-                                <b:Anchor href="/OAuthVKServlet" icon="FACEBOOK" iconSize="TIMES5" addStyleNames="{style.align-horizontal}"/>
+                                <b:Anchor href="/OAuthFacebookServlet" icon="FACEBOOK" iconSize="TIMES5" addStyleNames="{style.align-horizontal}"/>
                             </b:Column>
 
                             <b:Column size="MD_3">
