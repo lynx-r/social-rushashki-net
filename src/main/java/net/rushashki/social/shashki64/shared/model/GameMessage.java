@@ -12,11 +12,11 @@ public interface GameMessage extends Message {
 
   String getStartStep();
 
-  void setStartStep(String startStep);
+  void setStartMove(String startStep);
 
   String getEndStep();
 
-  void setEndStep(String endStep);
+  void setEndMove(String endStep);
 
   String getCaptured();
 

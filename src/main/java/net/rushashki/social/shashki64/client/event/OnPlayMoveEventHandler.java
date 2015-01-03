@@ -8,6 +8,6 @@ import com.google.gwt.event.shared.EventHandler;
  * Date: 03.01.15
  * Time: 17:11
  */
-public interface OnShashkiStepEventHandler extends EventHandler {
-  void onOnShashkiStep(OnShashkiStepEvent event);
+public interface OnPlayMoveEventHandler extends EventHandler {
+  void onOnPlayMove(OnPlayMoveEvent event);
 }

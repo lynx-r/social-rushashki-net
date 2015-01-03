@@ -6,9 +6,7 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnNotationStrokeEvent;
-import net.rushashki.social.shashki64.client.event.OnShashkiStepEvent;
-import net.rushashki.social.shashki64.client.event.OnTurnEvent;
+import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shashki.util.Operator;
 import net.rushashki.social.shashki64.shashki.util.PossibleOperators;
 
@@ -71,6 +69,13 @@ public class Board extends Layer {
       @Override
       public void onNodeMouseClick(NodeMouseClickEvent nodeMouseClickEvent) {
         Board.this.moveDraught(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
+      }
+    });
+
+    eventBus.addHandler(OnPlayMoveOpponentEvent.TYPE, new OnPlayMoveOpponentEventHandler() {
+      @Override
+      public void onOnPlayMoveOpponent(OnPlayMoveOpponentEvent event) {
+        Board.this.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured(), -1);
       }
     });
   }
@@ -505,9 +510,9 @@ public class Board extends Layer {
     return row >= 0 && row < rows && col >= 0 && col < cols;
   }
 
-  private Square parseStep(String step) {
-    int sRow = 8 - Integer.parseInt(step.substring(1, 2));
-    int sCol = alphMap.get(step.substring(0, 1));
+  private Square parseStep(String move) {
+    int sRow = 8 - Integer.parseInt(move.substring(1, 2));
+    int sCol = alphMap.get(move.substring(0, 1));
 
     return backgroundLayer.getSquare(sRow, sCol);
   }
@@ -767,7 +772,7 @@ public class Board extends Layer {
             + square.toNotation(isWhite(), true, false)
             + (isWhite() ? "" : "<br />");
         eventBus.fireEvent(new OnNotationStrokeEvent(stroke));
-        eventBus.fireEvent(new OnShashkiStepEvent(prevSquare.toSend(), square.toSend(), captured));
+        eventBus.fireEvent(new OnPlayMoveEvent(prevSquare.toSend(), square.toSend(), captured));
 //          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
 //              clientFactory.getClientFactory().getUserId(), clientFactory.getOpponentId(),
 //              startSquare.toSend(), newSquare.toSend(), captured);

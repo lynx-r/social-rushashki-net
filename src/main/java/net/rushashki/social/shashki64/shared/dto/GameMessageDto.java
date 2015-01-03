@@ -95,7 +95,7 @@ public class GameMessageDto implements GameMessage {
   }
 
   @Override
-  public void setStartStep(String startStep) {
+  public void setStartMove(String startStep) {
     this.startStep = startStep;
   }
 
@@ -105,7 +105,7 @@ public class GameMessageDto implements GameMessage {
   }
 
   @Override
-  public void setEndStep(String endStep) {
+  public void setEndMove(String endStep) {
     this.endStep = endStep;
   }
 

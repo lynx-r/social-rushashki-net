@@ -8,24 +8,24 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 03.01.15
  * Time: 17:11
  */
-public class OnShashkiStepEvent extends GwtEvent<OnShashkiStepEventHandler> {
+public class OnPlayMoveEvent extends GwtEvent<OnPlayMoveEventHandler> {
 
-  public static Type<OnShashkiStepEventHandler> TYPE = new Type<OnShashkiStepEventHandler>();
+  public static Type<OnPlayMoveEventHandler> TYPE = new Type<OnPlayMoveEventHandler>();
   private final String prevStep;
   private final String newStep;
   private final String captured;
 
-  public OnShashkiStepEvent(String prevStep, String newStep, String captured) {
+  public OnPlayMoveEvent(String prevStep, String newStep, String captured) {
     this.prevStep = prevStep;
     this.newStep = newStep;
     this.captured = captured;
   }
 
-  public String getPrevStep() {
+  public String getStartMove() {
     return prevStep;
   }
 
-  public String getNewStep() {
+  public String getEndMove() {
     return newStep;
   }
 
@@ -33,12 +33,12 @@ public class OnShashkiStepEvent extends GwtEvent<OnShashkiStepEventHandler> {
     return captured;
   }
 
-  public Type<OnShashkiStepEventHandler> getAssociatedType() {
+  public Type<OnPlayMoveEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnShashkiStepEventHandler handler) {
-    handler.onOnShashkiStep(this);
+  protected void dispatch(OnPlayMoveEventHandler handler) {
+    handler.onOnPlayMove(this);
   }
 
 }

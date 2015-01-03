@@ -2,11 +2,13 @@ package net.rushashki.social.shashki64.server.websocket.game;
 
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import net.rushashki.social.shashki64.server.service.GameMessageService;
+import net.rushashki.social.shashki64.server.service.GameService;
 import net.rushashki.social.shashki64.server.service.ShashistService;
 import net.rushashki.social.shashki64.server.util.Utils;
 import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageDecoder;
 import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageEncoder;
 import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 import net.rushashki.social.shashki64.shared.model.entity.GameMessageEntity;
 import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
@@ -38,6 +40,8 @@ public class GameWebsocket {
   private ShashistService shashistService;
   @Inject
   private GameMessageService gameMessageService;
+  @Inject
+  private GameService gameService;
 
   @OnOpen
   public void onOpen(Session session) {
@@ -57,6 +61,7 @@ public class GameWebsocket {
       case PLAY_INVITE:
       case PLAY_REJECT_INVITE:
       case PLAY_START:
+      case PLAY_MOVE:
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(message);
         break;
@@ -116,11 +121,17 @@ public class GameWebsocket {
 
     ShashistEntity shashistReceiver = shashistService.find(message.getReceiver().getId());
     ShashistEntity shashistSender = shashistService.find(message.getSender().getId());
+    GameEntity gameEntity = gameService.find(message.getGame().getId());
 
     GameMessageEntity gameMessageEntity = new GameMessageEntity();
     gameMessageEntity.setMessageType(message.getMessageType());
     gameMessageEntity.setData(message.getData());
     gameMessageEntity.setMessage(message.getMessage());
+
+    gameMessageEntity.setGame(gameEntity);
+    gameMessageEntity.setCaptured(message.getCaptured());
+    gameMessageEntity.setEndMove(message.getEndStep());
+    gameMessageEntity.setStartMove(message.getStartStep());
 
     gameMessageEntity.setReceiver(shashistReceiver);
     gameMessageEntity.setSender(shashistSender);
