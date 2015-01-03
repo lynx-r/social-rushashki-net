@@ -10,8 +10,10 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public interface PersistableObject extends IsSerializable {
 
-  public Long getId();
+  Long getId();
 
-  public Integer getVersion();
+  void setId(Long id);
+
+  Integer getVersion();
 
 }

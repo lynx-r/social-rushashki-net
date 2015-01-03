@@ -4,6 +4,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import net.rushashki.social.shashki64.client.rpc.GameRpcService;
 import net.rushashki.social.shashki64.server.service.GameService;
 import net.rushashki.social.shashki64.server.service.ShashistService;
+import net.rushashki.social.shashki64.shared.dto.GameDto;
 import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
@@ -25,7 +26,7 @@ public class GameRpcServiceImpl extends RemoteServiceServlet implements GameRpcS
   private ShashistService shashistService;
 
   @Override
-  public Long createGame(Game game) {
+  public Game createGame(Game game) {
     GameEntity gameEntity = new GameEntity().copy(game);
     ShashistEntity playerWhite = shashistService.find(game.getPlayerWhite().getId());
     if (playerWhite == null) {
@@ -38,12 +39,12 @@ public class GameRpcServiceImpl extends RemoteServiceServlet implements GameRpcS
     gameEntity.setPlayerWhite(playerWhite);
     gameEntity.setPlayerBlack(playerBlack);
     gameService.create(gameEntity);
-    return gameEntity.getId();
+    return new GameDto().copy(gameEntity);
   }
 
   @Override
   public Game getGame(Long id) {
-    return gameService.find(id);
+    return gameService.findLazyFalse(id);
   }
 
   @Override

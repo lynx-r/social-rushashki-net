@@ -15,5 +15,5 @@ public interface GameRpcServiceAsync {
 
   void saveGame(Game game, AsyncCallback<Void> async);
 
-  void createGame(Game game, AsyncCallback<Long> async);
+  void createGame(Game game, AsyncCallback<Game> async);
 }

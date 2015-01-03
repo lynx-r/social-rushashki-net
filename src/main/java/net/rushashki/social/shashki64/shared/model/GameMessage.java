@@ -22,9 +22,9 @@ public interface GameMessage extends Message {
 
   void setCaptured(String captured);
 
-  Long getGameId();
+  Game getGame();
 
-  void setGameId(Long gameId);
+  void setGame(Game gameId);
 
   public List<Shashist> getPlayerList();
 

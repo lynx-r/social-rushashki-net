@@ -74,7 +74,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         });
 
         aboutUsLink = new AnchorListItem(constants.aboutUs());
-        aboutUsLink.setIcon(IconType.INFO);
+        aboutUsLink.setIcon(IconType.INFO_CIRCLE);
         aboutUsLink.addClickHandler(event -> {
             disableLink(prevActiveLink);
             prevActiveLink = aboutUsLink;

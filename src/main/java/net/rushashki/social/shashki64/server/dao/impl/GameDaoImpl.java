@@ -1,11 +1,13 @@
 package net.rushashki.social.shashki64.server.dao.impl;
 
 import net.rushashki.social.shashki64.server.dao.GameDao;
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,4 +30,11 @@ public class GameDaoImpl extends DaoImpl<GameEntity> implements GameDao {
     return entityManager;
   }
 
+  @Override
+  public Game findLazyFalse(Long id) {
+    String hql = "SELECT g FROM GameEntity g JOIN FETCH g.playerWhite JOIN FETCH g.playerBlack WHERE g.id = :gameId";
+    Query query = entityManager.createQuery(hql);
+    query.setParameter("gameId", id);
+    return (Game) query.getSingleResult();
+  }
 }

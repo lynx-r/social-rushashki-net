@@ -14,7 +14,7 @@ import net.rushashki.social.shashki64.shared.model.Game;
 @RemoteServiceRelativePath("GameRpcService")
 public interface GameRpcService extends RemoteService {
 
-  public Long createGame(Game game);
+  public Game createGame(Game game);
 
   public Game getGame(Long id);
 

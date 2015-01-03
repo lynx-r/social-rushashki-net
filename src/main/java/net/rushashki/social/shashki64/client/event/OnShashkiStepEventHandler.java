@@ -1,0 +1,13 @@
+package net.rushashki.social.shashki64.client.event;
+
+import com.google.gwt.event.shared.EventHandler;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: alekspo
+ * Date: 03.01.15
+ * Time: 17:11
+ */
+public interface OnShashkiStepEventHandler extends EventHandler {
+  void onOnShashkiStep(OnShashkiStepEvent event);
+}

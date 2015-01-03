@@ -2,6 +2,7 @@ package net.rushashki.social.shashki64.shared.dto;
 
 import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 public class GameDto implements Game {
 
+  private Long id;
   private Shashist playerBlack;
   private Shashist playerWhite;
   private GameEnds playEndStatus;
@@ -85,11 +87,27 @@ public class GameDto implements Game {
 
   @Override
   public Long getId() {
-    return null;
+    return id;
   }
 
   @Override
   public Integer getVersion() {
     return null;
+  }
+
+  public Game copy(GameEntity gameEntity) {
+    this.setId(gameEntity.getId());
+    this.setPlayerBlack(gameEntity.getPlayerBlack());
+    this.setPlayerWhite(gameEntity.getPlayerWhite());
+    this.setPlayStartDate(gameEntity.getPlayStartDate());
+    this.setPartyNotation(gameEntity.getPartyNotation());
+    this.setPlayEndDate(gameEntity.getPlayEndDate());
+    this.setPlayEndStatus(gameEntity.getPlayEndStatus());
+    return this;
+  }
+
+  @Override
+  public void setId(Long id) {
+    this.id = id;
   }
 }

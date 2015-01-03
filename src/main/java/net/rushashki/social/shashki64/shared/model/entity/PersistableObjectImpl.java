@@ -26,6 +26,11 @@ public class PersistableObjectImpl implements PersistableObject {
   }
 
   @Override
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  @Override
   public Integer getVersion() {
     return version;
   }

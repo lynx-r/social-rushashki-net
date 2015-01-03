@@ -1,7 +1,6 @@
 package net.rushashki.social.shashki64.client.websocket;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.websockets.client.WebSocket;
 import com.google.gwt.websockets.client.WebSocketCallback;
@@ -69,6 +68,24 @@ public class GameWebsocket implements WebSocketCallback {
         sendGameMessage(gameMessage);
       }
     });
+
+    eventBus.addHandler(OnShashkiStepEvent.TYPE, new OnShashkiStepEventHandler() {
+      @Override
+      public void onOnShashkiStep(OnShashkiStepEvent event) {
+        GameMessage message = GWT.create(GameMessageDto.class);
+        message.setSender(clientFactory.getPlayer());
+        message.setReceiver(clientFactory.getOpponent());
+        message.setMessageType(Message.MessageType.PLAY_MOVE);
+        message.setStartStep(event.getPrevStep());
+        message.setEndStep(event.getNewStep());
+        message.setCaptured(event.getCaptured());
+
+        message.setData(Boolean.TRUE.toString());
+        message.setGame(clientFactory.getGame());
+
+        sendGameMessage(message);
+      }
+    });
   }
 
   private void sendGameMessage(GameMessage gameMessage) {
@@ -101,8 +118,7 @@ public class GameWebsocket implements WebSocketCallback {
             game.setPlayStartDate(new Date());
             game.setPlayerWhite(isWhite() ? clientFactory.getPlayer() : clientFactory.getOpponent());
             game.setPlayerBlack(isWhite() ? clientFactory.getOpponent() : clientFactory.getPlayer());
-            Window.alert(game.getPlayerWhite().getPublicName() + "white:black" + game.getPlayerBlack().getPublicName());
-            gameService.createGame(game, new AsyncCallback<Long>() {
+            gameService.createGame(game, new AsyncCallback<Game>() {
               @Override
               public void onFailure(Throwable throwable) {
                 new DialogBox(constants.error(), constants.failedToStartGame() + throwable.getMessage()).show();
@@ -110,22 +126,24 @@ public class GameWebsocket implements WebSocketCallback {
               }
 
               @Override
-              public void onSuccess(Long id) {
+              public void onSuccess(Game game) {
                 GameMessage message = GWT.create(GameMessageDto.class);
                 message.setSender(gameMessage.getReceiver());
                 message.setReceiver(gameMessage.getSender());
                 message.setMessageType(Message.MessageType.PLAY_START);
 
                 message.setData(Boolean.TRUE.toString());
-                message.setGameId(id);
+                message.setGame(game);
 
                 sendGameMessage(message);
+
+                clientFactory.setGame(game);
+                eventBus.fireEvent(new OnStartPlayEvent(isWhite()));
               }
             });
-
-            eventBus.fireEvent(new OnStartPlayEvent(isWhite()));
           }
         });
+
       }
 
       @Override
@@ -183,6 +201,22 @@ public class GameWebsocket implements WebSocketCallback {
   }
 
   private void handlePlayStart(GameMessage gameMessage) {
+    gameService.getGame(gameMessage.getGame().getId(), new AsyncCallback<Game>() {
+      @Override
+      public void onFailure(Throwable throwable) {
+        new DialogBox(constants.error(), constants.errorWhileGettingGame()).show();
+      }
+
+      @Override
+      public void onSuccess(Game game) {
+        clientFactory.setGame(game);
+        boolean white = Boolean.valueOf(gameMessage.getData());
+        clientFactory.setOpponent(white ? game.getPlayerBlack() : game.getPlayerWhite());
+        eventBus.fireEvent(new OnStartPlayEvent(white));
+      }
+    });
+
+/*
     profileService.getProfile(gameMessage.getSender().getId(), new AsyncCallback<Shashist>() {
       @Override
       public void onFailure(Throwable caught) {
@@ -191,12 +225,23 @@ public class GameWebsocket implements WebSocketCallback {
 
       @Override
       public void onSuccess(Shashist result) {
-        Window.alert("Start play");
         clientFactory.setOpponent(result);
-        boolean white = Boolean.valueOf(gameMessage.getData());
-        eventBus.fireEvent(new OnStartPlayEvent(white));
+        gameService.getGame(gameMessage.getGame(), new AsyncCallback<Game>() {
+          @Override
+          public void onFailure(Throwable throwable) {
+            new DialogBox(constants.error(), constants.errorWhileGettingGame()).show();
+          }
+
+          @Override
+          public void onSuccess(Game game) {
+            clientFactory.setGame(game);
+            boolean white = Boolean.valueOf(gameMessage.getData());
+            eventBus.fireEvent(new OnStartPlayEvent(white));
+          }
+        });
       }
     });
+*/
   }
 
   private void handleChatPrivateMessage(GameMessage gameMessage) {

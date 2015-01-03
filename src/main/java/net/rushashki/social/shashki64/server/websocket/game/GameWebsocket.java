@@ -3,7 +3,7 @@ package net.rushashki.social.shashki64.server.websocket.game;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import net.rushashki.social.shashki64.server.service.GameMessageService;
 import net.rushashki.social.shashki64.server.service.ShashistService;
-import net.rushashki.social.shashki64.server.util.Util;
+import net.rushashki.social.shashki64.server.util.Utils;
 import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageDecoder;
 import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageEncoder;
 import net.rushashki.social.shashki64.shared.model.Shashist;
@@ -144,7 +144,7 @@ public class GameWebsocket {
     RemoteEndpoint.Basic remote = session.getBasicRemote();
     if (remote != null) {
       try {
-        remote.sendText(Util.serializePlayerMessageToJson(message), true);
+        remote.sendText(Utils.serializePlayerMessageToJson(message), true);
       } catch (IOException e) {
         e.printStackTrace();
       }

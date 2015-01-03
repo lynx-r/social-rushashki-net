@@ -38,6 +38,9 @@ public abstract class DaoImpl<E extends PersistableObject> implements Dao<E> {
   }
 
   public E find(Object id) {
+    if (id == null) {
+      return null;
+    }
     return getEntityManager().find(entityClass, id);
   }
 

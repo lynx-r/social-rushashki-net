@@ -9,10 +9,10 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import net.rushashki.social.shashki64.server.config.ConfigHelper;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
 import net.rushashki.social.shashki64.server.service.ShashistService;
-import net.rushashki.social.shashki64.server.util.Util;
+import net.rushashki.social.shashki64.server.servlet.oauth.jsonfilesecrets.JsonFileRepository;
+import net.rushashki.social.shashki64.server.util.Utils;
 import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 import javax.inject.Inject;
@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,8 +39,8 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
   @Inject
   private ShashistService shashistService;
 
-  private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-  private String hostName;
+  private static ClientSecrets secrets;
+  private List<String> scopes = new ArrayList<>();
 
   @Override
   protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential) throws ServletException, IOException {
@@ -46,7 +48,7 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
     GenericUrl url = new GenericUrl(OAuthClient.API_VK_GET_USER_INFO);
     url.set("access_token", accessToken);
 
-    HttpRequest request = HTTP_TRANSPORT.createRequestFactory().buildGetRequest(url);
+    HttpRequest request = Utils.HTTP_TRANSPORT.createRequestFactory().buildGetRequest(url);
     HttpResponse response = request.execute();
     InputStream inputStream = response.getContent();
     JsonReader jsonReader = Json.createReader(inputStream);
@@ -100,7 +102,8 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    return Util.getFlow(hostName, Util.OAuthProvider.VK);
+    secrets = new JsonFileRepository(Utils.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class);
+    return Utils.getFlow(secrets, scopes);
   }
 
   @Override
@@ -112,7 +115,6 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
 
   @Override
   protected String getUserId(HttpServletRequest httpServletRequest) throws ServletException, IOException {
-    hostName = httpServletRequest.getRemoteHost();
     return httpServletRequest.getSession(true).getId();
   }
 

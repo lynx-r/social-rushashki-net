@@ -1,5 +1,6 @@
 package net.rushashki.social.shashki64.server.dao;
 
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 
 /**
@@ -9,4 +10,5 @@ import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
  * Time: 17:33
  */
 public interface GameDao extends Dao<GameEntity> {
+  Game findLazyFalse(Long id);
 }

@@ -5,7 +5,9 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -13,11 +15,12 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import net.rushashki.social.shashki64.server.config.ConfigHelper;
-import net.rushashki.social.shashki64.server.config.OAuthClient;
+import net.rushashki.social.shashki64.server.servlet.oauth.ClientSecrets;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,69 +28,24 @@ import java.io.*;
  * Date: 16.11.14
  * Time: 17:19
  */
-public class Util {
+public class Utils {
 
   public static final String LOCALHOST = "127.0.0.1";
+  public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  public static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-  public static AuthorizationCodeFlow getFlow(String hostName, OAuthProvider provider) throws IOException {
-    String apiKey;
-    String apiSecret;
-
-    switch (provider) {
-      case VK:
-        switch (hostName) {
-          case Util.LOCALHOST:
-            apiKey = OAuthClient.API_VK_KEY_LOCALHOST;
-            apiSecret = OAuthClient.API_VK_SECRET_LOCALHOST;
-            break;
-          default:
-            apiKey = OAuthClient.API_VK_KEY_LOCALHOST;
-            apiSecret = OAuthClient.API_VK_SECRET_LOCALHOST;
-            break;
-        }
-        return Util.getFlow(OAuthClient.API_VK_TOKEN_SERVER_URL,
-            apiKey,
-            apiSecret,
-            OAuthClient.API_VK_AUTHORIZATION_SERVER_URL,
-            ConfigHelper.CREDENTIAL_STORE_FILE_PATH);
-      case FACEBOOK:
-        switch (hostName) {
-          case Util.LOCALHOST:
-            apiKey = OAuthClient.API_FACEBOOK_KEY_LOCALHOST;
-            apiSecret = OAuthClient.API_FACEBOOK_SECRET_LOCALHOST;
-            break;
-          default:
-            apiKey = OAuthClient.API_FACEBOOK_KEY_LOCALHOST;
-            apiSecret = OAuthClient.API_FACEBOOK_SECRET_LOCALHOST;
-            break;
-        }
-        return Util.getFlow(OAuthClient.API_FACEBOOK_TOKEN_SERVER_URL,
-            apiKey,
-            apiSecret,
-            OAuthClient.API_FACEBOOK_AUTHORIZATION_SERVER_URL,
-            ConfigHelper.CREDENTIAL_STORE_FILE_PATH);
-      default:
-        return null;
-    }
-  }
-
-  public enum OAuthProvider {
-    VK,
-    FACEBOOK
-  }
-
-  private static AuthorizationCodeFlow getFlow(String apiTokenServerUrl, String apiKey, String apiSecret,
-                                               String apiAuthorizationServerUrl,
-                                               String credentialStoreFilePath) throws IOException {
+  public static AuthorizationCodeFlow getFlow(ClientSecrets secrets,
+                                               List<String> scopes) throws IOException {
     return new AuthorizationCodeFlow.Builder(BearerToken.authorizationHeaderAccessMethod(),
-        new NetHttpTransport(),
-        new JacksonFactory(),
-        new GenericUrl(apiTokenServerUrl),
-        new ClientParametersAuthentication(apiKey, apiSecret),
-        apiKey,
-        apiAuthorizationServerUrl)
+        HTTP_TRANSPORT,
+        JSON_FACTORY,
+        new GenericUrl(secrets.getTokenUri()),
+        new ClientParametersAuthentication(secrets.getClientId(), secrets.getClientSecret()),
+        secrets.getClientId(),
+        secrets.getAuthUri())
         .setCredentialDataStore(StoredCredential.getDefaultDataStore(new FileDataStoreFactory(
-            new File(credentialStoreFilePath))))
+            new File(ConfigHelper.CREDENTIAL_STORE_FILE_PATH))))
+        .setScopes(scopes)
         .build();
   }
 

@@ -1,7 +1,8 @@
 package net.rushashki.social.shashki64.shared.dto;
 
-import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,10 +26,8 @@ public class GameMessageDto implements GameMessage {
   private String startStep;
   private String endStep;
   private String captured;
-  private Long gameId;
-
-  public GameMessageDto() {
-  }
+  private Game game;
+  private Long id;
 
   @Override
   public Shashist getSender() {
@@ -121,13 +120,13 @@ public class GameMessageDto implements GameMessage {
   }
 
   @Override
-  public Long getGameId() {
-    return gameId;
+  public Game getGame() {
+    return game;
   }
 
   @Override
-  public void setGameId(Long gameId) {
-    this.gameId = gameId;
+  public void setGame(Game game) {
+    this.game = game;
   }
 
   @Override
@@ -142,7 +141,12 @@ public class GameMessageDto implements GameMessage {
 
   @Override
   public Long getId() {
-    return null;
+    return id;
+  }
+
+  @Override
+  public void setId(Long id) {
+    this.id = id;
   }
 
   @Override

@@ -1,5 +1,6 @@
 package net.rushashki.social.shashki64.client;
 
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import java.util.List;
@@ -23,4 +24,8 @@ public interface ClientFactory {
     Shashist getOpponent();
 
     void setOpponent(Shashist opponent);
+
+    Game getGame();
+
+    void setGame(Game game);
 }

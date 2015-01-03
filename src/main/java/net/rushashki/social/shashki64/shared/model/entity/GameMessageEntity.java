@@ -1,7 +1,8 @@
 package net.rushashki.social.shashki64.shared.model.entity;
 
-import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -44,8 +45,9 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
 
   private String captured;
 
-  @Column(name = "game_id")
-  private Long gameId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "game_id")
+  private GameEntity game;
 
   @Override
   public Shashist getSender() {
@@ -153,13 +155,16 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
   }
 
   @Override
-  public Long getGameId() {
-    return gameId;
+  public Game getGame() {
+    return game;
   }
 
   @Override
-  public void setGameId(Long gameId) {
-    this.gameId = gameId;
+  public void setGame(Game game) {
+  }
+
+  public void setGame(GameEntity entity) {
+    this.game = entity;
   }
 
 }

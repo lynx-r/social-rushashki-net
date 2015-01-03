@@ -2,6 +2,7 @@ package net.rushashki.social.shashki64.server.service;
 
 import net.rushashki.social.shashki64.server.dao.Dao;
 import net.rushashki.social.shashki64.server.dao.GameDao;
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 
 import javax.ejb.Stateless;
@@ -24,4 +25,7 @@ public class GameService extends BaseService<GameEntity> {
     return gameDao;
   }
 
+  public Game findLazyFalse(Long id) {
+    return gameDao.findLazyFalse(id);
+  }
 }

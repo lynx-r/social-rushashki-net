@@ -1,5 +1,6 @@
 package net.rushashki.social.shashki64.client;
 
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class ClientFactoryImpl implements ClientFactory {
     private Shashist player;
     private Shashist opponent;
     private List<Shashist> playerList;
+    private Game game;
 
     @Override
     public Shashist getPlayer() {
@@ -44,6 +46,16 @@ public class ClientFactoryImpl implements ClientFactory {
     @Override
     public void setOpponent(Shashist opponent) {
         this.opponent = opponent;
+    }
+
+    @Override
+    public Game getGame() {
+        return game;
+    }
+
+    @Override
+    public void setGame(Game game) {
+        this.game = game;
     }
 
 }

@@ -29,8 +29,7 @@
   <servlet path="/GameMessageRpcService" class="net.rushashki.social.shashki64.server.rpc.GameMessageRpcServiceImpl"/>
   <servlet path="/GameRpcService" class="net.rushashki.social.shashki64.server.rpc.GameRpcServiceImpl"/>
 
-  <!--<set-property name="user.agent" value="gecko1_8"/>-->
-  <set-property name="user.agent" value="safari"/>
+  <set-property name="user.agent" value="gecko1_8,safari"/>
   <!--<set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />-->
 
   <source path="client"/>
