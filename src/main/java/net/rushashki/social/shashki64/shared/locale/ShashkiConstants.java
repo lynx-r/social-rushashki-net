@@ -105,4 +105,8 @@ public interface ShashkiConstants extends Messages {
   String errorWhileGettingProfile();
 
   String errorWhileGettingGame();
+
+  String selectPlayer();
+
+  String selectAnotherPlayerItsYou();
 }

@@ -51,7 +51,6 @@ public class Draught extends Group {
     this.cols = cols;
     this.white = white;
 
-//    this.setDraggable(true);
     this.setListening(true);
 
     this.setAlpha(.8);
@@ -84,71 +83,13 @@ public class Draught extends Group {
         onNodeTouch((Draught) nodeMouseDownEvent.getSource());
       }
     });
+
     addNodeTouchEndHandler(new NodeTouchEndHandler() {
       @Override
       public void onNodeTouchEnd(NodeTouchEndEvent nodeTouchEndEvent) {
         onNodeTouch((Draught) nodeTouchEndEvent.getSource());
       }
     });
-
-//    addNodeMouseUpHandler(nodeMouseUpEvent -> {
-//      Board board = (Board) getParent();
-//      board.getBackgroundLayer().resetDeskDrawing();
-//    });
-
-//    addNodeDragEndHandler(new NodeDragEndHandler() {
-//      @Override
-//      public void onNodeDragEnd(NodeDragEndEvent nodeDragEndEvent) {
-//        if (!isValidStroke()) {
-//          return;
-//        }
-//        Board board = (Board) getParent();
-//        Square newSquare = board.getBackgroundLayer().getSquare((double) nodeDragEndEvent.getX(),  // - mainWindowController.getSceneOffsetX(),
-//            (double) nodeDragEndEvent.getY());
-//        if (newSquare != null && newSquare != startSquare
-//            && startSquare.isOnLine(newSquare) && isAllowed(newSquare)) {
-
-//          double mouseDeltaX = newSquare.getCenterX() - getX();
-//          double mouseDeltaY = newSquare.getCenterY() - getY();
-
-//          animate(AnimationTweener.LINEAR, new AnimationProperties(
-//              AnimationProperty.Properties.X(getX() + mouseDeltaX),
-//              AnimationProperty.Properties.Y(getY() + mouseDeltaY)
-//          ), timeReturnToStartPos);
-//          String captured = board.move(startSquare, newSquare);
-
-//          boolean simpleStroke = "null".equals(captured);
-//          if ("null".equals(captured) || "none".equals(captured.split(",")[2])) {
-//            board.toggleTurn();
-//          }
-//          if (!queen) {
-//            if (Draught.this.getRow() == 0) {
-//              setQueen(true);
-//            }
-//          }
-
-//          String op = simpleStroke ? "-" : ":";
-//          NotationTextArea.get().appendStroke(
-//              startSquare.toNotation(isWhite(), false, false)
-//              + op
-//              + newSquare.toNotation(isWhite(), true, false)
-//              + (isWhite() ? "" : "\n")
-//          );
-//          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
-//              clientFactory.getClientFactory().getUserId(), clientFactory.getOpponentId(),
-//              startSquare.toSend(), newSquare.toSend(), captured);
-//        } else { // translate circle on initial position when we try to move it on incorrect place
-//          double mouseDeltaX = mouseStartX - nodeDragEndEvent.getX(); // + mainWindowController.getSceneOffsetX();
-//          double mouseDeltaY = mouseStartY - nodeDragEndEvent.getY(); // + mainWindowController.getSceneOffsetY();
-
-//          animate(AnimationTweener.LINEAR, new AnimationProperties(
-//              AnimationProperty.Properties.X(getX() + mouseDeltaX),
-//              AnimationProperty.Properties.Y(getY() + mouseDeltaY)
-//          ), timeReturnToStartPos);
-//        }
-//        board.getBackgroundLayer().resetDeskDrawing();
-//      }
-//    });
   }
 
   private void onNodeTouch(Draught draught) {

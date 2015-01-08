@@ -20,12 +20,13 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
+import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialogBox;
 import net.rushashki.social.shashki64.client.event.*;
+import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
-import net.rushashki.social.shashki64.shared.model.GameMessage;
-import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
 import org.gwtbootstrap3.client.ui.Button;
@@ -89,16 +90,29 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       setPlayerList(clientFactory.getPlayerList());
     }
 
+    if (clientFactory.isConnected()) {
+      toggleInPlayButton();
+    }
+
     connectPlayButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
         switch (connectPlayButton.getIcon()) {
           case REFRESH:
-            connectPlayButton.setType(ButtonType.DEFAULT);
-            connectPlayButton.setIcon(IconType.PLAY);
+            if (clientFactory.isConnected()) {
+              return;
+            }
             eventBus.fireEvent(new OnConnectToPlayEvent());
-            break;
+            return;
           case PLAY:
+            if (playerSelectionModel.getSelectedObject() == null) {
+              new DialogBox(constants.info(), constants.selectPlayer()).show();
+              return;
+            }
+            if (playerSelectionModel.getSelectedObject().getSystemId().equals(clientFactory.getPlayer().getSystemId())) {
+              new DialogBox(constants.info(), constants.selectAnotherPlayerItsYou()).show();
+              return;
+            }
             clientFactory.setOpponent(playerSelectionModel.getSelectedObject());
 
             inviteDialogBox = new InviteDialogBox() {
@@ -118,7 +132,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             };
             inviteDialogBox.show(constants.inviteToPlay(clientFactory.getOpponent().getPublicName(),
                 constants.draughts()));
-            break;
+            return;
         }
       }
     });
@@ -134,7 +148,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     eventBus.addHandler(OnConnectedToPlayEvent.TYPE, new OnConnectedToPlayEventHandler() {
       @Override
       public void onOnConnectedToPlay(OnConnectedToPlayEvent event) {
-        connectPlayButton.setText(constants.play());
+        toggleInPlayButton();
       }
     });
 
@@ -169,6 +183,12 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         inviteDialogBox.hide();
       }
     });
+  }
+
+  private void toggleInPlayButton() {
+    connectPlayButton.setType(ButtonType.DEFAULT);
+    connectPlayButton.setIcon(IconType.PLAY);
+    connectPlayButton.setText(constants.play());
   }
 
   private void setPlayerList(List<Shashist> playerList) {

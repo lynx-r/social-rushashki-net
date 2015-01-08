@@ -76,6 +76,12 @@ public class GameWebsocket {
 
   private void handleNewPlayer(GameMessage message, Session session) {
     Shashist shashist = message.getSender();
+    if (!peers.isEmpty()) {
+      Shashist registered = peers.keySet().stream().filter(sh -> sh.getSystemId().equals(shashist.getSystemId())).findAny().get();
+      if (registered != null) {
+        return;
+      }
+    }
     ShashistEntity shashistEntity = shashistService.find(shashist.getId());
 
     shashistEntity.setLoggedIn(true);
@@ -86,7 +92,7 @@ public class GameWebsocket {
     shashist.setOnline(true);
 
     peers.put(shashist, session);
-    System.out.println("Register new game: " + shashist.getSystemId() + " " + session.getId());
+    System.out.println("Register new player: " + shashist.getSystemId() + " " + session.getId());
     updatePlayerList(session);
   }
 

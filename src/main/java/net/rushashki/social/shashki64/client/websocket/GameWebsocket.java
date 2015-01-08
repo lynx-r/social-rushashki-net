@@ -166,11 +166,13 @@ public class GameWebsocket implements WebSocketCallback {
 
     sendGameMessage(gameMessage);
 
+    clientFactory.setConnected(true);
     eventBus.fireEvent(new OnConnectedToPlayEvent());
   }
 
   @Override
   public void onDisconnect() {
+    clientFactory.setConnected(false);
     eventBus.fireEvent(new OnDisconnectFromPlayEvent());
   }
 

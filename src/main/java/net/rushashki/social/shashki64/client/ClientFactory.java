@@ -28,4 +28,9 @@ public interface ClientFactory {
     Game getGame();
 
     void setGame(Game game);
+
+    boolean isConnected();
+
+    void setConnected(boolean connected);
+
 }

@@ -17,6 +17,17 @@ public class ClientFactoryImpl implements ClientFactory {
     private Shashist opponent;
     private List<Shashist> playerList;
     private Game game;
+    private boolean connected;
+
+    @Override
+    public boolean isConnected() {
+        return connected;
+    }
+
+    @Override
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
 
     @Override
     public Shashist getPlayer() {
