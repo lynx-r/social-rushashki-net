@@ -35,4 +35,24 @@ public class FriendId implements Serializable {
     this.friendOf = friendOf;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    FriendId friendId = (FriendId) o;
+
+    if (friend != null ? !friend.equals(friendId.friend) : friendId.friend != null) return false;
+    if (friendOf != null ? !friendOf.equals(friendId.friendOf) : friendId.friendOf != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = friend != null ? friend.hashCode() : 0;
+    result = 31 * result + (friendOf != null ? friendOf.hashCode() : 0);
+    return result;
+  }
+
 }

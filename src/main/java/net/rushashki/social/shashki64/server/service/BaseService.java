@@ -12,7 +12,6 @@ import java.util.List;
  * Date: 05.12.14
  * Time: 0:07
  */
-@Stateless
 public abstract class BaseService<E extends PersistableObject> {
   protected abstract Dao<E> getDao();
 

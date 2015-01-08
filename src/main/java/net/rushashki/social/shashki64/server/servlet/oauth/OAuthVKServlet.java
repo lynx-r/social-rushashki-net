@@ -28,7 +28,8 @@ public class OAuthVKServlet extends AbstractAuthorizationCodeServlet {
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    secrets = new JsonFileRepository(Utils.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class);
+    secrets = new JsonFileRepository(Utils.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class,
+        Utils.CURRENT_SOCIAL_TYPE);
     return Utils.getFlow(secrets, scope);
   }
 

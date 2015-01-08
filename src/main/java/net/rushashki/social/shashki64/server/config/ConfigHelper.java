@@ -8,6 +8,6 @@ package net.rushashki.social.shashki64.server.config;
  */
 public class ConfigHelper {
 
-  public static final String CREDENTIAL_STORE_FILE_PATH = "/Users/alekspo/.datastore";
+  public static final String CREDENTIAL_STORE_FILE_PATH = "~/.datastore";
 
 }

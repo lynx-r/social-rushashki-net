@@ -4,6 +4,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Preconditions;
 import net.rushashki.social.shashki64.server.servlet.oauth.ClientSecretRepository;
 import net.rushashki.social.shashki64.server.servlet.oauth.ClientSecrets;
+import net.rushashki.social.shashki64.server.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,9 +18,9 @@ public class JsonFileRepository implements ClientSecretRepository {
 	}
 
 	@Override
-	public ClientSecrets loadClientSecrets(Class context) {
+	public ClientSecrets loadClientSecrets(Class context, Utils.SocialType socialType) {
 		InputStreamReader clientSecrets = new InputStreamReader(context.getResourceAsStream("/" + CLIENT_SECRETS_FILENAME));
-		WebApplication app = null;
+		WebApplication app;
 		try {
 			app = jsonFactory.createJsonParser(clientSecrets).parseAndClose(WebApplication.class, null);
 		} catch (IOException e) {
@@ -34,7 +35,15 @@ public class JsonFileRepository implements ClientSecretRepository {
 						+ "download the %s file from the VersionOne permitted applications page, \n"
 						+ "and save it in the src/main/resources directory.\n",
 				CLIENT_SECRETS_FILENAME);
-		return app.getSecretVk();
+
+		switch (socialType) {
+			case VK:
+				return app.getSecretVk();
+			case VK_LOCAL:
+				return app.getLocaleSecretVk();
+			default:
+				return null;
+		}
 	}
 
 }

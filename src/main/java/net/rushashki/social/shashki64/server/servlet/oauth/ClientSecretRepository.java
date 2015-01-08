@@ -1,5 +1,7 @@
 package net.rushashki.social.shashki64.server.servlet.oauth;
 
+import net.rushashki.social.shashki64.server.util.Utils;
+
 public interface ClientSecretRepository {
-	public ClientSecrets loadClientSecrets(Class c);
+	ClientSecrets loadClientSecrets(Class context, Utils.SocialType socialType);
 }
