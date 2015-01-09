@@ -5,8 +5,10 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
+import net.rushashki.social.shashki64.client.event.ClearNotationEvent;
+import net.rushashki.social.shashki64.client.event.ClearNotationEventHandler;
 import net.rushashki.social.shashki64.client.event.NotationMoveEvent;
-import net.rushashki.social.shashki64.client.event.OnNotationMoveEventHandler;
+import net.rushashki.social.shashki64.client.event.NotationMoveEventHandler;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,12 +28,19 @@ public class NotationPanel extends ScrollPanel {
     this.eventBus = shashkiGinjector.getEventBus();
 
     // TODO: Not Compile
-    eventBus.addHandler(NotationMoveEvent.TYPE, new OnNotationMoveEventHandler() {
+    eventBus.addHandler(NotationMoveEvent.TYPE, new NotationMoveEventHandler() {
       @Override
-      public void onNotationStroke(NotationMoveEvent event) {
+      public void onNotationMove(NotationMoveEvent event) {
         NotationPanel.this.appendMove(event.getMove());
       }
     });
+    eventBus.addHandler(ClearNotationEvent.TYPE, new ClearNotationEventHandler() {
+      @Override
+      public void onClearNotation(ClearNotationEvent event) {
+        getElement().setInnerHTML("");
+      }
+    });
+
     Scheduler.get().scheduleFinally(() -> {
       setWidth("100px");
     });
@@ -55,7 +64,7 @@ public class NotationPanel extends ScrollPanel {
       }
     }
     if (move.contains(NOTATION_SEPARATOR)) {
-      html += " " + move + "sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>";
+      html += " " + move; //+ "sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>";
       stepCounter++;
     } else {
       html += stepCounter + ". " + move;
@@ -74,4 +83,5 @@ public class NotationPanel extends ScrollPanel {
   public static String getNotation() {
     return notation;
   }
+
 }

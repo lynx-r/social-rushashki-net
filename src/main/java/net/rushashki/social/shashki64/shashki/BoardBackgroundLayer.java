@@ -56,9 +56,7 @@ public class BoardBackgroundLayer extends Layer {
       for (int j = 0; j < cols; j++) {
         if (lastColor) {
           square = getSquare(i, j);
-          if (square != null) {
-//            square.updateShape();
-          } else {
+          if (square == null) {
             square = new Square(deskSide, rows, cols, i, j, OFFSET_X);
             gameBoard[i][j] = square;
             add(square);
@@ -170,4 +168,5 @@ public class BoardBackgroundLayer extends Layer {
   public double getOffsetX() {
     return OFFSET_X;
   }
+
 }

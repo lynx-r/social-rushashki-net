@@ -26,6 +26,7 @@ import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.model.GameProxy;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 import net.rushashki.social.shashki64.shashki.Board;
@@ -36,6 +37,7 @@ import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -89,7 +91,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     this.player = clientFactory.getPlayer();
     this.gameService = shashkiGinjector.getGameService();
 
-    initEmptyDeskPanel();
+    initEmptyDeskPanel(constants.playStartDescription());
     initNotationPanel();
     initCellList();
 
@@ -207,40 +209,71 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         setBeatenOpponent(CHECKERS_ON_DESK_INIT - board.getOpponentDraughts().size());
         Game endGame = clientFactory.getGame();
         if (0 == board.getMineDraughts().size()) {
-          new DialogBox(constants.info(), constants.youLost()).show();
+          new DialogBox(constants.info(), constants.youLose()).show();
           if (board.isWhite()) {
             endGame.setPlayEndStatus(Game.GameEnds.BLACK_WON);
+          } else {
+            endGame.setPlayEndStatus(GameProxy.GameEnds.WHITE_WON);
           }
-        } else if (0 == board.getOpponentDraughts().size()) {
+        }
+        if (0 == board.getOpponentDraughts().size()) {
           new DialogBox(constants.info(), constants.youWon());
           if (board.isWhite()) {
             endGame.setPlayEndStatus(Game.GameEnds.WHITE_WON);
+          } else {
+            endGame.setPlayEndStatus(GameProxy.GameEnds.BLACK_WON);
           }
         }
-        if (null != endGame.getPlayEndStatus()) {
-          endGame.setPartyNotation(NotationPanel.getNotation());
-          gameService.saveGame(endGame, new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable caught) {
-              new DialogBox(constants.error(), caught.getMessage()).show();
-              caught.printStackTrace();
-            }
+        gameService.getGame(endGame.getId(), new AsyncCallback<Game>() {
+          @Override
+          public void onFailure(Throwable throwable) {
 
-            @Override
-            public void onSuccess(Void result) {
-              GameMessage gameMessage = GWT.create(GameMessageDto.class);
-              gameMessage.setSender(clientFactory.getPlayer());
-              gameMessage.setReceiver(clientFactory.getOpponent());
-              gameMessage.setMessageType(GameMessage.MessageType.PLAY_END);
-              gameMessage.setData(String.valueOf(endGame.getPlayEndStatus()));
+          }
 
-              eventBus.fireEvent(new GameMessageEvent(gameMessage));
-              eventBus.fireEvent(new UpdatePlayComponentEvent());
+          @Override
+          public void onSuccess(Game game) {
+            if (game.getPlayEndStatus() == null) {
+              if (null != endGame.getPlayEndStatus()) {
+                endGame.setPartyNotation(NotationPanel.getNotation());
+                endGame.setPlayEndDate(new Date());
+                gameService.saveGame(endGame, new AsyncCallback<Void>() {
+                  @Override
+                  public void onFailure(Throwable caught) {
+                    new DialogBox(constants.error(), caught.getMessage()).show();
+                    caught.printStackTrace();
+                  }
+
+                  @Override
+                  public void onSuccess(Void result) {
+                  }
+                });
+              }
             }
-          });
-        }
+            clearPlayComponent(clientFactory);
+          }
+        });
       }
     });
+
+    eventBus.addHandler(ClearPlayComponentEvent.TYPE, new ClearPlayComponentEventHandler() {
+      @Override
+      public void onClearPlayComponent(ClearPlayComponentEvent event) {
+        clearPlayComponent(clientFactory);
+      }
+    });
+  }
+
+  private void clearPlayComponent(ClientFactory clientFactory) {
+    eventBus.fireEvent(new ClearNotationEvent());
+
+    clientFactory.setOpponent(null);
+    clientFactory.setGame(null);
+
+    board.clearDesk();
+    shashki.remove(lienzoPanel);
+    initEmptyDeskPanel(constants.playRestartDescription());
+
+    turnLabel.setHTML(constants.playDidNotStart());
   }
 
   public void setBeatenMine(int count) {
@@ -271,7 +304,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     playersCellList.setRowData(playerList);
   }
 
-  private void initEmptyDeskPanel() {
+  private void initEmptyDeskPanel(String playStartDescription) {
     int shashkiSide = Window.getClientHeight() - RootPanel.get("navigation").getOffsetHeight() -
         RootPanel.get("footer").getOffsetHeight();
     shashkiColumn.setWidth(shashkiSide + "px");
@@ -283,7 +316,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     contour.setX(1);
     contour.setY(1);
     initDeskRect.add(contour);
-    String[] descriptions = constants.playStartDescription().split("\n");
+    String[] descriptions = playStartDescription.split("\n");
     int y = 0;
     for (String description : descriptions) {
       Text greeting = new Text(description, "Times New Roman", 14);

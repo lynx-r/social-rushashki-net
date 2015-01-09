@@ -17,10 +17,7 @@ import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
 import net.rushashki.social.shashki64.shared.dto.GameDto;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
-import net.rushashki.social.shashki64.shared.model.Game;
-import net.rushashki.social.shashki64.shared.model.GameMessage;
-import net.rushashki.social.shashki64.shared.model.Message;
-import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.*;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
 
 import java.util.Date;
@@ -197,10 +194,26 @@ public class GameWebsocket implements WebSocketCallback {
       case PLAY_MOVE:
         handlePlayMove(gameMessage);
         break;
+//      case PLAY_END:
+//        handlePlayEnd(gameMessage);
+//        break;
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(gameMessage);
         break;
     }
+  }
+
+  private void handlePlayEnd(GameMessage gameMessage) {
+    if (clientFactory.getGame() == null) {
+      return;
+    }
+    Game.GameEnds gameEnd = Game.GameEnds.valueOf(gameMessage.getData());
+    if (gameEnd.equals(GameProxy.GameEnds.WHITE_WON) && clientFactory.getGame().getPlayerWhite().getSystemId().equals(clientFactory.getPlayer().getSystemId())) {
+      new DialogBox(constants.info(), constants.youWon());
+    } else {
+      new DialogBox(constants.info(), constants.youLose());
+    }
+    eventBus.fireEvent(new ClearPlayComponentEvent());
   }
 
   private void handlePlayMove(GameMessage gameMessage) {

@@ -112,14 +112,19 @@ public class Board extends Layer {
       }
     }
 
-    /*
-    addDraught(opponentDraughtVector, 4, 3, !white);
-    addDraught(opponentDraughtVector, 4, 5, !white);
-//    addDraught(opponentDraughtVector, 1, 4, !white);
+/*
+    if (isWhite()) {
+      opponentDraughtVector.add(addDraught(3, 4, !white));
+    } else {
+      mineDraughtVector.add(addDraught(4, 3, white));
+    }
 
-    addDraught(mineDraughtVector, 6, 1, white);
-    mineDraughtVector.get(0).setQueen(true);
-    */
+    if (isWhite()) {
+      mineDraughtVector.add(addDraught(4, 3, white));
+    } else {
+      opponentDraughtVector.add(addDraught(3, 4, !white));
+    }
+*/
   }
 
   private Draught addDraught(int row, int col, boolean white) {
@@ -494,7 +499,14 @@ public class Board extends Layer {
   }
 
   public void removeDraughtFrom(Square takenSquare) {
+    removeDraughtFrom(takenSquare, false);
+  }
+
+  private void removeDraughtFrom(Square takenSquare, boolean clearDesk) {
     final Draught takenDraught = takenSquare.getOccupant();
+    if (takenDraught == null) {
+      return;
+    }
     takenSquare.setOccupant(null);
     AnimationProperties props = new AnimationProperties();
     props.push(AnimationProperty.Properties.ALPHA(0));
@@ -511,7 +523,7 @@ public class Board extends Layer {
           @Override
           public void onClose(IAnimation iAnimation, IAnimationHandle iAnimationHandle) {
             remove(takenDraught);
-            if (!isEmulate()) {
+            if (!isEmulate() && !clearDesk) {
               eventBus.fireEvent(new CheckWinnerEvent());
             }
           }
@@ -806,5 +818,16 @@ public class Board extends Layer {
       }
     }
     return false;
+  }
+
+  public void clearDesk() {
+    for (int i = 0; i < cols; i++) {
+      for (int j = 0; j < rows; j++) {
+        Square square = getSquare(i, j);
+        if (square != null) {
+          removeDraughtFrom(square, true);
+        }
+      }
+    }
   }
 }

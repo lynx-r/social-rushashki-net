@@ -94,6 +94,8 @@ public interface ShashkiConstants extends Messages {
 
   String playStartDescription();
 
+  String playRestartDescription();
+
   String invalidCharsInName();
 
   String tooShortPlayerName();
@@ -120,7 +122,10 @@ public interface ShashkiConstants extends Messages {
 
   String blacks();
 
-  String youLost();
+  String youLose();
 
   String youWon();
+
+  String playDidNotStart();
+
 }

@@ -8,8 +8,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 30.11.14
  * Time: 18:11
  */
-public class NotationMoveEvent extends GwtEvent<OnNotationMoveEventHandler> {
-  public static Type<OnNotationMoveEventHandler> TYPE = new Type<>();
+public class NotationMoveEvent extends GwtEvent<NotationMoveEventHandler> {
+  public static Type<NotationMoveEventHandler> TYPE = new Type<>();
   private final String stroke;
 
   public NotationMoveEvent(String stroke) {
@@ -20,11 +20,11 @@ public class NotationMoveEvent extends GwtEvent<OnNotationMoveEventHandler> {
     return stroke;
   }
 
-  public Type<OnNotationMoveEventHandler> getAssociatedType() {
+  public Type<NotationMoveEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnNotationMoveEventHandler handler) {
-    handler.onNotationStroke(this);
+  protected void dispatch(NotationMoveEventHandler handler) {
+    handler.onNotationMove(this);
   }
 }
