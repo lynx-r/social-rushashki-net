@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 0:41
  */
 public interface GetPlayerListEventHandler extends EventHandler {
-  void onOnGetPlayerList(GetPlayerListEvent event);
+  void onGetPlayerList(GetPlayerListEvent event);
 }

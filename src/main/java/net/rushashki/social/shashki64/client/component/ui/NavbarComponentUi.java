@@ -140,7 +140,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         // TODO: Not Compile
         eventBus.addHandler(ClientFactoryEvent.TYPE, new ClientFactoryEventHandler() {
             @Override
-            public void onOnClientFactory(ClientFactoryEvent event) {
+            public void onClientFactory(ClientFactoryEvent event) {
                 Shashist shashist = event.getClientFactory().getPlayer();
                 if (shashist != null) {
                     navLeft.add(homeLink);

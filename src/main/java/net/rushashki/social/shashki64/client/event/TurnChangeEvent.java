@@ -26,7 +26,7 @@ public class TurnChangeEvent extends GwtEvent<TurnChangeEventHandler> {
   }
 
   protected void dispatch(TurnChangeEventHandler handler) {
-    handler.onOnTurnChange(this);
+    handler.onTurnChange(this);
   }
 
 }

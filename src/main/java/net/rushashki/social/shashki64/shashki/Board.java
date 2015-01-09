@@ -84,7 +84,7 @@ public class Board extends Layer {
 
     eventBus.addHandler(PlayMoveOpponentEvent.TYPE, new PlayMoveOpponentEventHandler() {
       @Override
-      public void onOnPlayMoveOpponent(PlayMoveOpponentEvent event) {
+      public void onPlayMoveOpponent(PlayMoveOpponentEvent event) {
         Board.this.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured(), -1);
       }
     });

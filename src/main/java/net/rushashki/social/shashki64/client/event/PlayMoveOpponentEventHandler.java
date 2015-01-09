@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 19:46
  */
 public interface PlayMoveOpponentEventHandler extends EventHandler {
-  void onOnPlayMoveOpponent(PlayMoveOpponentEvent event);
+  void onPlayMoveOpponent(PlayMoveOpponentEvent event);
 }

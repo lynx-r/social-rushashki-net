@@ -25,6 +25,6 @@ public class StartPlayEvent extends GwtEvent<StartPlayEventHandler> {
   }
 
   protected void dispatch(StartPlayEventHandler handler) {
-    handler.onOnStartPlay(this);
+    handler.onStartPlay(this);
   }
 }

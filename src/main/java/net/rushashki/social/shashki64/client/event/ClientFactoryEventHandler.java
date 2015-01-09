@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 7:42
  */
 public interface ClientFactoryEventHandler extends EventHandler {
-  void onOnClientFactory(ClientFactoryEvent event);
+  void onClientFactory(ClientFactoryEvent event);
 }

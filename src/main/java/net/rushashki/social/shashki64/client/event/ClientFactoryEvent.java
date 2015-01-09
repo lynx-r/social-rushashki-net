@@ -28,7 +28,7 @@ public class ClientFactoryEvent extends GwtEvent<ClientFactoryEventHandler> {
   }
 
   protected void dispatch(ClientFactoryEventHandler handler) {
-    handler.onOnClientFactory(this);
+    handler.onClientFactory(this);
   }
 
 }

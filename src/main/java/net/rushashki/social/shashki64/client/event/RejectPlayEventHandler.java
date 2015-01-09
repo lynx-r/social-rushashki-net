@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 2:23
  */
 public interface RejectPlayEventHandler extends EventHandler {
-  void onOnRejectPlay(RejectPlayEvent event);
+  void onRejectPlay(RejectPlayEvent event);
 }

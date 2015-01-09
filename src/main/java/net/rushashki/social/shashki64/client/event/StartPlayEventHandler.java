@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 1:37
  */
 public interface StartPlayEventHandler extends EventHandler {
-  void onOnStartPlay(StartPlayEvent event);
+  void onStartPlay(StartPlayEvent event);
 }

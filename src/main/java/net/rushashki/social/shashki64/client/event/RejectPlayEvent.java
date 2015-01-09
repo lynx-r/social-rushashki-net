@@ -16,6 +16,6 @@ public class RejectPlayEvent extends GwtEvent<RejectPlayEventHandler> {
   }
 
   protected void dispatch(RejectPlayEventHandler handler) {
-    handler.onOnRejectPlay(this);
+    handler.onRejectPlay(this);
   }
 }

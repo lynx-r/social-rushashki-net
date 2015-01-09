@@ -28,6 +28,6 @@ public class GetPlayerListEvent extends GwtEvent<GetPlayerListEventHandler> {
   }
 
   protected void dispatch(GetPlayerListEventHandler handler) {
-    handler.onOnGetPlayerList(this);
+    handler.onGetPlayerList(this);
   }
 }

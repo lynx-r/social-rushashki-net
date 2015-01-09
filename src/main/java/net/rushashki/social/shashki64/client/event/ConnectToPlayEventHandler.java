@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 10:48
  */
 public interface ConnectToPlayEventHandler extends EventHandler {
-    void onOnConnectToPlay(ConnectToPlayEvent event);
+    void onConnectToPlay(ConnectToPlayEvent event);
 }

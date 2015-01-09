@@ -16,6 +16,6 @@ public class ConnectToPlayEvent extends GwtEvent<ConnectToPlayEventHandler> {
     }
 
     protected void dispatch(ConnectToPlayEventHandler handler) {
-        handler.onOnConnectToPlay(this);
+        handler.onConnectToPlay(this);
     }
 }

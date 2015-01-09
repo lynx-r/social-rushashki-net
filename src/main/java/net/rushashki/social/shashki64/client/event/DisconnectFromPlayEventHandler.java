@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 10:51
  */
 public interface DisconnectFromPlayEventHandler extends EventHandler {
-    void onOnDisconnectFromPlay(DisconnectFromPlayEvent event);
+    void onDisconnectFromPlay(DisconnectFromPlayEvent event);
 }

@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 1:57
  */
 public interface ChatMessageEventHandler extends EventHandler {
-  void onOnChatMessage(ChatMessageEvent event);
+  void onChatMessage(ChatMessageEvent event);
 }

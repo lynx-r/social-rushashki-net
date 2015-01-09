@@ -40,7 +40,7 @@ public class ChatPrivateComponentUi extends BasicComponent {
 
     eventBus.addHandler(StartPlayEvent.TYPE, new StartPlayEventHandler() {
       @Override
-      public void onOnStartPlay(StartPlayEvent event) {
+      public void onStartPlay(StartPlayEvent event) {
         gameMessageService.getLastPlayerMessages(200, clientFactory.getPlayer().getId(),
             clientFactory.getOpponent().getId(), new AsyncCallback<List<GameMessage>>() {
           @Override
@@ -61,7 +61,7 @@ public class ChatPrivateComponentUi extends BasicComponent {
 
     eventBus.addHandler(ChatMessageEvent.TYPE, new ChatMessageEventHandler() {
       @Override
-      public void onOnChatMessage(ChatMessageEvent event) {
+      public void onChatMessage(ChatMessageEvent event) {
         String message = event.getMessage();
         String publicName = clientFactory.getPlayer().getPublicName();
         chatPanelAddMessage(message, publicName);

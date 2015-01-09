@@ -71,7 +71,7 @@ public class ShashkiViewComponentUi extends BasicComponent implements ClickHandl
     // TODO: Not Compile
     eventBus.addHandler(ClientFactoryEvent.TYPE, new ClientFactoryEventHandler() {
       @Override
-      public void onOnClientFactory(ClientFactoryEvent event) {
+      public void onClientFactory(ClientFactoryEvent event) {
         ShashkiViewComponentUi.this.player = event.getClientFactory().getPlayer();
         alignNotationPanel(shashkiSide);
       }

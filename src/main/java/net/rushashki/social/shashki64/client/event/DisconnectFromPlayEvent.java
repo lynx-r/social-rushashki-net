@@ -16,6 +16,6 @@ public class DisconnectFromPlayEvent extends GwtEvent<DisconnectFromPlayEventHan
     }
 
     protected void dispatch(DisconnectFromPlayEventHandler handler) {
-        handler.onOnDisconnectFromPlay(this);
+        handler.onDisconnectFromPlay(this);
     }
 }

@@ -38,7 +38,7 @@ public class PlayMoveEvent extends GwtEvent<PlayMoveEventHandler> {
   }
 
   protected void dispatch(PlayMoveEventHandler handler) {
-    handler.onOnPlayMove(this);
+    handler.onPlayMove(this);
   }
 
 }

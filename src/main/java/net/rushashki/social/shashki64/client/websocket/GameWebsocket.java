@@ -54,7 +54,7 @@ public class GameWebsocket implements WebSocketCallback {
 
     eventBus.addHandler(ConnectToPlayEvent.TYPE, new ConnectToPlayEventHandler() {
       @Override
-      public void onOnConnectToPlay(ConnectToPlayEvent event) {
+      public void onConnectToPlay(ConnectToPlayEvent event) {
         webSocket = new WebSocket(GameWebsocket.this);
         webSocket.connect(PLAYER_WEBSOCKET_URL);
       }
@@ -71,7 +71,7 @@ public class GameWebsocket implements WebSocketCallback {
 
     eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
       @Override
-      public void onOnPlayMove(PlayMoveEvent event) {
+      public void onPlayMove(PlayMoveEvent event) {
         GameMessage message = GWT.create(GameMessageDto.class);
         message.setSender(clientFactory.getPlayer());
         message.setReceiver(clientFactory.getOpponent());

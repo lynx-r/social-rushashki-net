@@ -147,21 +147,21 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     // TODO: Not Compile
     eventBus.addHandler(GetPlayerListEvent.TYPE, new GetPlayerListEventHandler() {
       @Override
-      public void onOnGetPlayerList(GetPlayerListEvent event) {
+      public void onGetPlayerList(GetPlayerListEvent event) {
         setPlayerList(event.getPlayerList());
       }
     });
 
     eventBus.addHandler(ConnectedToPlayEvent.TYPE, new ConnectedToPlayEventHandler() {
       @Override
-      public void onOnConnectedToPlay(ConnectedToPlayEvent event) {
+      public void onConnectedToPlay(ConnectedToPlayEvent event) {
         toggleInPlayButton();
       }
     });
 
     eventBus.addHandler(DisconnectFromPlayEvent.TYPE, new DisconnectFromPlayEventHandler() {
       @Override
-      public void onOnDisconnectFromPlay(DisconnectFromPlayEvent event) {
+      public void onDisconnectFromPlay(DisconnectFromPlayEvent event) {
         connectPlayButton.setActive(true);
         connectPlayButton.setBlock(true);
         connectPlayButton.addStyleName("btn-danger");
@@ -175,7 +175,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
 
     eventBus.addHandler(StartPlayEvent.TYPE, new StartPlayEventHandler() {
       @Override
-      public void onOnStartPlay(StartPlayEvent event) {
+      public void onStartPlay(StartPlayEvent event) {
         if (inviteDialogBox != null) {
           inviteDialogBox.hide();
         }
@@ -188,14 +188,14 @@ public class ShashkiPlayComponentUi extends BasicComponent {
 
     eventBus.addHandler(RejectPlayEvent.TYPE, new RejectPlayEventHandler() {
       @Override
-      public void onOnRejectPlay(RejectPlayEvent event) {
+      public void onRejectPlay(RejectPlayEvent event) {
         inviteDialogBox.hide();
       }
     });
 
     eventBus.addHandler(TurnChangeEvent.TYPE, new TurnChangeEventHandler() {
       @Override
-      public void onOnTurnChange(TurnChangeEvent event) {
+      public void onTurnChange(TurnChangeEvent event) {
         updateTurn(event.isMyTurn());
       }
     });

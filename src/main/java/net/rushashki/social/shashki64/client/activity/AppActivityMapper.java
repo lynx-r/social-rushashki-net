@@ -27,7 +27,7 @@ public class AppActivityMapper implements ActivityMapper {
 
     eventBus.addHandler(ClientFactoryEvent.TYPE, new ClientFactoryEventHandler() {
       @Override
-      public void onOnClientFactory(ClientFactoryEvent event) {
+      public void onClientFactory(ClientFactoryEvent event) {
         AppActivityMapper.this.clientFactory = event.getClientFactory();
       }
     });

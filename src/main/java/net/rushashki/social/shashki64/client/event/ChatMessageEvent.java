@@ -26,6 +26,6 @@ public class ChatMessageEvent extends GwtEvent<ChatMessageEventHandler> {
   }
 
   protected void dispatch(ChatMessageEventHandler handler) {
-    handler.onOnChatMessage(this);
+    handler.onChatMessage(this);
   }
 }

@@ -9,5 +9,5 @@ import com.google.gwt.event.shared.EventHandler;
  * Time: 9:48
  */
 public interface TurnChangeEventHandler extends EventHandler {
-  void onOnTurnChange(TurnChangeEvent event);
+  void onTurnChange(TurnChangeEvent event);
 }
