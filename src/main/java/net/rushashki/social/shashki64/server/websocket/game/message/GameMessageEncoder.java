@@ -1,6 +1,6 @@
 package net.rushashki.social.shashki64.server.websocket.game.message;
 
-import net.rushashki.social.shashki64.server.util.Utils;
+import net.rushashki.social.shashki64.server.util.Util;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
 
 import javax.websocket.EncodeException;
@@ -16,7 +16,7 @@ import javax.websocket.EndpointConfig;
 public class GameMessageEncoder implements Encoder.Text<GameMessage> {
   @Override
   public String encode(GameMessage gameMessage) throws EncodeException {
-    return Utils.serializePlayerMessageToJson(gameMessage);
+    return Util.serializePlayerMessageToJson(gameMessage);
   }
 
   @Override

@@ -9,7 +9,7 @@
 
         .notation-column {
             float: left;
-            margin-left: 10px;
+            /*margin-left: 10px;*/
         }
 
         .private-chat {
@@ -29,11 +29,18 @@
             <g:HTMLPanel ui:field="shashki"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="notationColumn" addStyleNames="{style.notation-column}">
-            <ui:msg description="Нотация" key="notationList">Нотация:</ui:msg>
+            <ui:msg description="Ход" key="stroke"><b>Ход:</b></ui:msg>
+            <g:Label ui:field="strokeLabel"/>
+            <ui:msg description="Сбито шашек" key="beatDraughts"><b>Сбито шашек:</b></ui:msg>
+            <g:Label ui:field="beatDraughtsLabel"/>
+            <b:Button ui:field="moveBack" text="Ход назад" styleName="btn btn-default btn-block">
+                <ui:attribute name="text"/>
+            </b:Button>
+            <ui:msg description="Нотация" key="notationList"><b>Нотация:</b></ui:msg>
             <g:HTMLPanel ui:field="notationList"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="privateChatColumn" addStyleNames="{style.private-chat}">
-            <ui:msg description="Приватный чат" key="privateChat">Персональный чат:</ui:msg>
+            <ui:msg description="Приватный чат" key="privateChat"><b>Персональный чат:</b></ui:msg>
             <c:ChatPrivateComponentUi ui:field="privateChat"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="playerListColumn" addStyleNames="{style.player-list}">
@@ -43,6 +50,7 @@
                 </b:Button>
                 <b:Label ui:field="offlineHintLabel" styleName="text-warning"/>
             </span>
+            <ui:msg description="Список игроков" key="playerListLabel"><b>Список игроков:</b></ui:msg>
             <g:ScrollPanel ui:field="playerPanel"/>
             <b:InputGroup>
                 <b:InputGroupAddon icon="SEARCH"/>

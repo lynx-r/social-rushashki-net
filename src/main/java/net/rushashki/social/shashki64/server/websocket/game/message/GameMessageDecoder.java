@@ -1,6 +1,6 @@
 package net.rushashki.social.shashki64.server.websocket.game.message;
 
-import net.rushashki.social.shashki64.server.util.Utils;
+import net.rushashki.social.shashki64.server.util.Util;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
 
 import javax.websocket.DecodeException;
@@ -38,7 +38,7 @@ public class GameMessageDecoder implements Decoder.Text<GameMessage> {
 
 
     try {
-      return Utils.deserializeFromJson(s);
+      return Util.deserializeFromJson(s);
     } catch (Exception e) {
       e.printStackTrace();
       return null;
@@ -47,7 +47,7 @@ public class GameMessageDecoder implements Decoder.Text<GameMessage> {
 
   @Override
   public boolean willDecode(String s) {
-    GameMessage gameMessage = Utils.deserializeFromJson(s);
+    GameMessage gameMessage = Util.deserializeFromJson(s);
     return gameMessage.getMessageType().equals(GameMessage.MessageType.CHAT_MESSAGE)
         || gameMessage.getMessageType().equals(GameMessage.MessageType.CHAT_PRIVATE_MESSAGE)
 

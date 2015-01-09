@@ -35,7 +35,7 @@ public class Util {
   public static String hashString(String in) {
     MessageDigest messageDigest;
     try {
-      messageDigest = MessageDigest.getInstance("MD5");
+      messageDigest = MessageDigest.getInstance("SHA1");
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
       return "";

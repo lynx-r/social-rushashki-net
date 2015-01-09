@@ -5,7 +5,7 @@ import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizatio
 import com.google.api.client.http.GenericUrl;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
 import net.rushashki.social.shashki64.server.servlet.oauth.jsonfilesecrets.JsonFileRepository;
-import net.rushashki.social.shashki64.server.util.Utils;
+import net.rushashki.social.shashki64.server.util.Util;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,9 +28,9 @@ public class OAuthVKServlet extends AbstractAuthorizationCodeServlet {
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    secrets = new JsonFileRepository(Utils.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class,
-        Utils.CURRENT_SOCIAL_TYPE);
-    return Utils.getFlow(secrets, scope);
+    secrets = new JsonFileRepository(Util.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class,
+        Util.CURRENT_SOCIAL_TYPE);
+    return Util.getFlow(secrets, scope);
   }
 
   @Override

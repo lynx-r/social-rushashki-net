@@ -10,7 +10,7 @@ import com.google.api.client.http.HttpResponse;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
 import net.rushashki.social.shashki64.server.service.ShashistService;
 import net.rushashki.social.shashki64.server.servlet.oauth.jsonfilesecrets.JsonFileRepository;
-import net.rushashki.social.shashki64.server.util.Utils;
+import net.rushashki.social.shashki64.server.util.Util;
 import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 import javax.inject.Inject;
@@ -46,7 +46,7 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
     GenericUrl url = new GenericUrl(OAuthClient.API_VK_GET_USER_INFO);
     url.set("access_token", accessToken);
 
-    HttpRequest request = Utils.HTTP_TRANSPORT.createRequestFactory().buildGetRequest(url);
+    HttpRequest request = Util.HTTP_TRANSPORT.createRequestFactory().buildGetRequest(url);
     HttpResponse response = request.execute();
     InputStream inputStream = response.getContent();
     JsonReader jsonReader = Json.createReader(inputStream);
@@ -84,11 +84,7 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
         shashistService.edit(shashistEntity);
       }
     }
-
-//    req.getSession().setAttribute("isAuthenticated", true);
-//    req.getSession().setAttribute("authProvider", "vk");
-//    req.getSession().setAttribute("firstName", shashistEntity.getFirstName());
-//    req.getSession().setAttribute("lastName", shashistEntity.getLastName());
+    session.setMaxInactiveInterval(0);
 
     resp.sendRedirect("/");
   }
@@ -100,9 +96,9 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    secrets = new JsonFileRepository(Utils.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class,
-        Utils.CURRENT_SOCIAL_TYPE);
-    return Utils.getFlow(secrets, scopes);
+    secrets = new JsonFileRepository(Util.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class,
+        Util.CURRENT_SOCIAL_TYPE);
+    return Util.getFlow(secrets, scopes);
   }
 
   @Override

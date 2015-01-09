@@ -4,7 +4,7 @@ import com.google.web.bindery.autobean.vm.AutoBeanFactorySource;
 import net.rushashki.social.shashki64.server.service.GameMessageService;
 import net.rushashki.social.shashki64.server.service.GameService;
 import net.rushashki.social.shashki64.server.service.ShashistService;
-import net.rushashki.social.shashki64.server.util.Utils;
+import net.rushashki.social.shashki64.server.util.Util;
 import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageDecoder;
 import net.rushashki.social.shashki64.server.websocket.game.message.GameMessageEncoder;
 import net.rushashki.social.shashki64.shared.model.Shashist;
@@ -69,7 +69,7 @@ public class GameWebsocket {
   }
 
   private void handleChatMessage(Session session, GameMessage message) {
-    session.getOpenSessions().stream().filter(Session::isOpen).forEach(peer -> {
+    session.getOpenSessions().parallelStream().filter(Session::isOpen).forEach(peer -> {
       sendMessage(peer, message);
     });
   }
@@ -77,8 +77,8 @@ public class GameWebsocket {
   private void handleNewPlayer(GameMessage message, Session session) {
     Shashist shashist = message.getSender();
     if (!peers.isEmpty()) {
-      Shashist registered = peers.keySet().stream().filter(sh -> sh.getSystemId().equals(shashist.getSystemId())).findAny().get();
-      if (registered != null) {
+      boolean registered = peers.keySet().parallelStream().filter(sh -> sh.getSystemId().equals(shashist.getSystemId())).findAny().isPresent();
+      if (registered) {
         return;
       }
     }
@@ -121,7 +121,7 @@ public class GameWebsocket {
   private void handleChatPrivateMessage(GameMessage message) {
     Shashist receiver = message.getReceiver();
     Shashist shashist = peers.keySet().stream()
-        .filter(s -> s.getSystemId().equals(receiver.getSystemId())).findFirst().get();
+        .filter(sh -> sh.getSystemId().equals(receiver.getSystemId())).findFirst().get();
     Session session = peers.get(shashist);
     sendMessage(session, message);
 
@@ -161,7 +161,7 @@ public class GameWebsocket {
     RemoteEndpoint.Basic remote = session.getBasicRemote();
     if (remote != null) {
       try {
-        remote.sendText(Utils.serializePlayerMessageToJson(message), true);
+        remote.sendText(Util.serializePlayerMessageToJson(message), true);
       } catch (IOException e) {
         e.printStackTrace();
       }

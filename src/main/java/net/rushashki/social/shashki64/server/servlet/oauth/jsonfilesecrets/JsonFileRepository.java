@@ -4,7 +4,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Preconditions;
 import net.rushashki.social.shashki64.server.servlet.oauth.ClientSecretRepository;
 import net.rushashki.social.shashki64.server.servlet.oauth.ClientSecrets;
-import net.rushashki.social.shashki64.server.util.Utils;
+import net.rushashki.social.shashki64.server.util.Util;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +18,7 @@ public class JsonFileRepository implements ClientSecretRepository {
 	}
 
 	@Override
-	public ClientSecrets loadClientSecrets(Class context, Utils.SocialType socialType) {
+	public ClientSecrets loadClientSecrets(Class context, Util.SocialType socialType) {
 		InputStreamReader clientSecrets = new InputStreamReader(context.getResourceAsStream("/" + CLIENT_SECRETS_FILENAME));
 		WebApplication app;
 		try {

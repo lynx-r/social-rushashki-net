@@ -28,7 +28,7 @@ import java.util.List;
  * Date: 16.11.14
  * Time: 17:19
  */
-public class Utils {
+public class Util {
 
   public static final String LOCALHOST = "127.0.0.1";
   public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();

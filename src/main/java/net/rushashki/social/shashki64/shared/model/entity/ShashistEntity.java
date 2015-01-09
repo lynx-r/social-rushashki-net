@@ -1,11 +1,11 @@
 package net.rushashki.social.shashki64.shared.model.entity;
 
 import com.google.gwt.user.client.rpc.GwtTransient;
-import net.rushashki.social.shashki64.client.util.Util;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Set;
 
@@ -329,16 +329,13 @@ public class ShashistEntity extends PersistableObjectImpl implements Shashist {
 
   @Override
   public String getSystemId() {
-    if (hashId == null) {
-      String uid = "";
-      if (getEmail() != null) {
-        uid = getEmail();
-      } else if (getVkUid() != null) {
-        uid = getVkUid();
-      }
-      hashId = Util.hashString(uid + ":" + getPublicName());
+    String uid = "";
+    if (getEmail() != null) {
+      uid = getEmail();
+    } else if (getVkUid() != null) {
+      uid = getVkUid();
     }
-    return hashId;
+    return BigInteger.valueOf(uid.hashCode()).toString(16);
   }
 
   public ShashistEntity copy(Shashist shashist) {
