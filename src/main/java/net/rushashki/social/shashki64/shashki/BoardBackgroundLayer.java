@@ -22,7 +22,7 @@ public class BoardBackgroundLayer extends Layer {
   private Square[][] gameBoard;
   private Rectangle boardConturRect;
   private Vector<Text> coordsTextVector = new Vector<>();
-  private int X_OFFSET = 20;
+  private int OFFSET_X = 30;
 
   public BoardBackgroundLayer(int side, int deskSide, int rows, int cols) {
     setListening(false);
@@ -39,12 +39,12 @@ public class BoardBackgroundLayer extends Layer {
   }
 
   private void drawDesk() {
-    Rectangle background = new Rectangle(deskSide, deskSide).setX(X_OFFSET).setY(0);
+    Rectangle background = new Rectangle(deskSide, deskSide).setX(OFFSET_X).setY(0);
     background.setFillColor(ColorName.LIGHTGRAY);
     add(background);
 
     if (boardConturRect == null) {
-      boardConturRect = new Rectangle(deskSide, deskSide).setX(X_OFFSET).setY(0);
+      boardConturRect = new Rectangle(deskSide, deskSide).setX(OFFSET_X).setY(0);
       add(boardConturRect);
     } else {
       boardConturRect.setWidth(side).setHeight(side);
@@ -59,7 +59,7 @@ public class BoardBackgroundLayer extends Layer {
           if (square != null) {
 //            square.updateShape();
           } else {
-            square = new Square(deskSide, rows, cols, i, j);
+            square = new Square(deskSide, rows, cols, i, j, OFFSET_X);
             gameBoard[i][j] = square;
             add(square);
 
@@ -91,7 +91,7 @@ public class BoardBackgroundLayer extends Layer {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
         if (0 == j) {
-          double x = 0;
+          double x = OFFSET_X - 20;
           double y = deskSide * (((double) i) / ((double) cols) + 1 / ((double) rows * 2));
 
           Text num = new Text(String.valueOf(numCoords), "Times New Roman", 12);
@@ -103,7 +103,7 @@ public class BoardBackgroundLayer extends Layer {
           coordsTextVector.add(num);
         }
         if (rows == (i + 1)) {
-          double x = deskSide * ((double) j / ((double) rows) + 1 / ((double) cols * 2)) + 15;
+          double x = deskSide * ((double) j / ((double) rows) + 1 / ((double) cols * 2)) + OFFSET_X - 25;
           double y = deskSide + 20;
 
           Text alph = new Text(alphCoords[alphIdCoords], "Times New Roman", 12);
@@ -165,5 +165,9 @@ public class BoardBackgroundLayer extends Layer {
 
   public int getDeskSide() {
     return deskSide;
+  }
+
+  public double getOffsetX() {
+    return OFFSET_X;
   }
 }

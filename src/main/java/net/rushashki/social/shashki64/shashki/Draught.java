@@ -42,22 +42,24 @@ public class Draught extends Group {
   private boolean queen;
 
   private Draught currentDraught;
+  private double offsetX;
 
-  public Draught(int deskSide, int rows, int cols, int row, int col, boolean white) {
+  public Draught(int deskSide, int rows, int cols, int row, int col, boolean white, double offsetX) {
     this.deskSide = deskSide;
     this.row = row;
     this.col = col;
     this.rows = rows;
     this.cols = cols;
     this.white = white;
+    this.offsetX = offsetX;
 
-    this.setListening(true);
+    setListening(true);
 
-    this.setAlpha(.8);
-    this.add(mainCircle);
-    this.add(innerCircle1);
-    this.add(innerCircle2);
-    this.add(innerCircle3);
+    setAlpha(.8);
+    add(mainCircle);
+    add(innerCircle1);
+    add(innerCircle2);
+    add(innerCircle3);
 
     queenStar.setFillColor(white ? ColorName.BLUE : ColorName.RED);
 
@@ -130,8 +132,8 @@ public class Draught extends Group {
     double x = col * deskSide / rows;
     double y = row * deskSide / cols;
     double squareSize = deskSide / rows;
-    this.setX(x + squareSize / 2 + 20);
-    this.setY(y + squareSize / 2);
+    setX(x + squareSize / 2 + offsetX);
+    setY(y + squareSize / 2);
 
     double radius = squareSize / 2 - 5;
 

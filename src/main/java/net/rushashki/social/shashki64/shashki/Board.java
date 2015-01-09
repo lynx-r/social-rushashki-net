@@ -125,7 +125,7 @@ public class Board extends Layer {
     Square square = backgroundLayer.getSquare(row, col);
     Draught draught;
     if (square != null && Square.isValid(row, col)) {
-      draught = new Draught(backgroundLayer.getDeskSide(), rows, cols, row, col, white);
+      draught = new Draught(backgroundLayer.getDeskSide(), rows, cols, row, col, white, backgroundLayer.getOffsetX());
       add(draught);
       square.setOccupant(draught);
       return draught;
@@ -260,7 +260,7 @@ public class Board extends Layer {
         outPossibleMoves.add(backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1)));
         if (queen) {
           possibleMovePair(opRow, opCol, opRow.apply(row, 1), opCol.apply(col, 1), white, sideWhite,
-              queen, outPossibleMoves, outJumpMoves, straightQueen);
+              true, outPossibleMoves, outJumpMoves, straightQueen);
         }
       } else {
         //if square is occupied, and the color of the Draught in square is

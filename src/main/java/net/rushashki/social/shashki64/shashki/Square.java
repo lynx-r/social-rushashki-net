@@ -22,14 +22,16 @@ public class Square extends Rectangle {
   private Draught occupant;
   private double strokeLineWidth = 1.5;
   private String[] alph = new String[] {"a", "b", "c", "d", "e", "f", "g", "h"};
+  private double offsetX;
 
-  public Square(double side, int rows, int cols, int row, int col) {
+  public Square(double side, int rows, int cols, int row, int col, double offsetX) {
     super(0, 0);
     this.side = side;
     this.row = row;
     this.col = col;
     this.rows = rows;
     this.cols = cols;
+    this.offsetX = offsetX;
 
     occupied = false;
     occupant = null;
@@ -163,7 +165,7 @@ public class Square extends Rectangle {
   }
 
   public void updateShape() {
-    double x = ((double) col) * side / ((double) rows) + 20;
+    double x = ((double) col) * side / ((double) rows) + offsetX;
     double y = ((double) row) * side / ((double) cols);
     setX(x);
     setY(y);
