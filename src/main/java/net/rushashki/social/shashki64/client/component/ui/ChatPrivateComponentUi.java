@@ -38,9 +38,9 @@ public class ChatPrivateComponentUi extends BasicComponent {
   public ChatPrivateComponentUi(final ClientFactory clientFactory) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
-    eventBus.addHandler(OnStartPlayEvent.TYPE, new OnStartPlayEventHandler() {
+    eventBus.addHandler(StartPlayEvent.TYPE, new StartPlayEventHandler() {
       @Override
-      public void onOnStartPlay(OnStartPlayEvent event) {
+      public void onOnStartPlay(StartPlayEvent event) {
         gameMessageService.getLastPlayerMessages(200, clientFactory.getPlayer().getId(),
             clientFactory.getOpponent().getId(), new AsyncCallback<List<GameMessage>>() {
           @Override
@@ -59,9 +59,9 @@ public class ChatPrivateComponentUi extends BasicComponent {
       }
     });
 
-    eventBus.addHandler(OnChatMessageEvent.TYPE, new OnChatMessageEventHandler() {
+    eventBus.addHandler(ChatMessageEvent.TYPE, new ChatMessageEventHandler() {
       @Override
-      public void onOnChatMessage(OnChatMessageEvent event) {
+      public void onOnChatMessage(ChatMessageEvent event) {
         String message = event.getMessage();
         String publicName = clientFactory.getPlayer().getPublicName();
         chatPanelAddMessage(message, publicName);
@@ -87,8 +87,8 @@ public class ChatPrivateComponentUi extends BasicComponent {
 
           gameMessage.setMessage(message);
 
-          eventBus.fireEvent(new OnChatMessageEvent(message));
-          eventBus.fireEvent(new OnGameMessageEvent(gameMessage));
+          eventBus.fireEvent(new ChatMessageEvent(message));
+          eventBus.fireEvent(new GameMessageEvent(gameMessage));
 
           messageInputTextBox.setText("");
         }

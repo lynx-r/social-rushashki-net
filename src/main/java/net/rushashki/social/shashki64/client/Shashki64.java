@@ -14,7 +14,7 @@ import net.rushashki.social.shashki64.client.activity.AppActivityMapper;
 import net.rushashki.social.shashki64.client.component.ui.FooterComponentUi;
 import net.rushashki.social.shashki64.client.component.ui.NavbarComponentUi;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
+import net.rushashki.social.shashki64.client.event.ClientFactoryEvent;
 import net.rushashki.social.shashki64.client.page.BasePage;
 import net.rushashki.social.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.social.shashki64.client.place.AppPlaceHistoryMapper;
@@ -72,7 +72,7 @@ public class Shashki64 implements EntryPoint {
 
         clientFactory.setPlayer(shashist);
         RootPanel.get("content").add((IsWidget) appWidget);
-        eventBus.fireEvent(new OnClientFactoryEvent(clientFactory));
+        eventBus.fireEvent(new ClientFactoryEvent(clientFactory));
         historyHandler.handleCurrentHistory();
 
 //        if (shashist != null) {

@@ -6,8 +6,8 @@ import com.google.gwt.event.shared.EventHandler;
  * Created with IntelliJ IDEA.
  * User: alekspo
  * Date: 27.12.14
- * Time: 10:50
+ * Time: 10:48
  */
-public interface OnConnectedToPlayEventHandler extends EventHandler {
-    void onOnConnectedToPlay(OnConnectedToPlayEvent event);
+public interface ConnectToPlayEventHandler extends EventHandler {
+    void onOnConnectToPlay(ConnectToPlayEvent event);
 }

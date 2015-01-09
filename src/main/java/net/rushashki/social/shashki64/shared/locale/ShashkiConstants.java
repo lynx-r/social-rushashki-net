@@ -115,4 +115,12 @@ public interface ShashkiConstants extends Messages {
   String opponentTurn();
 
   String youDisconnected();
+
+  String whites();
+
+  String blacks();
+
+  String youLost();
+
+  String youWon();
 }

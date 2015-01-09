@@ -9,13 +9,13 @@ import net.rushashki.social.shashki64.client.ClientFactory;
  * Date: 06.12.14
  * Time: 7:42
  */
-public class OnClientFactoryEvent extends GwtEvent<OnClientFactoryEventHandler> {
+public class ClientFactoryEvent extends GwtEvent<ClientFactoryEventHandler> {
 
-  public static Type<OnClientFactoryEventHandler> TYPE = new Type<>();
+  public static Type<ClientFactoryEventHandler> TYPE = new Type<>();
 
   private ClientFactory clientFactory;
 
-  public OnClientFactoryEvent(ClientFactory clientFactory) {
+  public ClientFactoryEvent(ClientFactory clientFactory) {
     this.clientFactory = clientFactory;
   }
 
@@ -23,11 +23,11 @@ public class OnClientFactoryEvent extends GwtEvent<OnClientFactoryEventHandler> 
     return clientFactory;
   }
 
-  public Type<OnClientFactoryEventHandler> getAssociatedType() {
+  public Type<ClientFactoryEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnClientFactoryEventHandler handler) {
+  protected void dispatch(ClientFactoryEventHandler handler) {
     handler.onOnClientFactory(this);
   }
 

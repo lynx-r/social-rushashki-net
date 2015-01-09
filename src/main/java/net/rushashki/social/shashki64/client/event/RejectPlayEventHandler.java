@@ -5,9 +5,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 27.12.14
- * Time: 10:48
+ * Date: 28.12.14
+ * Time: 2:23
  */
-public interface OnConnectToPlayEventHandler extends EventHandler {
-    void onOnConnectToPlay(OnConnectToPlayEvent event);
+public interface RejectPlayEventHandler extends EventHandler {
+  void onOnRejectPlay(RejectPlayEvent event);
 }

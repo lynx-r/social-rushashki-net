@@ -8,12 +8,12 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 09.01.15
  * Time: 9:48
  */
-public class OnTurnChangeEvent extends GwtEvent<OnTurnChangeEventHandler> {
+public class TurnChangeEvent extends GwtEvent<TurnChangeEventHandler> {
 
-  public static Type<OnTurnChangeEventHandler> TYPE = new Type<>();
+  public static Type<TurnChangeEventHandler> TYPE = new Type<>();
   private boolean myTurn;
 
-  public OnTurnChangeEvent(boolean myTurn) {
+  public TurnChangeEvent(boolean myTurn) {
     this.myTurn = myTurn;
   }
 
@@ -21,11 +21,11 @@ public class OnTurnChangeEvent extends GwtEvent<OnTurnChangeEventHandler> {
     return myTurn;
   }
 
-  public Type<OnTurnChangeEventHandler> getAssociatedType() {
+  public Type<TurnChangeEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnTurnChangeEventHandler handler) {
+  protected void dispatch(TurnChangeEventHandler handler) {
     handler.onOnTurnChange(this);
   }
 

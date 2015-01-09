@@ -47,6 +47,7 @@ public interface Message extends PersistableObject {
     PLAY_LEFT,
     PLAY_PROPOSE_DRAW,
     PLAY_ACCEPT_DRAW,
+    PLAY_END,
     PLAYER_REGISTER
 
   }

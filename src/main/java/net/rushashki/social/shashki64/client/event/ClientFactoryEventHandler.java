@@ -5,9 +5,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 23.11.14
- * Time: 23:32
+ * Date: 06.12.14
+ * Time: 7:42
  */
-public interface OnNavbarReloadEventHandler extends EventHandler {
-  void onEvent(OnNavbarReloadEvent event);
+public interface ClientFactoryEventHandler extends EventHandler {
+  void onOnClientFactory(ClientFactoryEvent event);
 }

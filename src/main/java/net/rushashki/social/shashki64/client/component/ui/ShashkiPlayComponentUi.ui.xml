@@ -34,7 +34,8 @@
                 <ui:attribute name="text"/>
             </g:HTML>
             <ui:msg description="Сбито шашек" key="beatDraughts"><b>Сбито шашек:</b></ui:msg>
-            <g:Label ui:field="beatDraughtsLabel"/>
+            <g:Label ui:field="beatenMineDraughtsLabel"/>
+            <g:Label ui:field="beatenOpponentDraughtsLabel"/>
             <b:Button ui:field="moveBack" text="Ход назад" styleName="btn btn-default btn-block">
                 <ui:attribute name="text"/>
             </b:Button>

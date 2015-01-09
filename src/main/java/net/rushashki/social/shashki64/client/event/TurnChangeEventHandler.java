@@ -5,9 +5,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 28.12.14
- * Time: 1:57
+ * Date: 09.01.15
+ * Time: 9:48
  */
-public interface OnChatMessageEventHandler extends EventHandler {
-  void onOnChatMessage(OnChatMessageEvent event);
+public interface TurnChangeEventHandler extends EventHandler {
+  void onOnTurnChange(TurnChangeEvent event);
 }

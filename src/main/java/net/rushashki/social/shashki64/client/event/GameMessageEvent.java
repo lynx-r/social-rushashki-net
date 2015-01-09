@@ -9,11 +9,11 @@ import net.rushashki.social.shashki64.shared.model.GameMessage;
  * Date: 13.12.14
  * Time: 12:38
  */
-public class OnGameMessageEvent extends GwtEvent<OnGameMessageEventHandler> {
-  public static Type<OnGameMessageEventHandler> TYPE = new Type<>();
+public class GameMessageEvent extends GwtEvent<GameMessageEventHandler> {
+  public static Type<GameMessageEventHandler> TYPE = new Type<>();
   private final GameMessage gameMessage;
 
-  public OnGameMessageEvent(GameMessage gameMessage) {
+  public GameMessageEvent(GameMessage gameMessage) {
     this.gameMessage = gameMessage;
   }
 
@@ -21,11 +21,11 @@ public class OnGameMessageEvent extends GwtEvent<OnGameMessageEventHandler> {
     return gameMessage;
   }
 
-  public Type<OnGameMessageEventHandler> getAssociatedType() {
+  public Type<GameMessageEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnGameMessageEventHandler handler) {
-    handler.onOnPlayerMessage(this);
+  protected void dispatch(GameMessageEventHandler handler) {
+    handler.onPlayerMessage(this);
   }
 }

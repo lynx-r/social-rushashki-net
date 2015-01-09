@@ -11,11 +11,11 @@ import java.util.List;
  * Date: 11.12.14
  * Time: 0:41
  */
-public class OnGetPlayerListEvent extends GwtEvent<OnGetPlayerListEventHandler> {
-  public static Type<OnGetPlayerListEventHandler> TYPE = new Type<>();
+public class GetPlayerListEvent extends GwtEvent<GetPlayerListEventHandler> {
+  public static Type<GetPlayerListEventHandler> TYPE = new Type<>();
   private List<Shashist> playerList;
 
-  public OnGetPlayerListEvent(List<Shashist> playerList) {
+  public GetPlayerListEvent(List<Shashist> playerList) {
     this.playerList = playerList;
   }
 
@@ -23,11 +23,11 @@ public class OnGetPlayerListEvent extends GwtEvent<OnGetPlayerListEventHandler> 
     return playerList;
   }
 
-  public Type<OnGetPlayerListEventHandler> getAssociatedType() {
+  public Type<GetPlayerListEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnGetPlayerListEventHandler handler) {
+  protected void dispatch(GetPlayerListEventHandler handler) {
     handler.onOnGetPlayerList(this);
   }
 }

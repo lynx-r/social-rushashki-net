@@ -8,12 +8,12 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 28.12.14
  * Time: 1:57
  */
-public class OnChatMessageEvent extends GwtEvent<OnChatMessageEventHandler> {
-  public static Type<OnChatMessageEventHandler> TYPE = new Type<>();
+public class ChatMessageEvent extends GwtEvent<ChatMessageEventHandler> {
+  public static Type<ChatMessageEventHandler> TYPE = new Type<>();
 
   private String message;
 
-  public OnChatMessageEvent(String message) {
+  public ChatMessageEvent(String message) {
     this.message = message;
   }
 
@@ -21,11 +21,11 @@ public class OnChatMessageEvent extends GwtEvent<OnChatMessageEventHandler> {
     return message;
   }
 
-  public Type<OnChatMessageEventHandler> getAssociatedType() {
+  public Type<ChatMessageEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnChatMessageEventHandler handler) {
+  protected void dispatch(ChatMessageEventHandler handler) {
     handler.onOnChatMessage(this);
   }
 }

@@ -8,10 +8,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.component.NavbarComponent;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
-import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
-import net.rushashki.social.shashki64.client.event.OnNavbarReloadEvent;
-import net.rushashki.social.shashki64.client.event.OnNavbarReloadEventHandler;
+import net.rushashki.social.shashki64.client.event.ClientFactoryEvent;
+import net.rushashki.social.shashki64.client.event.ClientFactoryEventHandler;
+import net.rushashki.social.shashki64.client.event.NavbarReloadEvent;
+import net.rushashki.social.shashki64.client.event.NavbarReloadEventHandler;
 import net.rushashki.social.shashki64.client.place.*;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.social.shashki64.shared.model.Shashist;
@@ -130,17 +130,17 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
 
     private void addEvents() {
         // TODO: Not Compile
-        eventBus.addHandler(OnNavbarReloadEvent.TYPE, new OnNavbarReloadEventHandler() {
+        eventBus.addHandler(NavbarReloadEvent.TYPE, new NavbarReloadEventHandler() {
             @Override
-            public void onEvent(OnNavbarReloadEvent event) {
+            public void onEvent(NavbarReloadEvent event) {
                 NavbarComponentUi.this.setActive(event.getToken());
             }
         });
 
         // TODO: Not Compile
-        eventBus.addHandler(OnClientFactoryEvent.TYPE, new OnClientFactoryEventHandler() {
+        eventBus.addHandler(ClientFactoryEvent.TYPE, new ClientFactoryEventHandler() {
             @Override
-            public void onOnClientFactory(OnClientFactoryEvent event) {
+            public void onOnClientFactory(ClientFactoryEvent event) {
                 Shashist shashist = event.getClientFactory().getPlayer();
                 if (shashist != null) {
                     navLeft.add(homeLink);

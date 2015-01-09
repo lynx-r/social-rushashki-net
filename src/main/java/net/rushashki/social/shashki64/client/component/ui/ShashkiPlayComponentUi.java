@@ -14,17 +14,17 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.SingleSelectionModel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialogBox;
 import net.rushashki.social.shashki64.client.event.*;
+import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
+import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
@@ -67,6 +67,10 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   ScrollPanel playerPanel;
   @UiField
   HTML turnLabel;
+  @UiField
+  Label beatenOpponentDraughtsLabel;
+  @UiField
+  Label beatenMineDraughtsLabel;
 
   private Board board;
   private LienzoPanel lienzoPanel;
@@ -75,12 +79,15 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   private SingleSelectionModel<Shashist> playerSelectionModel;
   private NotationPanel notationPanel;
   private InviteDialogBox inviteDialogBox;
+  private int CHECKERS_ON_DESK_INIT = 12;
+  private GameRpcServiceAsync gameService;
 
   public ShashkiPlayComponentUi(ClientFactory clientFactory) {
     privateChat = new ChatPrivateComponentUi(clientFactory);
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.player = clientFactory.getPlayer();
+    this.gameService = shashkiGinjector.getGameService();
 
     initEmptyDeskPanel();
     initNotationPanel();
@@ -102,7 +109,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             if (clientFactory.isConnected()) {
               return;
             }
-            eventBus.fireEvent(new OnConnectToPlayEvent());
+            eventBus.fireEvent(new ConnectToPlayEvent());
             return;
           case PLAY:
             if (playerSelectionModel.getSelectedObject() == null) {
@@ -127,7 +134,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
                     String.valueOf(white ? constants.black() : constants.white())));
                 gameMessage.setData(String.valueOf(!white));
 
-                eventBus.fireEvent(new OnGameMessageEvent(gameMessage));
+                eventBus.fireEvent(new GameMessageEvent(gameMessage));
               }
             };
             inviteDialogBox.show(constants.inviteToPlay(clientFactory.getOpponent().getPublicName(),
@@ -138,23 +145,23 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     });
 
     // TODO: Not Compile
-    eventBus.addHandler(OnGetPlayerListEvent.TYPE, new OnGetPlayerListEventHandler() {
+    eventBus.addHandler(GetPlayerListEvent.TYPE, new GetPlayerListEventHandler() {
       @Override
-      public void onOnGetPlayerList(OnGetPlayerListEvent event) {
+      public void onOnGetPlayerList(GetPlayerListEvent event) {
         setPlayerList(event.getPlayerList());
       }
     });
 
-    eventBus.addHandler(OnConnectedToPlayEvent.TYPE, new OnConnectedToPlayEventHandler() {
+    eventBus.addHandler(ConnectedToPlayEvent.TYPE, new ConnectedToPlayEventHandler() {
       @Override
-      public void onOnConnectedToPlay(OnConnectedToPlayEvent event) {
+      public void onOnConnectedToPlay(ConnectedToPlayEvent event) {
         toggleInPlayButton();
       }
     });
 
-    eventBus.addHandler(OnDisconnectFromPlayEvent.TYPE, new OnDisconnectFromPlayEventHandler() {
+    eventBus.addHandler(DisconnectFromPlayEvent.TYPE, new DisconnectFromPlayEventHandler() {
       @Override
-      public void onOnDisconnectFromPlay(OnDisconnectFromPlayEvent event) {
+      public void onOnDisconnectFromPlay(DisconnectFromPlayEvent event) {
         connectPlayButton.setActive(true);
         connectPlayButton.setBlock(true);
         connectPlayButton.addStyleName("btn-danger");
@@ -166,9 +173,9 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       }
     });
 
-    eventBus.addHandler(OnStartPlayEvent.TYPE, new OnStartPlayEventHandler() {
+    eventBus.addHandler(StartPlayEvent.TYPE, new StartPlayEventHandler() {
       @Override
-      public void onOnStartPlay(OnStartPlayEvent event) {
+      public void onOnStartPlay(StartPlayEvent event) {
         if (inviteDialogBox != null) {
           inviteDialogBox.hide();
         }
@@ -179,19 +186,71 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       }
     });
 
-    eventBus.addHandler(OnRejectPlayEvent.TYPE, new OnRejectPlayEventHandler() {
+    eventBus.addHandler(RejectPlayEvent.TYPE, new RejectPlayEventHandler() {
       @Override
-      public void onOnRejectPlay(OnRejectPlayEvent event) {
+      public void onOnRejectPlay(RejectPlayEvent event) {
         inviteDialogBox.hide();
       }
     });
 
-    eventBus.addHandler(OnTurnChangeEvent.TYPE, new OnTurnChangeEventHandler() {
+    eventBus.addHandler(TurnChangeEvent.TYPE, new TurnChangeEventHandler() {
       @Override
-      public void onOnTurnChange(OnTurnChangeEvent event) {
+      public void onOnTurnChange(TurnChangeEvent event) {
         updateTurn(event.isMyTurn());
       }
     });
+
+    eventBus.addHandler(CheckWinnerEvent.TYPE, new CheckWinnerEventHandler() {
+      @Override
+      public void onCheckWinner(CheckWinnerEvent event) {
+        setBeatenMine(CHECKERS_ON_DESK_INIT - board.getMineDraughts().size());
+        setBeatenOpponent(CHECKERS_ON_DESK_INIT - board.getOpponentDraughts().size());
+        Game endGame = clientFactory.getGame();
+        if (0 == board.getMineDraughts().size()) {
+          new DialogBox(constants.info(), constants.youLost()).show();
+          if (board.isWhite()) {
+            endGame.setPlayEndStatus(Game.GameEnds.BLACK_WON);
+          }
+        } else if (0 == board.getOpponentDraughts().size()) {
+          new DialogBox(constants.info(), constants.youWon());
+          if (board.isWhite()) {
+            endGame.setPlayEndStatus(Game.GameEnds.WHITE_WON);
+          }
+        }
+        if (null != endGame.getPlayEndStatus()) {
+          endGame.setPartyNotation(NotationPanel.getNotation());
+          gameService.saveGame(endGame, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+              new DialogBox(constants.error(), caught.getMessage()).show();
+              caught.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+              GameMessage gameMessage = GWT.create(GameMessageDto.class);
+              gameMessage.setSender(clientFactory.getPlayer());
+              gameMessage.setReceiver(clientFactory.getOpponent());
+              gameMessage.setMessageType(GameMessage.MessageType.PLAY_END);
+              gameMessage.setData(String.valueOf(endGame.getPlayEndStatus()));
+
+              eventBus.fireEvent(new GameMessageEvent(gameMessage));
+              eventBus.fireEvent(new UpdatePlayComponentEvent());
+            }
+          });
+        }
+      }
+    });
+  }
+
+  public void setBeatenMine(int count) {
+    beatenMineDraughtsLabel.setText(count + " - " + (board.isWhite() ? constants.whites()
+        : constants.blacks()));
+  }
+
+  public void setBeatenOpponent(int count) {
+    beatenOpponentDraughtsLabel.setText(count + " - " + (board.isWhite() ? constants.blacks()
+        : constants.whites()));
   }
 
   private void updateTurn(boolean myTurn) {

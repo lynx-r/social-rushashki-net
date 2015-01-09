@@ -5,9 +5,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 03.01.15
- * Time: 17:11
+ * Date: 13.12.14
+ * Time: 12:38
  */
-public interface OnPlayMoveEventHandler extends EventHandler {
-  void onOnPlayMove(OnPlayMoveEvent event);
+public interface GameMessageEventHandler extends EventHandler {
+  void onPlayerMessage(GameMessageEvent event);
 }

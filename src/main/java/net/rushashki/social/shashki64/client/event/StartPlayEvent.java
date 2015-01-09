@@ -8,11 +8,11 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 28.12.14
  * Time: 1:37
  */
-public class OnStartPlayEvent extends GwtEvent<OnStartPlayEventHandler> {
-  public static Type<OnStartPlayEventHandler> TYPE = new Type<>();
+public class StartPlayEvent extends GwtEvent<StartPlayEventHandler> {
+  public static Type<StartPlayEventHandler> TYPE = new Type<>();
   private final boolean white;
 
-  public OnStartPlayEvent(boolean white) {
+  public StartPlayEvent(boolean white) {
     this.white = white;
   }
 
@@ -20,11 +20,11 @@ public class OnStartPlayEvent extends GwtEvent<OnStartPlayEventHandler> {
     return white;
   }
 
-  public Type<OnStartPlayEventHandler> getAssociatedType() {
+  public Type<StartPlayEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnStartPlayEventHandler handler) {
+  protected void dispatch(StartPlayEventHandler handler) {
     handler.onOnStartPlay(this);
   }
 }

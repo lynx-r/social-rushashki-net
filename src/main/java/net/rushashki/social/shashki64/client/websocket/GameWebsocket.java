@@ -52,26 +52,26 @@ public class GameWebsocket implements WebSocketCallback {
     this.gameService = shashkiGinjector.getGameService();
     this.profileService = shashkiGinjector.getProfileService();
 
-    eventBus.addHandler(OnConnectToPlayEvent.TYPE, new OnConnectToPlayEventHandler() {
+    eventBus.addHandler(ConnectToPlayEvent.TYPE, new ConnectToPlayEventHandler() {
       @Override
-      public void onOnConnectToPlay(OnConnectToPlayEvent event) {
+      public void onOnConnectToPlay(ConnectToPlayEvent event) {
         webSocket = new WebSocket(GameWebsocket.this);
         webSocket.connect(PLAYER_WEBSOCKET_URL);
       }
     });
 
-    eventBus.addHandler(OnGameMessageEvent.TYPE, new OnGameMessageEventHandler() {
+    eventBus.addHandler(GameMessageEvent.TYPE, new GameMessageEventHandler() {
       @Override
-      public void onOnPlayerMessage(OnGameMessageEvent event) {
+      public void onPlayerMessage(GameMessageEvent event) {
         GameMessage gameMessage = event.getGameMessage();
 
         sendGameMessage(gameMessage);
       }
     });
 
-    eventBus.addHandler(OnPlayMoveEvent.TYPE, new OnPlayMoveEventHandler() {
+    eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
       @Override
-      public void onOnPlayMove(OnPlayMoveEvent event) {
+      public void onOnPlayMove(PlayMoveEvent event) {
         GameMessage message = GWT.create(GameMessageDto.class);
         message.setSender(clientFactory.getPlayer());
         message.setReceiver(clientFactory.getOpponent());
@@ -95,7 +95,7 @@ public class GameWebsocket implements WebSocketCallback {
 
   private void handleUpdatePlayerList(List<Shashist> playerList) {
     clientFactory.setPlayerList(playerList);
-    eventBus.fireEvent(new OnGetPlayerListEvent(playerList));
+    eventBus.fireEvent(new GetPlayerListEvent(playerList));
   }
 
   private void handlePlayInvite(GameMessage gameMessage) {
@@ -136,7 +136,7 @@ public class GameWebsocket implements WebSocketCallback {
                 sendGameMessage(message);
 
                 clientFactory.setGame(game);
-                eventBus.fireEvent(new OnStartPlayEvent(isWhite()));
+                eventBus.fireEvent(new StartPlayEvent(isWhite()));
               }
             });
           }
@@ -167,13 +167,13 @@ public class GameWebsocket implements WebSocketCallback {
     sendGameMessage(gameMessage);
 
     clientFactory.setConnected(true);
-    eventBus.fireEvent(new OnConnectedToPlayEvent());
+    eventBus.fireEvent(new ConnectedToPlayEvent());
   }
 
   @Override
   public void onDisconnect() {
     clientFactory.setConnected(false);
-    eventBus.fireEvent(new OnDisconnectFromPlayEvent());
+    eventBus.fireEvent(new DisconnectFromPlayEvent());
   }
 
   @Override
@@ -204,7 +204,7 @@ public class GameWebsocket implements WebSocketCallback {
   }
 
   private void handlePlayMove(GameMessage gameMessage) {
-    eventBus.fireEvent(new OnPlayMoveOpponentEvent(gameMessage.getStartStep(), gameMessage.getEndStep(),
+    eventBus.fireEvent(new PlayMoveOpponentEvent(gameMessage.getStartStep(), gameMessage.getEndStep(),
         gameMessage.getCaptured()));
   }
 
@@ -220,13 +220,13 @@ public class GameWebsocket implements WebSocketCallback {
         clientFactory.setGame(game);
         boolean white = Boolean.valueOf(gameMessage.getData());
         clientFactory.setOpponent(white ? game.getPlayerBlack() : game.getPlayerWhite());
-        eventBus.fireEvent(new OnStartPlayEvent(white));
+        eventBus.fireEvent(new StartPlayEvent(white));
       }
     });
   }
 
   private void handleChatPrivateMessage(GameMessage gameMessage) {
-    eventBus.fireEvent(new OnChatMessageEvent(gameMessage.getMessage()));
+    eventBus.fireEvent(new ChatMessageEvent(gameMessage.getMessage()));
   }
 
   private void handlePlayRejectInvite(GameMessage gameMessage) {
@@ -234,7 +234,7 @@ public class GameWebsocket implements WebSocketCallback {
     new DialogBox(constants.info(),
         constants.playerRejectedPlayRequest(gameMessage.getSender().getPublicName()))
         .show();
-    eventBus.fireEvent(new OnRejectPlayEvent());
+    eventBus.fireEvent(new RejectPlayEvent());
   }
 
 }

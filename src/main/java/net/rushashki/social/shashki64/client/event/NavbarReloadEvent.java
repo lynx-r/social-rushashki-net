@@ -8,11 +8,11 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 23.11.14
  * Time: 23:31
  */
-public class OnNavbarReloadEvent extends GwtEvent<OnNavbarReloadEventHandler> {
-  public static Type<OnNavbarReloadEventHandler> TYPE = new Type<>();
+public class NavbarReloadEvent extends GwtEvent<NavbarReloadEventHandler> {
+  public static Type<NavbarReloadEventHandler> TYPE = new Type<>();
   private String token;
 
-  public OnNavbarReloadEvent(String token) {
+  public NavbarReloadEvent(String token) {
     this.token = token;
   }
 
@@ -21,12 +21,12 @@ public class OnNavbarReloadEvent extends GwtEvent<OnNavbarReloadEventHandler> {
   }
 
   @Override
-  public Type<OnNavbarReloadEventHandler> getAssociatedType() {
+  public Type<NavbarReloadEventHandler> getAssociatedType() {
     return TYPE;
   }
 
   @Override
-  protected void dispatch(OnNavbarReloadEventHandler handler) {
+  protected void dispatch(NavbarReloadEventHandler handler) {
     handler.onEvent(this);
   }
 }

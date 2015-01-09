@@ -21,12 +21,10 @@ public class GameMessageEncoder implements Encoder.Text<GameMessage> {
 
   @Override
   public void init(EndpointConfig endpointConfig) {
-
   }
 
   @Override
   public void destroy() {
-
   }
 
 }

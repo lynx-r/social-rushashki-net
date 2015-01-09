@@ -5,7 +5,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnNotationMoveEvent;
+import net.rushashki.social.shashki64.client.event.NotationMoveEvent;
 import net.rushashki.social.shashki64.client.event.OnNotationMoveEventHandler;
 
 /**
@@ -19,15 +19,16 @@ public class NotationPanel extends ScrollPanel {
   private int stepCounter;
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   public static String NOTATION_SEPARATOR = "<br/>";
+  private static String notation;
 
   public NotationPanel() {
     stepCounter = 1;
     this.eventBus = shashkiGinjector.getEventBus();
 
     // TODO: Not Compile
-    eventBus.addHandler(OnNotationMoveEvent.TYPE, new OnNotationMoveEventHandler() {
+    eventBus.addHandler(NotationMoveEvent.TYPE, new OnNotationMoveEventHandler() {
       @Override
-      public void onNotationStroke(OnNotationMoveEvent event) {
+      public void onNotationStroke(NotationMoveEvent event) {
         NotationPanel.this.appendMove(event.getMove());
       }
     });
@@ -60,6 +61,7 @@ public class NotationPanel extends ScrollPanel {
       html += stepCounter + ". " + move;
     }
     getElement().setInnerHTML(html);
+    notation = html;
     pushScroll();
   }
 
@@ -69,4 +71,7 @@ public class NotationPanel extends ScrollPanel {
     scrollToBottom();
   }
 
+  public static String getNotation() {
+    return notation;
+  }
 }

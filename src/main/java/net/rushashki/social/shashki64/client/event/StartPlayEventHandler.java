@@ -5,9 +5,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 06.12.14
- * Time: 7:42
+ * Date: 28.12.14
+ * Time: 1:37
  */
-public interface OnClientFactoryEventHandler extends EventHandler {
-  void onOnClientFactory(OnClientFactoryEvent event);
+public interface StartPlayEventHandler extends EventHandler {
+  void onOnStartPlay(StartPlayEvent event);
 }

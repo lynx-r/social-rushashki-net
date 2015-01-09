@@ -82,9 +82,9 @@ public class Board extends Layer {
       }
     });
 
-    eventBus.addHandler(OnPlayMoveOpponentEvent.TYPE, new OnPlayMoveOpponentEventHandler() {
+    eventBus.addHandler(PlayMoveOpponentEvent.TYPE, new PlayMoveOpponentEventHandler() {
       @Override
-      public void onOnPlayMoveOpponent(OnPlayMoveOpponentEvent event) {
+      public void onOnPlayMoveOpponent(PlayMoveOpponentEvent event) {
         Board.this.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured(), -1);
       }
     });
@@ -512,7 +512,7 @@ public class Board extends Layer {
           public void onClose(IAnimation iAnimation, IAnimationHandle iAnimationHandle) {
             remove(takenDraught);
             if (!isEmulate()) {
-//              clientFactory.getEventBus().fireEvent(new OnCheckWinnerEvent());
+              eventBus.fireEvent(new CheckWinnerEvent());
             }
           }
         });
@@ -657,7 +657,7 @@ public class Board extends Layer {
         + op
         + eSquare.toNotation(!isWhite(), true, false)
         + (isWhite() ? NotationPanel.NOTATION_SEPARATOR : "");
-    eventBus.fireEvent(new OnNotationMoveEvent(move));
+    eventBus.fireEvent(new NotationMoveEvent(move));
 
     int startRow = rows - 1 - Integer.valueOf(start.split(",")[0]);
     int startCol = cols - 1 - Integer.valueOf(start.split(",")[1]);
@@ -742,7 +742,7 @@ public class Board extends Layer {
 
   public boolean toggleTurn() {
     turn = !turn;
-    eventBus.fireEvent(new OnTurnChangeEvent(turn));
+    eventBus.fireEvent(new TurnChangeEvent(turn));
     return turn;
   }
 
@@ -787,8 +787,8 @@ public class Board extends Layer {
             + op
             + square.toNotation(isWhite(), true, false)
             + (isWhite() ? "" : NotationPanel.NOTATION_SEPARATOR);
-        eventBus.fireEvent(new OnNotationMoveEvent(move));
-        eventBus.fireEvent(new OnPlayMoveEvent(prevSquare.toSend(), square.toSend(), captured));
+        eventBus.fireEvent(new NotationMoveEvent(move));
+        eventBus.fireEvent(new PlayMoveEvent(prevSquare.toSend(), square.toSend(), captured));
 
         AnimationProperties props = new AnimationProperties();
         props.push(AnimationProperty.Properties.X(square.getCenterX()));

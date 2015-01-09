@@ -8,11 +8,11 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 30.11.14
  * Time: 18:11
  */
-public class OnNotationMoveEvent extends GwtEvent<OnNotationMoveEventHandler> {
+public class NotationMoveEvent extends GwtEvent<OnNotationMoveEventHandler> {
   public static Type<OnNotationMoveEventHandler> TYPE = new Type<>();
   private final String stroke;
 
-  public OnNotationMoveEvent(String stroke) {
+  public NotationMoveEvent(String stroke) {
     this.stroke = stroke;
   }
 

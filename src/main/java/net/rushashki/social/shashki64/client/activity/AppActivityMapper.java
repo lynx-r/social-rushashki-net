@@ -6,8 +6,8 @@ import com.google.gwt.place.shared.Place;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnClientFactoryEvent;
-import net.rushashki.social.shashki64.client.event.OnClientFactoryEventHandler;
+import net.rushashki.social.shashki64.client.event.ClientFactoryEvent;
+import net.rushashki.social.shashki64.client.event.ClientFactoryEventHandler;
 import net.rushashki.social.shashki64.client.place.*;
 
 /**
@@ -25,9 +25,9 @@ public class AppActivityMapper implements ActivityMapper {
   public AppActivityMapper() {
     this.eventBus = shashkiGinjector.getEventBus();
 
-    eventBus.addHandler(OnClientFactoryEvent.TYPE, new OnClientFactoryEventHandler() {
+    eventBus.addHandler(ClientFactoryEvent.TYPE, new ClientFactoryEventHandler() {
       @Override
-      public void onOnClientFactory(OnClientFactoryEvent event) {
+      public void onOnClientFactory(ClientFactoryEvent event) {
         AppActivityMapper.this.clientFactory = event.getClientFactory();
       }
     });

@@ -8,13 +8,13 @@ import com.google.gwt.event.shared.GwtEvent;
  * Date: 03.01.15
  * Time: 19:46
  */
-public class OnPlayMoveOpponentEvent extends GwtEvent<OnPlayMoveOpponentEventHandler> {
-  public static Type<OnPlayMoveOpponentEventHandler> TYPE = new Type<>();
+public class PlayMoveOpponentEvent extends GwtEvent<PlayMoveOpponentEventHandler> {
+  public static Type<PlayMoveOpponentEventHandler> TYPE = new Type<>();
   private final String startMove;
   private final String endMove;
   private final String captured;
 
-  public OnPlayMoveOpponentEvent(String startMove, String endMove, String captured) {
+  public PlayMoveOpponentEvent(String startMove, String endMove, String captured) {
     this.startMove = startMove;
     this.endMove = endMove;
     this.captured = captured;
@@ -32,11 +32,11 @@ public class OnPlayMoveOpponentEvent extends GwtEvent<OnPlayMoveOpponentEventHan
     return captured;
   }
 
-  public Type<OnPlayMoveOpponentEventHandler> getAssociatedType() {
+  public Type<PlayMoveOpponentEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(OnPlayMoveOpponentEventHandler handler) {
+  protected void dispatch(PlayMoveOpponentEventHandler handler) {
     handler.onOnPlayMoveOpponent(this);
   }
 }
