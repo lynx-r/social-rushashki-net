@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Time: 1:37
  */
 public class OnStartPlayEvent extends GwtEvent<OnStartPlayEventHandler> {
-  public static Type<OnStartPlayEventHandler> TYPE = new Type<OnStartPlayEventHandler>();
+  public static Type<OnStartPlayEventHandler> TYPE = new Type<>();
   private final boolean white;
 
   public OnStartPlayEvent(boolean white) {

@@ -737,7 +737,7 @@ public class Board extends Layer {
 
   public boolean toggleTurn() {
     turn = !turn;
-    eventBus.fireEvent(new OnTurnEvent(turn));
+    eventBus.fireEvent(new OnTurnChangeEvent(turn));
     return turn;
   }
 
@@ -769,7 +769,7 @@ public class Board extends Layer {
 
         boolean simpleStroke = "null".equals(captured);
         if ("null".equals(captured) || "none".equals(captured.split(",")[2])) {
-          this.toggleTurn();
+          toggleTurn();
         }
         if (!selectedDraught.isQueen()) {
           if (selectedDraught.getRow() == 0) {

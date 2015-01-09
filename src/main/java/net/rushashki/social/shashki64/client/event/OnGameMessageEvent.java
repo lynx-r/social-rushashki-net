@@ -10,7 +10,7 @@ import net.rushashki.social.shashki64.shared.model.GameMessage;
  * Time: 12:38
  */
 public class OnGameMessageEvent extends GwtEvent<OnGameMessageEventHandler> {
-  public static Type<OnGameMessageEventHandler> TYPE = new Type<OnGameMessageEventHandler>();
+  public static Type<OnGameMessageEventHandler> TYPE = new Type<>();
   private final GameMessage gameMessage;
 
   public OnGameMessageEvent(GameMessage gameMessage) {

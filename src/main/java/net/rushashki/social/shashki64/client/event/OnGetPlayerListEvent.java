@@ -12,7 +12,7 @@ import java.util.List;
  * Time: 0:41
  */
 public class OnGetPlayerListEvent extends GwtEvent<OnGetPlayerListEventHandler> {
-  public static Type<OnGetPlayerListEventHandler> TYPE = new Type<OnGetPlayerListEventHandler>();
+  public static Type<OnGetPlayerListEventHandler> TYPE = new Type<>();
   private List<Shashist> playerList;
 
   public OnGetPlayerListEvent(List<Shashist> playerList) {

@@ -11,7 +11,7 @@ import net.rushashki.social.shashki64.client.ClientFactory;
  */
 public class OnClientFactoryEvent extends GwtEvent<OnClientFactoryEventHandler> {
 
-  public static Type<OnClientFactoryEventHandler> TYPE = new Type<OnClientFactoryEventHandler>();
+  public static Type<OnClientFactoryEventHandler> TYPE = new Type<>();
 
   private ClientFactory clientFactory;
 

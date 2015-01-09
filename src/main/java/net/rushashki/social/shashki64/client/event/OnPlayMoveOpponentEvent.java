@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Time: 19:46
  */
 public class OnPlayMoveOpponentEvent extends GwtEvent<OnPlayMoveOpponentEventHandler> {
-  public static Type<OnPlayMoveOpponentEventHandler> TYPE = new Type<OnPlayMoveOpponentEventHandler>();
+  public static Type<OnPlayMoveOpponentEventHandler> TYPE = new Type<>();
   private final String startMove;
   private final String endMove;
   private final String captured;

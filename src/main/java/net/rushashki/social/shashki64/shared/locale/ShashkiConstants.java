@@ -109,4 +109,10 @@ public interface ShashkiConstants extends Messages {
   String selectPlayer();
 
   String selectAnotherPlayerItsYou();
+
+  String yourTurn();
+
+  String opponentTurn();
+
+  String youDisconnected();
 }

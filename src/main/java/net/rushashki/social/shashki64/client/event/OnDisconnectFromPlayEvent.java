@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Time: 10:51
  */
 public class OnDisconnectFromPlayEvent extends GwtEvent<OnDisconnectFromPlayEventHandler> {
-    public static Type<OnDisconnectFromPlayEventHandler> TYPE = new Type<OnDisconnectFromPlayEventHandler>();
+    public static Type<OnDisconnectFromPlayEventHandler> TYPE = new Type<>();
 
     public Type<OnDisconnectFromPlayEventHandler> getAssociatedType() {
         return TYPE;

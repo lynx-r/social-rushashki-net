@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -31,7 +32,6 @@ import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Image;
-import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
@@ -62,11 +62,11 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   @UiField
   Button connectPlayButton;
   @UiField
-  Label offlineHintLabel;
-  @UiField
   HTMLPanel playerListColumn;
   @UiField
   ScrollPanel playerPanel;
+  @UiField
+  HTML turnLabel;
 
   private Board board;
   private LienzoPanel lienzoPanel;
@@ -162,6 +162,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         connectPlayButton.setText(constants.reconnect());
 
         playersCellList.setRowData(new ArrayList<>());
+        turnLabel.setHTML(constants.youDisconnected());
       }
     });
 
@@ -174,6 +175,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         BoardBackgroundLayer backgroundLayer = initDeskPanel(event.isWhite());
         board = new Board(backgroundLayer, 8, 8, event.isWhite());
         lienzoPanel.add(board);
+        updateTurn(clientFactory.getGame().getPlayerWhite().getSystemId().equals(clientFactory.getPlayer().getSystemId()));
       }
     });
 
@@ -183,6 +185,21 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         inviteDialogBox.hide();
       }
     });
+
+    eventBus.addHandler(OnTurnChangeEvent.TYPE, new OnTurnChangeEventHandler() {
+      @Override
+      public void onOnTurnChange(OnTurnChangeEvent event) {
+        updateTurn(event.isMyTurn());
+      }
+    });
+  }
+
+  private void updateTurn(boolean myTurn) {
+    if (myTurn) {
+      turnLabel.setHTML(constants.yourTurn());
+    } else {
+      turnLabel.setHTML(constants.opponentTurn());
+    }
   }
 
   private void toggleInPlayButton() {

@@ -5,9 +5,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 30.11.14
- * Time: 15:07
+ * Date: 09.01.15
+ * Time: 9:48
  */
-public interface OnTurnEventHandler extends EventHandler {
-  void onOnTurn(OnTurnEvent event);
+public interface OnTurnChangeEventHandler extends EventHandler {
+  void onOnTurnChange(OnTurnChangeEvent event);
 }

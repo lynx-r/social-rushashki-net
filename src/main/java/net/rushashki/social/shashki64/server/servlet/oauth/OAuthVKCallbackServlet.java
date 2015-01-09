@@ -84,6 +84,7 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
         shashistService.edit(shashistEntity);
       }
     }
+    System.out.println(session.getMaxInactiveInterval() + " - max inactive interval");
     session.setMaxInactiveInterval(0);
 
     resp.sendRedirect("/");

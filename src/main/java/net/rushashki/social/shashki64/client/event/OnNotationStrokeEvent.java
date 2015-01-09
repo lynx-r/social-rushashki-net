@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Time: 18:11
  */
 public class OnNotationStrokeEvent extends GwtEvent<OnNotationStrokeEventHandler> {
-  public static Type<OnNotationStrokeEventHandler> TYPE = new Type<OnNotationStrokeEventHandler>();
+  public static Type<OnNotationStrokeEventHandler> TYPE = new Type<>();
   private final String stroke;
 
   public OnNotationStrokeEvent(String stroke) {

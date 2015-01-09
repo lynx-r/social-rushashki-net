@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Time: 10:48
  */
 public class OnConnectToPlayEvent extends GwtEvent<OnConnectToPlayEventHandler> {
-    public static Type<OnConnectToPlayEventHandler> TYPE = new Type<OnConnectToPlayEventHandler>();
+    public static Type<OnConnectToPlayEventHandler> TYPE = new Type<>();
 
     public Type<OnConnectToPlayEventHandler> getAssociatedType() {
         return TYPE;

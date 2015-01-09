@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Time: 2:23
  */
 public class OnRejectPlayEvent extends GwtEvent<OnRejectPlayEventHandler> {
-  public static Type<OnRejectPlayEventHandler> TYPE = new Type<OnRejectPlayEventHandler>();
+  public static Type<OnRejectPlayEventHandler> TYPE = new Type<>();
 
   public Type<OnRejectPlayEventHandler> getAssociatedType() {
     return TYPE;

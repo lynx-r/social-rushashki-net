@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Time: 1:57
  */
 public class OnChatMessageEvent extends GwtEvent<OnChatMessageEventHandler> {
-  public static Type<OnChatMessageEventHandler> TYPE = new Type<OnChatMessageEventHandler>();
+  public static Type<OnChatMessageEventHandler> TYPE = new Type<>();
 
   private String message;
 

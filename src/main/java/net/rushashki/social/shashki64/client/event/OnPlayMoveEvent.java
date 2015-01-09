@@ -10,7 +10,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class OnPlayMoveEvent extends GwtEvent<OnPlayMoveEventHandler> {
 
-  public static Type<OnPlayMoveEventHandler> TYPE = new Type<OnPlayMoveEventHandler>();
+  public static Type<OnPlayMoveEventHandler> TYPE = new Type<>();
   private final String prevStep;
   private final String newStep;
   private final String captured;
