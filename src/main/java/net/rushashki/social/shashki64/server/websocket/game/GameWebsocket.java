@@ -127,7 +127,7 @@ public class GameWebsocket {
 
     ShashistEntity shashistReceiver = shashistService.find(message.getReceiver().getId());
     ShashistEntity shashistSender = shashistService.find(message.getSender().getId());
-    GameEntity gameEntity = gameService.find(message.getGame().getId());
+    GameEntity gameEntity = message.getGame() != null ? gameService.find(message.getGame().getId()) : null;
 
     GameMessageEntity gameMessageEntity = new GameMessageEntity();
     gameMessageEntity.setMessageType(message.getMessageType());

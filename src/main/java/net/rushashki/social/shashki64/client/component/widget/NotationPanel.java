@@ -2,12 +2,11 @@ package net.rushashki.social.shashki64.client.component.widget;
 
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.OnNotationStrokeEvent;
-import net.rushashki.social.shashki64.client.event.OnNotationStrokeEventHandler;
+import net.rushashki.social.shashki64.client.event.OnNotationMoveEvent;
+import net.rushashki.social.shashki64.client.event.OnNotationMoveEventHandler;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,54 +18,55 @@ public class NotationPanel extends ScrollPanel {
   private final EventBus eventBus;
   private int stepCounter;
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
+  public static String NOTATION_SEPARATOR = "<br/>";
 
   public NotationPanel() {
     stepCounter = 1;
     this.eventBus = shashkiGinjector.getEventBus();
 
     // TODO: Not Compile
-    eventBus.addHandler(OnNotationStrokeEvent.TYPE, new OnNotationStrokeEventHandler() {
+    eventBus.addHandler(OnNotationMoveEvent.TYPE, new OnNotationMoveEventHandler() {
       @Override
-      public void onNotationStroke(OnNotationStrokeEvent event) {
-        NotationPanel.this.appendStroke(event.getStroke());
+      public void onNotationStroke(OnNotationMoveEvent event) {
+        NotationPanel.this.appendMove(event.getMove());
       }
     });
     Scheduler.get().scheduleFinally(() -> {
-      this.setWidth("80px");
+      setWidth("100px");
     });
   }
 
-  public void appendStroke(String stroke) {
-    String text = this.getElement().getInnerText();
-    if (stroke.contains(":")) {
-      String firstStep = stroke.split(":")[0];
-      String[] steps = text.split("<br />");
+  public void appendMove(String move) {
+    String html = getElement().getInnerHTML();
+    if (move.contains(":")) {
+      String firstStep = move.split(":")[0];
+      String[] steps = html.split(NOTATION_SEPARATOR);
       String lastStroke = steps[steps.length - 1];
       if (lastStroke.endsWith(firstStep)) {
-        String lastBeatenStroke = stroke.split(":")[1];
-        if (text.endsWith("<br />")) {
-          text = text.substring(0, text.length() - 1) + ":" + lastBeatenStroke;
+        String lastBeatenStroke = move.split(":")[1];
+        if (html.endsWith(NOTATION_SEPARATOR)) {
+          html = html.substring(0, html.length() - 1) + ":" + lastBeatenStroke;
         } else {
-          text += ":" + lastBeatenStroke;
+          html += ":" + lastBeatenStroke;
         }
-        this.getElement().setInnerHTML(text);
+        getElement().setInnerHTML(html);
         return;
       }
     }
-    if (stroke.contains("<br />")) {
-      text += " " + stroke;
+    if (move.contains(NOTATION_SEPARATOR)) {
+      html += " " + move + "sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>";
       stepCounter++;
     } else {
-      text += stepCounter + ". " + stroke;
+      html += stepCounter + ". " + move;
     }
-    this.getElement().setInnerHTML(text);
+    getElement().setInnerHTML(html);
     pushScroll();
   }
 
 
   // код для прокрутки TextArea в конец
   public void pushScroll() {
-    this.scrollToBottom();
+    scrollToBottom();
   }
 
 }

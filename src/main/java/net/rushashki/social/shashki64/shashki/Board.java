@@ -7,6 +7,7 @@ import com.ait.lienzo.client.core.event.NodeTouchEndEvent;
 import com.ait.lienzo.client.core.event.NodeTouchEndHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.web.bindery.event.shared.EventBus;
+import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shashki.util.Operator;
@@ -145,7 +146,7 @@ public class Board extends Layer {
         }
       }
     }
-    // если нашли шашку которая будет побита, удаляем прорисоку обычных ходов
+    // если нашли шашку, которая будет побита, удаляем прорисоку обычных ходов
     if (!capturedSquares.isEmpty()) {
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
@@ -641,7 +642,8 @@ public class Board extends Layer {
 
     Square captured = null;
     boolean nextCapture = false;
-    if (!"null".equals(capture)) {
+    boolean isSimpleMove = "null".equals(capture);
+    if (!isSimpleMove) {
       int beatenRow = rows - 1 - Integer.valueOf(capture.split(",")[0]);
       int beatenCol = cols - 1 - Integer.valueOf(capture.split(",")[1]);
       nextCapture = "next".equals(capture.split(",")[2]);
@@ -650,9 +652,12 @@ public class Board extends Layer {
 
     Square sSquare = backgroundLayer.getSquare(sRow, sCol);
     Square eSquare = backgroundLayer.getSquare(eRow, eCol);
-//    NotationTextArea.get().appendStroke(sSquare.toNotation(!isWhite(), false, false) + (captured == null ? "-" : ":")
-//            + eSquare.toNotation(!isWhite(), true, false) + (isWhite() ? "\n" : "")
-//    );
+    String op = isSimpleMove ? "-" : ":";
+    String move = sSquare.toNotation(!isWhite(), false, false)
+        + op
+        + eSquare.toNotation(!isWhite(), true, false)
+        + (isWhite() ? NotationPanel.NOTATION_SEPARATOR : "");
+    eventBus.fireEvent(new OnNotationMoveEvent(move));
 
     int startRow = rows - 1 - Integer.valueOf(start.split(",")[0]);
     int startCol = cols - 1 - Integer.valueOf(start.split(",")[1]);
@@ -767,7 +772,7 @@ public class Board extends Layer {
 
         String captured = this.move(prevSquare, square);
 
-        boolean simpleStroke = "null".equals(captured);
+        boolean isSimpleMove = "null".equals(captured);
         if ("null".equals(captured) || "none".equals(captured.split(",")[2])) {
           toggleTurn();
         }
@@ -777,16 +782,14 @@ public class Board extends Layer {
           }
         }
 
-        String op = simpleStroke ? "-" : ":";
-        String stroke = prevSquare.toNotation(isWhite(), false, false)
+        String op = isSimpleMove ? "-" : ":";
+        String move = prevSquare.toNotation(isWhite(), false, false)
             + op
             + square.toNotation(isWhite(), true, false)
-            + (isWhite() ? "" : "<br />");
-        eventBus.fireEvent(new OnNotationStrokeEvent(stroke));
+            + (isWhite() ? "" : NotationPanel.NOTATION_SEPARATOR);
+        eventBus.fireEvent(new OnNotationMoveEvent(move));
         eventBus.fireEvent(new OnPlayMoveEvent(prevSquare.toSend(), square.toSend(), captured));
-//          ChatUtil.sendStep(clientFactory.getChatChannel(), String.valueOf(clientFactory.getCurrentGame().getId()),
-//              clientFactory.getClientFactory().getUserId(), clientFactory.getOpponentId(),
-//              startSquare.toSend(), newSquare.toSend(), captured);
+
         AnimationProperties props = new AnimationProperties();
         props.push(AnimationProperty.Properties.X(square.getCenterX()));
         props.push(AnimationProperty.Properties.Y(square.getCenterY()));

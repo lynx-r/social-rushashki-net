@@ -8,6 +8,6 @@ import com.google.gwt.event.shared.EventHandler;
  * Date: 30.11.14
  * Time: 18:11
  */
-public interface OnNotationStrokeEventHandler extends EventHandler {
-  void onNotationStroke(OnNotationStrokeEvent event);
+public interface OnNotationMoveEventHandler extends EventHandler {
+  void onNotationStroke(OnNotationMoveEvent event);
 }
