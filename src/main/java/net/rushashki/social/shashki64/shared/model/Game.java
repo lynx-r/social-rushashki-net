@@ -8,7 +8,7 @@ import java.util.Date;
  * Date: 31.12.14
  * Time: 16:13
  */
-public interface Game extends GameProxy {
+public interface Game extends PersistableObject {
 
   GameEnds getPlayEndStatus();
 
@@ -25,5 +25,13 @@ public interface Game extends GameProxy {
   String getPartyNotation();
 
   void setPartyNotation(String partyNotation);
+
+  Shashist getPlayerBlack();
+
+  void setPlayerBlack(Shashist playerBlack);
+
+  Shashist getPlayerWhite();
+
+  void setPlayerWhite(Shashist playerWhite);
 
 }

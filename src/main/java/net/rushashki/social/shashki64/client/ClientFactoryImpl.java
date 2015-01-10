@@ -30,6 +30,11 @@ public class ClientFactoryImpl implements ClientFactory {
     }
 
     @Override
+    public boolean isPlayerHasWhiteColor() {
+        return player != null && game != null && game.getPlayerWhite().getSystemId().equals(player.getSystemId());
+    }
+
+    @Override
     public Shashist getPlayer() {
         return player;
     }

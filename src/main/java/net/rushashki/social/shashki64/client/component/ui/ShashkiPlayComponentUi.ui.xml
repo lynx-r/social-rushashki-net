@@ -36,7 +36,7 @@
             <ui:msg description="Сбито шашек" key="beatDraughts"><b>Сбито шашек:</b></ui:msg>
             <g:Label ui:field="beatenMineDraughtsLabel"/>
             <g:Label ui:field="beatenOpponentDraughtsLabel"/>
-            <b:Button ui:field="moveBack" text="Ход назад" styleName="btn btn-default btn-block">
+            <b:Button ui:field="moveBack" text="Ход назад" addStyleNames="btn btn-default btn-block">
                 <ui:attribute name="text"/>
             </b:Button>
             <ui:msg description="Нотация" key="notationList"><b>Нотация:</b></ui:msg>
@@ -48,8 +48,14 @@
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="playerListColumn" addStyleNames="{style.player-list}">
             <span>
-                <b:Button ui:field="connectToPlayButton" icon="REFRESH" styleName="btn btn-default btn-primary btn-block">
-                    <ui:msg description="Подключиться" key="connectPlayButton">Подключиться</ui:msg>
+                <b:Button ui:field="connectToPlayButton" icon="REFRESH" addStyleNames="btn btn-default btn-primary btn-block">
+                    <ui:msg description="Подключиться" key="connectToPlayButton">Подключиться</ui:msg>
+                </b:Button>
+                <b:Button ui:field="drawButton" addStyleNames="btn btn-default btn-block btn-sm" visible="false">
+                    <ui:msg description="Предложить ничью" key="drawButton">Предложить ничью</ui:msg>
+                </b:Button>
+                <b:Button ui:field="surrenderButton" addStyleNames="btn btn-default btn-block btn-sm" visible="false">
+                    <ui:msg description="Сдаться" key="surrenderButton">Сдаться</ui:msg>
                 </b:Button>
             </span>
             <ui:msg description="Список игроков" key="playerListLabel"><b>Список игроков:</b></ui:msg>

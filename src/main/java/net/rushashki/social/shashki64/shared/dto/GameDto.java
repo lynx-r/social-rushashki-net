@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.shared.dto;
 
 import net.rushashki.social.shashki64.shared.model.Game;
+import net.rushashki.social.shashki64.shared.model.GameEnds;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 

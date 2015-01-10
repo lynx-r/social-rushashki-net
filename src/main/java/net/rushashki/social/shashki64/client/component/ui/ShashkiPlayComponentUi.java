@@ -19,14 +19,15 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.SingleSelectionModel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
+import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialogBox;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shared.model.Game;
+import net.rushashki.social.shashki64.shared.model.GameEnds;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
-import net.rushashki.social.shashki64.shared.model.GameProxy;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 import net.rushashki.social.shashki64.shashki.Board;
@@ -63,6 +64,10 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   HTMLPanel notationList;
   @UiField
   Button connectToPlayButton;
+  @UiField
+  Button drawButton;
+  @UiField
+  Button surrenderButton;
   @UiField
   HTMLPanel playerListColumn;
   @UiField
@@ -146,6 +151,23 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       }
     });
 
+    surrenderButton.addClickHandler(clickEvent -> {
+      ConfirmDialogBox confirmSurrender = new ConfirmDialogBox(constants.areYouShareYouWantSurrender()) {
+        @Override
+        public void procConfirm() {
+          GameMessage gameMessage = GWT.create(GameMessageDto.class);
+          gameMessage.setSender(clientFactory.getPlayer());
+          gameMessage.setReceiver(clientFactory.getOpponent());
+          gameMessage.setMessageType(GameMessage.MessageType.PLAY_SURRENDER);
+
+          eventBus.fireEvent(new GameMessageEvent(gameMessage));
+
+          hidePlayingButtonShowPlayButton();
+          clearPlayComponent(clientFactory);
+        }
+      };
+    });
+
     // TODO: Not Compile
     eventBus.addHandler(GetPlayerListEvent.TYPE, new GetPlayerListEventHandler() {
       @Override
@@ -184,7 +206,9 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         BoardBackgroundLayer backgroundLayer = initDeskPanel(event.isWhite());
         board = new Board(backgroundLayer, 8, 8, event.isWhite());
         lienzoPanel.add(board);
-        updateTurn(clientFactory.getGame().getPlayerWhite().getSystemId().equals(clientFactory.getPlayer().getSystemId()));
+        updateTurn(clientFactory.getGame().getPlayerWhite().getSystemId()
+            .equals(clientFactory.getPlayer().getSystemId()));
+        hidePlayButtonShowPlayingButtons();
       }
     });
 
@@ -211,17 +235,17 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         if (0 == board.getMineDraughts().size()) {
           new DialogBox(constants.info(), constants.youLose()).show();
           if (board.isWhite()) {
-            endGame.setPlayEndStatus(Game.GameEnds.BLACK_WON);
+            endGame.setPlayEndStatus(GameEnds.BLACK_WON);
           } else {
-            endGame.setPlayEndStatus(GameProxy.GameEnds.WHITE_WON);
+            endGame.setPlayEndStatus(GameEnds.WHITE_WON);
           }
         }
         if (0 == board.getOpponentDraughts().size()) {
           new DialogBox(constants.info(), constants.youWon());
           if (board.isWhite()) {
-            endGame.setPlayEndStatus(Game.GameEnds.WHITE_WON);
+            endGame.setPlayEndStatus(GameEnds.WHITE_WON);
           } else {
-            endGame.setPlayEndStatus(GameProxy.GameEnds.BLACK_WON);
+            endGame.setPlayEndStatus(GameEnds.BLACK_WON);
           }
         }
         gameService.getGame(endGame.getId(), new AsyncCallback<Game>() {
@@ -263,8 +287,16 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     });
   }
 
+  private void hidePlayingButtonShowPlayButton() {
+    connectToPlayButton.setVisible(true);
+    drawButton.setVisible(false);
+    surrenderButton.setVisible(false);
+  }
+
   private void hidePlayButtonShowPlayingButtons() {
     connectToPlayButton.setVisible(false);
+    drawButton.setVisible(true);
+    surrenderButton.setVisible(true);
   }
 
   private void clearPlayComponent(ClientFactory clientFactory) {

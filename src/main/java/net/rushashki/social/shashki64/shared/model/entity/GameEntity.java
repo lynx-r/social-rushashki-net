@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.shared.model.entity;
 
 import net.rushashki.social.shashki64.shared.model.Game;
+import net.rushashki.social.shashki64.shared.model.GameEnds;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import javax.persistence.*;

@@ -33,4 +33,5 @@ public interface ClientFactory {
 
     void setConnected(boolean connected);
 
+    boolean isPlayerHasWhiteColor();
 }

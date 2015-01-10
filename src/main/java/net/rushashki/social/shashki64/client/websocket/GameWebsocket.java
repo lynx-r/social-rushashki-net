@@ -194,26 +194,32 @@ public class GameWebsocket implements WebSocketCallback {
       case PLAY_MOVE:
         handlePlayMove(gameMessage);
         break;
-//      case PLAY_END:
-//        handlePlayEnd(gameMessage);
-//        break;
+      case PLAY_SURRENDER:
+        handlePlaySurrender(gameMessage);
+        break;
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(gameMessage);
         break;
     }
   }
 
-  private void handlePlayEnd(GameMessage gameMessage) {
-    if (clientFactory.getGame() == null) {
-      return;
-    }
-    Game.GameEnds gameEnd = Game.GameEnds.valueOf(gameMessage.getData());
-    if (gameEnd.equals(GameProxy.GameEnds.WHITE_WON) && clientFactory.getGame().getPlayerWhite().getSystemId().equals(clientFactory.getPlayer().getSystemId())) {
-      new DialogBox(constants.info(), constants.youWon());
-    } else {
-      new DialogBox(constants.info(), constants.youLose());
-    }
-    eventBus.fireEvent(new ClearPlayComponentEvent());
+  private void handlePlaySurrender(GameMessage gameMessage) {
+    Game game = clientFactory.getGame();
+    game.setPlayEndDate(new Date());
+    game.setPlayEndStatus(clientFactory.isPlayerHasWhiteColor() ? GameEnds.SURRENDER_WHITE
+        : GameEnds.SURRENDER_BLACK);
+    gameService.saveGame(game, new AsyncCallback<Void>() {
+      @Override
+      public void onFailure(Throwable throwable) {
+        new DialogBox(constants.error(), constants.error()).show();
+      }
+
+      @Override
+      public void onSuccess(Void aVoid) {
+        new DialogBox(constants.info(), constants.opponentSurrendered());
+        eventBus.fireEvent(new ClearPlayComponentEvent());
+      }
+    });
   }
 
   private void handlePlayMove(GameMessage gameMessage) {

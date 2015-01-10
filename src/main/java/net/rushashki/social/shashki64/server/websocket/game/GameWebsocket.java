@@ -63,6 +63,7 @@ public class GameWebsocket {
       case PLAY_START:
       case PLAY_MOVE:
       case PLAY_END:
+      case PLAY_SURRENDER:
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(message);
         break;

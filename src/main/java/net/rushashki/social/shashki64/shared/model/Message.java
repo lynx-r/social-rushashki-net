@@ -1,5 +1,7 @@
 package net.rushashki.social.shashki64.shared.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.util.Date;
 
 /**
@@ -34,7 +36,7 @@ public interface Message extends PersistableObject {
 
   public void setSentDate(Date sentDate);
 
-  public enum MessageType {
+  public enum MessageType implements IsSerializable {
 
     CHAT_MESSAGE,
     CHAT_PRIVATE_MESSAGE,
@@ -48,6 +50,7 @@ public interface Message extends PersistableObject {
     PLAY_PROPOSE_DRAW,
     PLAY_ACCEPT_DRAW,
     PLAY_END,
+    PLAY_SURRENDER,
     PLAYER_REGISTER
 
   }
