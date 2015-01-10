@@ -27,10 +27,14 @@
         <url-pattern>/net.rushashki.social.shashki64.Shashki64/GameRpcService</url-pattern>
     </servlet-mapping>
 
-    <!--<error-page>-->
-        <!--<error-code>500</error-code>-->
-        <!--<location>/500.html</location>-->
-    <!--</error-page>-->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/500.html</location>
+    </error-page>
+
+    <session-config>
+        <session-timeout>-1</session-timeout>
+    </session-config>
 
     <error-page>
         <error-code>404</error-code>

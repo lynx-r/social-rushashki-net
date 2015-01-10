@@ -62,7 +62,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   @UiField
   HTMLPanel notationList;
   @UiField
-  Button connectPlayButton;
+  Button connectToPlayButton;
   @UiField
   HTMLPanel playerListColumn;
   @UiField
@@ -103,10 +103,10 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       toggleInPlayButton();
     }
 
-    connectPlayButton.addClickHandler(new ClickHandler() {
+    connectToPlayButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
-        switch (connectPlayButton.getIcon()) {
+        switch (connectToPlayButton.getIcon()) {
           case REFRESH:
             if (clientFactory.isConnected()) {
               return;
@@ -137,11 +137,11 @@ public class ShashkiPlayComponentUi extends BasicComponent {
                 gameMessage.setData(String.valueOf(!white));
 
                 eventBus.fireEvent(new GameMessageEvent(gameMessage));
+                hidePlayButtonShowPlayingButtons();
               }
             };
             inviteDialogBox.show(constants.inviteToPlay(clientFactory.getOpponent().getPublicName(),
                 constants.draughts()));
-            return;
         }
       }
     });
@@ -164,11 +164,11 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     eventBus.addHandler(DisconnectFromPlayEvent.TYPE, new DisconnectFromPlayEventHandler() {
       @Override
       public void onDisconnectFromPlay(DisconnectFromPlayEvent event) {
-        connectPlayButton.setActive(true);
-        connectPlayButton.setBlock(true);
-        connectPlayButton.addStyleName("btn-danger");
-        connectPlayButton.setIcon(IconType.REFRESH);
-        connectPlayButton.setText(constants.reconnect());
+        connectToPlayButton.setActive(true);
+        connectToPlayButton.setBlock(true);
+        connectToPlayButton.addStyleName("btn-danger");
+        connectToPlayButton.setIcon(IconType.REFRESH);
+        connectToPlayButton.setText(constants.reconnect());
 
         playersCellList.setRowData(new ArrayList<>());
         turnLabel.setHTML(constants.youDisconnected());
@@ -263,6 +263,10 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     });
   }
 
+  private void hidePlayButtonShowPlayingButtons() {
+    connectToPlayButton.setVisible(false);
+  }
+
   private void clearPlayComponent(ClientFactory clientFactory) {
     eventBus.fireEvent(new ClearNotationEvent());
 
@@ -295,9 +299,9 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   }
 
   private void toggleInPlayButton() {
-    connectPlayButton.setType(ButtonType.DEFAULT);
-    connectPlayButton.setIcon(IconType.PLAY);
-    connectPlayButton.setText(constants.play());
+    connectToPlayButton.setType(ButtonType.DEFAULT);
+    connectToPlayButton.setIcon(IconType.PLAY);
+    connectToPlayButton.setText(constants.play());
   }
 
   private void setPlayerList(List<Shashist> playerList) {
