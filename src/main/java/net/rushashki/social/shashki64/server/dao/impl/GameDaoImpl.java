@@ -32,7 +32,11 @@ public class GameDaoImpl extends DaoImpl<GameEntity> implements GameDao {
 
   @Override
   public Game findLazyFalse(Long id) {
-    String hql = "SELECT g FROM GameEntity g JOIN FETCH g.playerWhite JOIN FETCH g.playerBlack WHERE g.id = :gameId";
+    String hql = "SELECT g " +
+        "FROM GameEntity g " +
+        "JOIN FETCH g.playerWhite " +
+        "JOIN FETCH g.playerBlack " +
+        "WHERE g.id = :gameId";
     Query query = entityManager.createQuery(hql);
     query.setParameter("gameId", id);
     return (Game) query.getSingleResult();

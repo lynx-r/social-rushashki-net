@@ -34,6 +34,8 @@ public abstract class InviteDialogBox extends BasicDialogBox {
   public InviteDialogBox() {
     setText(constants.captionGame());
     VerticalPanel panel = new VerticalPanel();
+    panel.setPixelSize(WIDTH, HEIGHT);
+
     panel.add(inviteLabel);
 
     submitButton = new Button(constants.next());
@@ -82,7 +84,7 @@ public abstract class InviteDialogBox extends BasicDialogBox {
     panel.add(group);
     panel.setCellHorizontalAlignment(group, HasAlignment.ALIGN_RIGHT);
 
-    add(panel);
+    setWidget(panel);
 
     waitResponseTimer = new Timer() {
       @Override

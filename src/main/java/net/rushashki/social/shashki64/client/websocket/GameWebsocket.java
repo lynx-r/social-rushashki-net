@@ -8,6 +8,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.ClientFactory;
+import net.rushashki.social.shashki64.client.component.widget.dialog.IsConfirmedDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmPlayDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
@@ -197,10 +198,60 @@ public class GameWebsocket implements WebSocketCallback {
       case PLAY_SURRENDER:
         handlePlaySurrender(gameMessage);
         break;
+      case PLAY_PROPOSE_DRAW:
+        handlePlayProposeDraw(gameMessage);
+        break;
+      case PLAY_ACCEPT_DRAW:
+        handlePlayAcceptDraw(gameMessage);
+        break;
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(gameMessage);
         break;
     }
+  }
+
+  private void handlePlayAcceptDraw(GameMessage gameMessage) {
+    if (Boolean.valueOf(gameMessage.getData())) {
+      Game game = clientFactory.getGame();
+      game.setPlayEndDate(new Date());
+      game.setPlayEndStatus(GameEnds.DRAW);
+      gameService.saveGame(game, new AsyncCallback<Void>() {
+        @Override
+        public void onFailure(Throwable throwable) {
+          new DialogBox(constants.error(), constants.errorWhileSavingGame());
+        }
+
+        @Override
+        public void onSuccess(Void aVoid) {
+          eventBus.fireEvent(new ClearPlayComponentEvent());
+        }
+      });
+    } else {
+      String senderName = gameMessage.getSender().getPublicName();
+      new DialogBox(constants.info(), constants.playerRejectedDraw(senderName));
+    }
+  }
+
+  private void handlePlayProposeDraw(GameMessage gameMessage) {
+    String senderName = gameMessage.getSender().getPublicName();
+    new IsConfirmedDialogBox(constants.playerProposesDraw(senderName)) {
+      @Override
+      public void procConfirm() {
+        GameMessage message = GWT.create(GameMessageDto.class);
+        message.setSender(gameMessage.getReceiver());
+        message.setReceiver(gameMessage.getSender());
+        message.setMessageType(GameMessage.MessageType.PLAY_ACCEPT_DRAW);
+
+        if (isConfirmed()) {
+          eventBus.fireEvent(new ClearPlayComponentEvent());
+          message.setData(Boolean.TRUE.toString());
+        } else {
+          message.setData(Boolean.FALSE.toString());
+        }
+
+        sendGameMessage(message);
+      }
+    };
   }
 
   private void handlePlaySurrender(GameMessage gameMessage) {

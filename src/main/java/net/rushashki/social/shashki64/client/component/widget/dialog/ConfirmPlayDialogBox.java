@@ -23,8 +23,9 @@ public abstract class ConfirmPlayDialogBox extends BasicDialogBox {
   private String senderName;
 
   public ConfirmPlayDialogBox() {
-    setText("Игра");
+    setText(constants.captionGame());
     VerticalPanel panel = new VerticalPanel();
+    panel.setPixelSize(WIDTH, HEIGHT);
     panel.add(confirmLabel);
 
     ButtonGroup group = new ButtonGroup();
@@ -38,7 +39,7 @@ public abstract class ConfirmPlayDialogBox extends BasicDialogBox {
     panel.add(group);
     panel.setCellHorizontalAlignment(group, HasAlignment.ALIGN_RIGHT);
 
-    add(panel);
+    setWidget(panel);
 
     yesButton.addClickHandler(new ClickHandler() {
       @Override

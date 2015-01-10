@@ -19,16 +19,13 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.SingleSelectionModel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
-import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmDialogBox;
+import net.rushashki.social.shashki64.client.component.widget.dialog.IsConfirmedDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialogBox;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
-import net.rushashki.social.shashki64.shared.model.Game;
-import net.rushashki.social.shashki64.shared.model.GameEnds;
-import net.rushashki.social.shashki64.shared.model.GameMessage;
-import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shared.model.*;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
@@ -142,7 +139,6 @@ public class ShashkiPlayComponentUi extends BasicComponent {
                 gameMessage.setData(String.valueOf(!white));
 
                 eventBus.fireEvent(new GameMessageEvent(gameMessage));
-                hidePlayButtonShowPlayingButtons();
               }
             };
             inviteDialogBox.show(constants.inviteToPlay(clientFactory.getOpponent().getPublicName(),
@@ -151,19 +147,39 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       }
     });
 
-    surrenderButton.addClickHandler(clickEvent -> {
-      ConfirmDialogBox confirmSurrender = new ConfirmDialogBox(constants.areYouShareYouWantSurrender()) {
+    drawButton.addClickHandler(clickEvent -> {
+      new IsConfirmedDialogBox(constants.doYouWantToProposeDraw()) {
         @Override
         public void procConfirm() {
-          GameMessage gameMessage = GWT.create(GameMessageDto.class);
-          gameMessage.setSender(clientFactory.getPlayer());
-          gameMessage.setReceiver(clientFactory.getOpponent());
-          gameMessage.setMessageType(GameMessage.MessageType.PLAY_SURRENDER);
+          if (isConfirmed()) {
+            GameMessage gameMessage = GWT.create(GameMessageDto.class);
+            gameMessage.setSender(clientFactory.getPlayer());
+            gameMessage.setReceiver(clientFactory.getOpponent());
+            gameMessage.setMessageType(GameMessage.MessageType.PLAY_PROPOSE_DRAW);
+            gameMessage.setGame(clientFactory.getGame());
 
-          eventBus.fireEvent(new GameMessageEvent(gameMessage));
+            eventBus.fireEvent(new GameMessageEvent(gameMessage));
+          }
+        }
+      };
+    });
 
-          hidePlayingButtonsShowPlayButton();
-          clearPlayComponent(clientFactory);
+    surrenderButton.addClickHandler(clickEvent -> {
+      new IsConfirmedDialogBox(constants.areYouSureYouWantSurrender()) {
+        @Override
+        public void procConfirm() {
+          if (isConfirmed()) {
+            GameMessage gameMessage = GWT.create(GameMessageDto.class);
+            gameMessage.setSender(clientFactory.getPlayer());
+            gameMessage.setReceiver(clientFactory.getOpponent());
+            gameMessage.setMessageType(GameMessage.MessageType.PLAY_SURRENDER);
+            gameMessage.setGame(clientFactory.getGame());
+
+            eventBus.fireEvent(new GameMessageEvent(gameMessage));
+
+            hidePlayingButtonsShowPlayButton();
+            clearPlayComponent(clientFactory);
+          }
         }
       };
     });
@@ -251,7 +267,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         gameService.getGame(endGame.getId(), new AsyncCallback<Game>() {
           @Override
           public void onFailure(Throwable throwable) {
-
+            new DialogBox(constants.error(), constants.errorWhileGettingGame());
           }
 
           @Override
@@ -263,7 +279,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
                 gameService.saveGame(endGame, new AsyncCallback<Void>() {
                   @Override
                   public void onFailure(Throwable caught) {
-                    new DialogBox(constants.error(), caught.getMessage()).show();
+                    new DialogBox(constants.error(), constants.errorWhileSavingGame()).show();
                     caught.printStackTrace();
                   }
 

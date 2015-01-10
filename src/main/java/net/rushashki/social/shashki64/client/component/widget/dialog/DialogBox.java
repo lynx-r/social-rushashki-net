@@ -16,21 +16,19 @@ import org.gwtbootstrap3.client.ui.Button;
  * Time: 14:12
  */
 public class DialogBox extends BasicDialogBox {
-  private ScrollPanel contentScrollPanel;
   private HTML contentHTML;
-  private final VerticalPanel panel = new VerticalPanel();
 
   public DialogBox(String header, String content) {
     setText(header);
 
-    contentScrollPanel = new ScrollPanel();
-    contentScrollPanel.setHeight("40px");
-    contentScrollPanel.setWidth("400px");
+    ScrollPanel contentScrollPanel = new ScrollPanel();
 
     contentHTML = new HTML();
     contentHTML.setHTML(content);
     contentScrollPanel.add(contentHTML);
 
+    VerticalPanel panel = new VerticalPanel();
+    panel.setPixelSize(WIDTH, HEIGHT);
     panel.add(contentScrollPanel);
 
     final Button buttonClose = new Button(constants.close(), new ClickHandler() {
@@ -43,7 +41,7 @@ public class DialogBox extends BasicDialogBox {
 
     panel.setCellHorizontalAlignment(buttonClose, HasAlignment.ALIGN_RIGHT);
 
-    add(panel);
+    setWidget(panel);
 
     center();
 

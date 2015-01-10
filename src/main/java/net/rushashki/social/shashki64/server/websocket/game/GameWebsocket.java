@@ -64,6 +64,8 @@ public class GameWebsocket {
       case PLAY_MOVE:
       case PLAY_END:
       case PLAY_SURRENDER:
+      case PLAY_PROPOSE_DRAW:
+      case PLAY_ACCEPT_DRAW:
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(message);
         break;

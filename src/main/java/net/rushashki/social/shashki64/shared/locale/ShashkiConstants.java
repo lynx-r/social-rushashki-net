@@ -128,7 +128,15 @@ public interface ShashkiConstants extends Messages {
 
   String playDidNotStart();
 
-  String areYouShareYouWantSurrender();
+  String areYouSureYouWantSurrender();
 
   String opponentSurrendered();
+
+  String doYouWantToProposeDraw();
+
+  String errorWhileSavingGame();
+
+  String playerProposesDraw(String senderName);
+
+  String playerRejectedDraw(String senderName);
 }

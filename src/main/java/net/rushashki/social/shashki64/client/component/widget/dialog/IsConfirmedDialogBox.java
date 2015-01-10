@@ -2,8 +2,8 @@ package net.rushashki.social.shashki64.client.component.widget.dialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonGroup;
@@ -14,18 +14,19 @@ import org.gwtbootstrap3.client.ui.ButtonGroup;
  * Date: 10/03/14
  * Time: 11:07
  */
-public abstract class ConfirmDialogBox extends BasicDialogBox {
+public abstract class IsConfirmedDialogBox extends BasicDialogBox {
 
   private boolean confirmed;
 
-  public ConfirmDialogBox(String ask) {
+  public IsConfirmedDialogBox(String ask) {
     setText(constants.confirm());
     setModal(true);
 
     VerticalPanel panel = new VerticalPanel();
+    panel.setPixelSize(WIDTH, HEIGHT);
 
-    Label askLabel = new Label(ask);
-    panel.add(askLabel);
+    HTML askHtml = new HTML(ask);
+    panel.add(askHtml);
 
     ButtonGroup askButtons = new ButtonGroup();
     Button yesButton = new Button(constants.yes());
@@ -37,7 +38,7 @@ public abstract class ConfirmDialogBox extends BasicDialogBox {
     panel.add(askButtons);
     panel.setCellHorizontalAlignment(askButtons, HasAlignment.ALIGN_RIGHT);
 
-    add(panel);
+    setWidget(panel);
 
     yesButton.addClickHandler(new ClickHandler() {
       @Override
@@ -60,7 +61,7 @@ public abstract class ConfirmDialogBox extends BasicDialogBox {
     center();
   }
 
-  public boolean confirm() {
+  public boolean isConfirmed() {
     return confirmed;
   }
 

@@ -32,3 +32,8 @@ body {
 .chat-prev-messages {
     background-color: aliceblue;
 }
+
+.fullSize {
+    width: 100%;
+    height: 100%;
+}
