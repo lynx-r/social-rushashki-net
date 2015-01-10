@@ -162,7 +162,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
 
           eventBus.fireEvent(new GameMessageEvent(gameMessage));
 
-          hidePlayingButtonShowPlayButton();
+          hidePlayingButtonsShowPlayButton();
           clearPlayComponent(clientFactory);
         }
       };
@@ -283,11 +283,12 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       @Override
       public void onClearPlayComponent(ClearPlayComponentEvent event) {
         clearPlayComponent(clientFactory);
+        hidePlayingButtonsShowPlayButton();
       }
     });
   }
 
-  private void hidePlayingButtonShowPlayButton() {
+  private void hidePlayingButtonsShowPlayButton() {
     connectToPlayButton.setVisible(true);
     drawButton.setVisible(false);
     surrenderButton.setVisible(false);
