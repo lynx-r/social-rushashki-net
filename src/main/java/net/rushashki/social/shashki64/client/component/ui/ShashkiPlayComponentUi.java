@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.SingleSelectionModel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
-import net.rushashki.social.shashki64.client.component.widget.dialog.IsConfirmedDialogBox;
+import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmeDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialogBox;
 import net.rushashki.social.shashki64.client.event.*;
@@ -75,6 +75,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   Label beatenOpponentDraughtsLabel;
   @UiField
   Label beatenMineDraughtsLabel;
+  @UiField
+  Button cancelMove;
 
   private Board board;
   private LienzoPanel lienzoPanel;
@@ -129,9 +131,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             inviteDialogBox = new InviteDialogBox() {
               @Override
               public void submitted(boolean white) {
-                GameMessage gameMessage = GWT.create(GameMessageDto.class);
-                gameMessage.setSender(clientFactory.getPlayer());
-                gameMessage.setReceiver(clientFactory.getOpponent());
+                GameMessage gameMessage = createSendGameMessage(clientFactory);
                 gameMessage.setMessageType(GameMessage.MessageType.PLAY_INVITE);
 
                 gameMessage.setMessage(constants.inviteMessage(clientFactory.getPlayer().getPublicName(),
@@ -148,16 +148,12 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     });
 
     drawButton.addClickHandler(clickEvent -> {
-      new IsConfirmedDialogBox(constants.doYouWantToProposeDraw()) {
+      new ConfirmeDialogBox(constants.doYouWantToProposeDraw()) {
         @Override
         public void procConfirm() {
           if (isConfirmed()) {
-            GameMessage gameMessage = GWT.create(GameMessageDto.class);
-            gameMessage.setSender(clientFactory.getPlayer());
-            gameMessage.setReceiver(clientFactory.getOpponent());
+            GameMessage gameMessage = createSendGameMessage(clientFactory);
             gameMessage.setMessageType(GameMessage.MessageType.PLAY_PROPOSE_DRAW);
-            gameMessage.setGame(clientFactory.getGame());
-
             eventBus.fireEvent(new GameMessageEvent(gameMessage));
           }
         }
@@ -165,16 +161,12 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     });
 
     surrenderButton.addClickHandler(clickEvent -> {
-      new IsConfirmedDialogBox(constants.areYouSureYouWantSurrender()) {
+      new ConfirmeDialogBox(constants.areYouSureYouWantSurrender()) {
         @Override
         public void procConfirm() {
           if (isConfirmed()) {
-            GameMessage gameMessage = GWT.create(GameMessageDto.class);
-            gameMessage.setSender(clientFactory.getPlayer());
-            gameMessage.setReceiver(clientFactory.getOpponent());
+            GameMessage gameMessage = createSendGameMessage(clientFactory);
             gameMessage.setMessageType(GameMessage.MessageType.PLAY_SURRENDER);
-            gameMessage.setGame(clientFactory.getGame());
-
             eventBus.fireEvent(new GameMessageEvent(gameMessage));
 
             hidePlayingButtonsShowPlayButton();
@@ -182,6 +174,26 @@ public class ShashkiPlayComponentUi extends BasicComponent {
           }
         }
       };
+    });
+
+    cancelMove.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent clickEvent) {
+        if (!board.isMyTurn()) {
+          new DialogBox(constants.info(), constants.itIsNotYourTurn());
+          return;
+        }
+        new ConfirmeDialogBox(constants.doYouWantToCancelMove()) {
+          @Override
+          public void procConfirm() {
+            if (isConfirmed()) {
+              GameMessage gameMessage = createSendGameMessage(clientFactory);
+              gameMessage.setMessageType(GameMessage.MessageType.PLAY_CANCEL_MOVE);
+              eventBus.fireEvent(new GameMessageEvent(gameMessage));
+            }
+          }
+        };
+      }
     });
 
     // TODO: Not Compile
@@ -302,6 +314,14 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         hidePlayingButtonsShowPlayButton();
       }
     });
+  }
+
+  private GameMessage createSendGameMessage(ClientFactory clientFactory) {
+    GameMessage gameMessage = GWT.create(GameMessageDto.class);
+    gameMessage.setSender(clientFactory.getPlayer());
+    gameMessage.setReceiver(clientFactory.getOpponent());
+    gameMessage.setGame(clientFactory.getGame());
+    return gameMessage;
   }
 
   private void hidePlayingButtonsShowPlayButton() {

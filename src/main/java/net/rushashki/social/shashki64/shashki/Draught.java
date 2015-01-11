@@ -182,7 +182,7 @@ public class Draught extends Group {
 
   private boolean isValidStroke() {
     Board board = (Board) getParent();
-    return board.myTurn() && isWhite() == board.isWhite() && !board.isEmulate();
+    return board.isMyTurn() && isWhite() == board.isWhite() && !board.isEmulate();
   }
 
   private boolean isAllowed(Square newSquare) {

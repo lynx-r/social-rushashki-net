@@ -14,11 +14,11 @@ import org.gwtbootstrap3.client.ui.ButtonGroup;
  * Date: 10/03/14
  * Time: 11:07
  */
-public abstract class IsConfirmedDialogBox extends BasicDialogBox {
+public abstract class ConfirmeDialogBox extends BasicDialogBox {
 
   private boolean confirmed;
 
-  public IsConfirmedDialogBox(String ask) {
+  public ConfirmeDialogBox(String ask) {
     setText(constants.confirm());
     setModal(true);
 

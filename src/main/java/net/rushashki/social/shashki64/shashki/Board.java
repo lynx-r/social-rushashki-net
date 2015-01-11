@@ -748,7 +748,7 @@ public class Board extends Layer {
     return white;
   }
 
-  public boolean myTurn() {
+  public boolean isMyTurn() {
     return turn;
   }
 

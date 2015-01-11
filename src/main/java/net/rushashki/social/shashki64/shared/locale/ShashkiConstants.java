@@ -139,4 +139,12 @@ public interface ShashkiConstants extends Messages {
   String playerProposesDraw(String senderName);
 
   String playerRejectedDraw(String senderName);
+
+  String doYouWantToCancelMove();
+
+  String playerProposesCancelMove(String publicName);
+
+  String playerRejectedMoveCancel(String publicName);
+
+  String itIsNotYourTurn();
 }

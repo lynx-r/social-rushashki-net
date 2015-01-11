@@ -8,7 +8,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.ClientFactory;
-import net.rushashki.social.shashki64.client.component.widget.dialog.IsConfirmedDialogBox;
+import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmeDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmPlayDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
@@ -70,9 +70,7 @@ public class GameWebsocket implements WebSocketCallback {
     eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
       @Override
       public void onPlayMove(PlayMoveEvent event) {
-        GameMessage message = GWT.create(GameMessageDto.class);
-        message.setSender(clientFactory.getPlayer());
-        message.setReceiver(clientFactory.getOpponent());
+        GameMessage message = createSendGameMessage(clientFactory);
         message.setMessageType(Message.MessageType.PLAY_MOVE);
         message.setStartMove(event.getStartMove());
         message.setEndMove(event.getEndMove());
@@ -82,6 +80,13 @@ public class GameWebsocket implements WebSocketCallback {
         sendGameMessage(message);
       }
     });
+  }
+
+  private GameMessage createSendGameMessage(ClientFactory clientFactory) {
+    GameMessage message = GWT.create(GameMessageDto.class);
+    message.setSender(clientFactory.getPlayer());
+    message.setReceiver(clientFactory.getOpponent());
+    return message;
   }
 
   private void sendGameMessage(GameMessage gameMessage) {
@@ -123,9 +128,7 @@ public class GameWebsocket implements WebSocketCallback {
 
               @Override
               public void onSuccess(Game game) {
-                GameMessage message = GWT.create(GameMessageDto.class);
-                message.setSender(gameMessage.getReceiver());
-                message.setReceiver(gameMessage.getSender());
+                GameMessage message = createSendGameMessage(gameMessage);
                 message.setMessageType(Message.MessageType.PLAY_START);
 
                 message.setData(Boolean.TRUE.toString());
@@ -144,9 +147,7 @@ public class GameWebsocket implements WebSocketCallback {
 
       @Override
       public void canceled() {
-        GameMessage message = GWT.create(GameMessageDto.class);
-        message.setSender(gameMessage.getReceiver());
-        message.setReceiver(gameMessage.getSender());
+        GameMessage message = createSendGameMessage(gameMessage);
         message.setMessageType(GameMessage.MessageType.PLAY_REJECT_INVITE);
 
         sendGameMessage(message);
@@ -204,10 +205,45 @@ public class GameWebsocket implements WebSocketCallback {
       case PLAY_ACCEPT_DRAW:
         handlePlayAcceptDraw(gameMessage);
         break;
+      case PLAY_CANCEL_MOVE:
+        handlePlayCancelMove(gameMessage);
+        break;
+      case PLAY_CANCEL_MOVE_RESPONSE:
+        handlePlayCancelMoveResponse(gameMessage);
+        break;
       case CHAT_PRIVATE_MESSAGE:
         handleChatPrivateMessage(gameMessage);
         break;
     }
+  }
+
+  private void handlePlayCancelMoveResponse(GameMessage gameMessage) {
+    boolean isAcceptedCancelMove = Boolean.valueOf(gameMessage.getData());
+    if (isAcceptedCancelMove) {
+
+    } else {
+      new DialogBox(constants.info(), constants.playerRejectedMoveCancel(gameMessage.getSender().getPublicName()));
+    }
+  }
+
+  private void handlePlayCancelMove(GameMessage gameMessage) {
+    new ConfirmeDialogBox(constants.playerProposesCancelMove(gameMessage.getSender().getPublicName())) {
+      @Override
+      public void procConfirm() {
+        GameMessage returnGameMessage = createSendGameMessage(gameMessage);
+        if (isConfirmed()) {
+          returnGameMessage.setMessageType(Message.MessageType.PLAY_CANCEL_MOVE_RESPONSE);
+          returnGameMessage.setData(Boolean.TRUE.toString());
+
+          sendGameMessage(returnGameMessage);
+        } else {
+          returnGameMessage.setMessageType(Message.MessageType.PLAY_CANCEL_MOVE_RESPONSE);
+          returnGameMessage.setData(Boolean.FALSE.toString());
+
+          sendGameMessage(returnGameMessage);
+        }
+      }
+    };
   }
 
   private void handlePlayAcceptDraw(GameMessage gameMessage) {
@@ -234,12 +270,10 @@ public class GameWebsocket implements WebSocketCallback {
 
   private void handlePlayProposeDraw(GameMessage gameMessage) {
     String senderName = gameMessage.getSender().getPublicName();
-    new IsConfirmedDialogBox(constants.playerProposesDraw(senderName)) {
+    new ConfirmeDialogBox(constants.playerProposesDraw(senderName)) {
       @Override
       public void procConfirm() {
-        GameMessage message = GWT.create(GameMessageDto.class);
-        message.setSender(gameMessage.getReceiver());
-        message.setReceiver(gameMessage.getSender());
+        GameMessage message = createSendGameMessage(gameMessage);
         message.setMessageType(GameMessage.MessageType.PLAY_ACCEPT_DRAW);
 
         if (isConfirmed()) {
@@ -252,6 +286,13 @@ public class GameWebsocket implements WebSocketCallback {
         sendGameMessage(message);
       }
     };
+  }
+
+  private GameMessage createSendGameMessage(GameMessage gameMessage) {
+    GameMessage message = GWT.create(GameMessageDto.class);
+    message.setSender(gameMessage.getReceiver());
+    message.setReceiver(gameMessage.getSender());
+    return message;
   }
 
   private void handlePlaySurrender(GameMessage gameMessage) {
