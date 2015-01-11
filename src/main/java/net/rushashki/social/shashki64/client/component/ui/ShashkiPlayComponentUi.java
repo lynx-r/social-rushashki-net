@@ -169,7 +169,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             gameMessage.setMessageType(GameMessage.MessageType.PLAY_SURRENDER);
             eventBus.fireEvent(new GameMessageEvent(gameMessage));
 
-            hidePlayingButtonsShowPlayButton();
+            hidePlayingButtonsAndShowPlayButton();
             clearPlayComponent(clientFactory);
           }
         }
@@ -222,6 +222,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
 
         playersCellList.setRowData(new ArrayList<>());
         turnLabel.setHTML(constants.youDisconnected());
+
+        hidePlayingButtonsAndShowPlayButton();
       }
     });
 
@@ -236,7 +238,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
         lienzoPanel.add(board);
         updateTurn(clientFactory.getGame().getPlayerWhite().getSystemId()
             .equals(clientFactory.getPlayer().getSystemId()));
-        hidePlayButtonShowPlayingButtons();
+        hidePlayButtonAndShowPlayingButtons();
       }
     });
 
@@ -311,7 +313,14 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       @Override
       public void onClearPlayComponent(ClearPlayComponentEvent event) {
         clearPlayComponent(clientFactory);
-        hidePlayingButtonsShowPlayButton();
+        hidePlayingButtonsAndShowPlayButton();
+      }
+    });
+
+    eventBus.addHandler(PlayCancelMoveEvent.TYPE, new PlayCancelMoveEventHandler() {
+      @Override
+      public void onPlayCancelMove(PlayCancelMoveEvent event) {
+        notationPanel.cancelMove();
       }
     });
   }
@@ -324,13 +333,13 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     return gameMessage;
   }
 
-  private void hidePlayingButtonsShowPlayButton() {
+  private void hidePlayingButtonsAndShowPlayButton() {
     connectToPlayButton.setVisible(true);
     drawButton.setVisible(false);
     surrenderButton.setVisible(false);
   }
 
-  private void hidePlayButtonShowPlayingButtons() {
+  private void hidePlayButtonAndShowPlayingButtons() {
     connectToPlayButton.setVisible(false);
     drawButton.setVisible(true);
     surrenderButton.setVisible(true);

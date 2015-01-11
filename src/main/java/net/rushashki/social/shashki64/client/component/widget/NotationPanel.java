@@ -20,7 +20,7 @@ public class NotationPanel extends ScrollPanel {
   private final EventBus eventBus;
   private int stepCounter;
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
-  public static String NOTATION_SEPARATOR = "<br/>";
+  public static String NOTATION_SEPARATOR = "<br>";
   private static String notation;
 
   public NotationPanel() {
@@ -84,4 +84,17 @@ public class NotationPanel extends ScrollPanel {
     return notation;
   }
 
+  public void cancelMove() {
+    notation = notation.replaceAll("<div[\\s\\w\\d\";:=]*></div>", "");
+    String[] notationArray = notation.split(NOTATION_SEPARATOR);
+    String lastMove = notationArray[notationArray.length - 1];
+    String[] lastMoveArray = lastMove.split(" ");
+    if (lastMoveArray.length == 3) {
+      notation = notation.substring(0, notation.lastIndexOf(" "));
+    } else {
+      notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEPARATOR));
+      stepCounter--;
+    }
+    getElement().setInnerHTML(notation);
+  }
 }
