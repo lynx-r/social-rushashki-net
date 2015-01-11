@@ -125,7 +125,7 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
   }
 
   @Override
-  public String getStartStep() {
+  public String getStartMove() {
     return startStep;
   }
 
@@ -135,7 +135,7 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
   }
 
   @Override
-  public String getEndStep() {
+  public String getEndMove() {
     return endStep;
   }
 

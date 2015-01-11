@@ -146,5 +146,5 @@ public interface ShashkiConstants extends Messages {
 
   String playerRejectedMoveCancel(String publicName);
 
-  String itIsNotYourTurn();
+  String youDontMove();
 }

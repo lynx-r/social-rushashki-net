@@ -179,8 +179,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     cancelMove.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
-        if (!board.isMyTurn()) {
-          new DialogBox(constants.info(), constants.itIsNotYourTurn());
+        if (board.isMyTurn()) {
+          new DialogBox(constants.info(), constants.youDontMove());
           return;
         }
         new ConfirmeDialogBox(constants.doYouWantToCancelMove()) {
@@ -189,6 +189,13 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             if (isConfirmed()) {
               GameMessage gameMessage = createSendGameMessage(clientFactory);
               gameMessage.setMessageType(GameMessage.MessageType.PLAY_CANCEL_MOVE);
+              gameMessage.setStartMove(board.getLastEndMove());
+              gameMessage.setEndMove(board.getLastStartMove());
+
+              String captured = gameMessage.getCaptured() == null ? Board.NOT_REMOVED + "," + Board.CANCEL_MOVE
+                  : gameMessage.getCaptured() + "," + Board.CANCEL_MOVE;
+              gameMessage.setCaptured(captured);
+
               eventBus.fireEvent(new GameMessageEvent(gameMessage));
             }
           }
@@ -317,10 +324,13 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       }
     });
 
-    eventBus.addHandler(PlayCancelMoveEvent.TYPE, new PlayCancelMoveEventHandler() {
+    eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
       @Override
-      public void onPlayCancelMove(PlayCancelMoveEvent event) {
-        notationPanel.cancelMove();
+      public void onPlayMove(PlayMoveEvent event) {
+        if (event.getCaptured().contains(Board.CANCEL_MOVE)) {
+          notationPanel.cancelMove();
+          board.moveByCoords(event.getStartMove(), event.getEndMove(), event.getCaptured());
+        }
       }
     });
   }

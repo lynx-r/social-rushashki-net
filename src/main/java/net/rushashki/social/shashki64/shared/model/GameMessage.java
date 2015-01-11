@@ -10,11 +10,11 @@ import java.util.List;
  */
 public interface GameMessage extends Message {
 
-  String getStartStep();
+  String getStartMove();
 
   void setStartMove(String startStep);
 
-  String getEndStep();
+  String getEndMove();
 
   void setEndMove(String endStep);
 

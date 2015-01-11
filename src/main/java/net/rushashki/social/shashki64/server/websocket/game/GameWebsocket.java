@@ -142,8 +142,8 @@ public class GameWebsocket {
 
     gameMessageEntity.setGame(gameEntity);
     gameMessageEntity.setCaptured(message.getCaptured());
-    gameMessageEntity.setEndMove(message.getEndStep());
-    gameMessageEntity.setStartMove(message.getStartStep());
+    gameMessageEntity.setEndMove(message.getEndMove());
+    gameMessageEntity.setStartMove(message.getStartMove());
 
     gameMessageEntity.setReceiver(shashistReceiver);
     gameMessageEntity.setSender(shashistSender);

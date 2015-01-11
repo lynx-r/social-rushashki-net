@@ -90,7 +90,7 @@ public class GameMessageDto implements GameMessage {
   }
 
   @Override
-  public String getStartStep() {
+  public String getStartMove() {
     return startStep;
   }
 
@@ -100,7 +100,7 @@ public class GameMessageDto implements GameMessage {
   }
 
   @Override
-  public String getEndStep() {
+  public String getEndMove() {
     return endStep;
   }
 

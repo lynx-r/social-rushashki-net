@@ -220,7 +220,8 @@ public class GameWebsocket implements WebSocketCallback {
   private void handlePlayCancelMoveResponse(GameMessage gameMessage) {
     boolean isAcceptedCancelMove = Boolean.valueOf(gameMessage.getData());
     if (isAcceptedCancelMove) {
-      eventBus.fireEvent(new PlayCancelMoveEvent());
+      eventBus.fireEvent(new PlayMoveEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
+          gameMessage.getCaptured()));
     } else {
       new DialogBox(constants.info(), constants.playerRejectedMoveCancel(gameMessage.getSender().getPublicName()));
     }
@@ -232,9 +233,12 @@ public class GameWebsocket implements WebSocketCallback {
       public void procConfirm() {
         GameMessage returnGameMessage = createSendGameMessage(gameMessage);
         returnGameMessage.setMessageType(Message.MessageType.PLAY_CANCEL_MOVE_RESPONSE);
+        returnGameMessage.setStartMove(gameMessage.getStartMove());
+        returnGameMessage.setEndMove(gameMessage.getEndMove());
         if (isConfirmed()) {
           returnGameMessage.setData(Boolean.TRUE.toString());
-          eventBus.fireEvent(new PlayCancelMoveEvent());
+          eventBus.fireEvent(new PlayMoveEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
+              gameMessage.getCaptured()));
         } else {
           returnGameMessage.setData(Boolean.FALSE.toString());
         }
@@ -312,7 +316,7 @@ public class GameWebsocket implements WebSocketCallback {
   }
 
   private void handlePlayMove(GameMessage gameMessage) {
-    eventBus.fireEvent(new PlayMoveOpponentEvent(gameMessage.getStartStep(), gameMessage.getEndStep(),
+    eventBus.fireEvent(new PlayMoveOpponentEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
         gameMessage.getCaptured()));
   }
 
