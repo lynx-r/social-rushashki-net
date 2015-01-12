@@ -50,13 +50,13 @@ public class GameWebsocket {
   }
 
   @OnMessage
-  public void onMessage(Session session, GameMessage message) {
-    switch (message.getMessageType()) {
+  public void onMessage(Session session, GameMessage gameMessage) {
+    switch (gameMessage.getMessageType()) {
       case PLAYER_REGISTER:
-        handleNewPlayer(message, session);
+        handleNewPlayer(gameMessage, session);
         break;
       case CHAT_MESSAGE:
-        handleChatMessage(session, message);
+        handleChatMessage(session, gameMessage);
         break;
       case PLAY_INVITE:
       case PLAY_REJECT_INVITE:
@@ -69,7 +69,7 @@ public class GameWebsocket {
       case PLAY_CANCEL_MOVE:
       case PLAY_CANCEL_MOVE_RESPONSE:
       case CHAT_PRIVATE_MESSAGE:
-        handleChatPrivateMessage(message);
+        handleChatPrivateMessage(gameMessage);
         break;
     }
   }

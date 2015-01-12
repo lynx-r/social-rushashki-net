@@ -207,6 +207,25 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     eventBus.addHandler(GetPlayerListEvent.TYPE, new GetPlayerListEventHandler() {
       @Override
       public void onGetPlayerList(GetPlayerListEvent event) {
+        if (!event.getPlayerList().contains(clientFactory.getOpponent()) && clientFactory.getGame() != null) {
+          Game game = clientFactory.getGame();
+          game.setPlayEndStatus(clientFactory.isPlayerHasWhiteColor() ? GameEnds.BLACK_LEFT : GameEnds.WHITE_LEFT);
+          game.setPlayEndDate(new Date());
+          gameService.saveGame(game, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+              new DialogBox(constants.error(), constants.errorWhileSavingGame());
+            }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+              new DialogBox(constants.info(), constants.opponentLeftGame());
+              clearPlayComponent(clientFactory);
+              hidePlayingButtonsAndShowPlayButton();
+            }
+          });
+          return;
+        }
         setPlayerList(event.getPlayerList());
       }
     });
@@ -329,7 +348,11 @@ public class ShashkiPlayComponentUi extends BasicComponent {
       public void onPlayMove(PlayMoveEvent event) {
         if (event.getCaptured().contains(Board.CANCEL_MOVE)) {
           notationPanel.cancelMove();
-          board.moveByCoords(event.getStartMove(), event.getEndMove(), event.getCaptured());
+          if (board.isMyTurn()) {
+            board.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured());
+          } else {
+            board.moveCanceled(event.getStartMove(), event.getEndMove(), event.getCaptured());
+          }
         }
       }
     });

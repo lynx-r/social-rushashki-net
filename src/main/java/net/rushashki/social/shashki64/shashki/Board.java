@@ -92,7 +92,7 @@ public class Board extends Layer {
     eventBus.addHandler(PlayMoveOpponentEvent.TYPE, new PlayMoveOpponentEventHandler() {
       @Override
       public void onPlayMoveOpponent(PlayMoveOpponentEvent event) {
-        Board.this.moveByCoords(event.getStartMove(), event.getEndMove(), event.getCaptured());
+        Board.this.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured());
       }
     });
   }
@@ -652,7 +652,7 @@ public class Board extends Layer {
     }
   }
 
-  public void moveByCoords(String startMove, String endMove, String captured) {
+  public void moveOpponent(String startMove, String endMove, String captured) {
     moveByCoords(startMove, endMove, captured, -1);
   }
 
@@ -703,8 +703,12 @@ public class Board extends Layer {
     move(startSquare, endSquare, captured, nextCapture, false, stepCursor);
   }
 
-  private void move(Square startSquare, Square endSquare, Square captured, boolean nextCapture,
-                    boolean cancelMove, int stepCursor) {
+  private void move(Square startSquare, Square endSquare, Square captured, boolean nextCapture, boolean cancelMove) {
+    move(startSquare, endSquare, captured, nextCapture, cancelMove, -1);
+  }
+
+  private void move(Square startSquare, Square endSquare, Square captured, boolean nextCapture, boolean cancelMove,
+                    int stepCursor) {
     final Draught occupant = startSquare.getOccupant();
 
     // вычисляем координаты для перемещения шашки относительно её центра
@@ -872,5 +876,30 @@ public class Board extends Layer {
 
   public void setLastStartMove(String lastStartMove) {
     this.lastStartMove = lastStartMove;
+  }
+
+  public void moveCanceled(String startMove, String endMove, String capture) {
+    int startRow = Integer.valueOf(startMove.split(",")[0]);
+    int startCol = Integer.valueOf(startMove.split(",")[1]);
+
+    int endRow = Integer.valueOf(endMove.split(",")[0]);
+    int endCol = Integer.valueOf(endMove.split(",")[1]);
+
+    Square startSquare = backgroundLayer.getSquare(startRow, startCol);
+    Square endSquare = backgroundLayer.getSquare(endRow, endCol);
+
+    boolean simpleMove = capture.contains(NOT_REMOVED);
+    boolean cancelMove = capture.contains(CANCEL_MOVE);
+
+    Square captured = null;
+    boolean nextCapture = false;
+    if (!simpleMove) {
+      int beatenRow = rows - 1 - Integer.valueOf(capture.split(",")[0]);
+      int beatenCol = cols - 1 - Integer.valueOf(capture.split(",")[1]);
+      nextCapture = NEXT_MOVE.equals(capture.split(",")[2]);
+      captured = backgroundLayer.getSquare(beatenRow, beatenCol);
+    }
+
+    move(startSquare, endSquare, captured, nextCapture, cancelMove);
   }
 }
