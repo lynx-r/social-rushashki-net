@@ -20,6 +20,7 @@ import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.social.shashki64.shared.model.*;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
+import net.rushashki.social.shashki64.shashki.Board;
 
 import java.util.Date;
 import java.util.List;
@@ -78,6 +79,14 @@ public class GameWebsocket implements WebSocketCallback {
         message.setGame(clientFactory.getGame());
 
         sendGameMessage(message);
+      }
+    });
+
+    eventBus.addHandler(WebsocketReconnectEvent.TYPE, new WebsocketReconnectEventHandler() {
+      @Override
+      public void onWebsocketReconnect(WebsocketReconnectEvent event) {
+        webSocket.close();
+        webSocket.connect(PLAYER_WEBSOCKET_URL);
       }
     });
   }
@@ -235,6 +244,7 @@ public class GameWebsocket implements WebSocketCallback {
         returnGameMessage.setMessageType(Message.MessageType.PLAY_CANCEL_MOVE_RESPONSE);
         returnGameMessage.setStartMove(gameMessage.getStartMove());
         returnGameMessage.setEndMove(gameMessage.getEndMove());
+        returnGameMessage.setCaptured(gameMessage.getCaptured());
         if (isConfirmed()) {
           returnGameMessage.setData(Boolean.TRUE.toString());
           eventBus.fireEvent(new PlayMoveEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
@@ -316,6 +326,9 @@ public class GameWebsocket implements WebSocketCallback {
   }
 
   private void handlePlayMove(GameMessage gameMessage) {
+    if (gameMessage.getCaptured().contains(Board.CANCEL_MOVE)) {
+      return;
+    }
     eventBus.fireEvent(new PlayMoveOpponentEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
         gameMessage.getCaptured()));
   }

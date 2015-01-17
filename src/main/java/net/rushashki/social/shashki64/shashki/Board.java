@@ -26,6 +26,7 @@ public class Board extends Layer {
   public static final String NOT_REMOVED = "null";
   private static final String NEXT_MOVE = "next_move";
   private static final String STOP_BEAT_MOVE = "stop_move";
+  public static final String MOVE_STR_SEPARATOR = ",";
 
   private final BoardBackgroundLayer backgroundLayer;
   private Vector<Square> capturedSquares = new Vector<>();
@@ -49,6 +50,7 @@ public class Board extends Layer {
   private List<Square> highlightedSquares = new ArrayList<>();
   private String lastEndMove;
   private String lastStartMove;
+  private String lastCaptured;
 
   public Board(BoardBackgroundLayer backgroundLayer, int rows, int cols, boolean white) {
 
@@ -494,7 +496,7 @@ public class Board extends Layer {
             jumpMoves);
       }
 
-      removedCoords = takenSquare.toSend() + (!jumpMoves.isEmpty() ? "," + NEXT_MOVE : "," + STOP_BEAT_MOVE);
+      removedCoords = takenSquare.toSend() + (!jumpMoves.isEmpty() ? MOVE_STR_SEPARATOR + NEXT_MOVE : MOVE_STR_SEPARATOR + STOP_BEAT_MOVE);
 
       opponentDraughtVector.remove(takenSquare.getOccupant());
       removeDraughtFrom(takenSquare);
@@ -653,24 +655,24 @@ public class Board extends Layer {
   }
 
   public void moveOpponent(String startMove, String endMove, String captured) {
-    moveByCoords(startMove, endMove, captured, -1);
+    moveOpponent(startMove, endMove, captured, -1);
   }
 
-  public void moveByCoords(String start, String end, String capture, int stepCursor) {
-    int sRow = Integer.valueOf(start.split(",")[0]);
-    int sCol = Integer.valueOf(start.split(",")[1]);
+  public void moveOpponent(String start, String end, String capture, int stepCursor) {
+    int sRow = Integer.valueOf(start.split(MOVE_STR_SEPARATOR)[0]);
+    int sCol = Integer.valueOf(start.split(MOVE_STR_SEPARATOR)[1]);
 
-    int eRow = Integer.valueOf(end.split(",")[0]);
-    int eCol = Integer.valueOf(end.split(",")[1]);
+    int eRow = Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[0]);
+    int eCol = Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[1]);
 
     Square sSquare = backgroundLayer.getSquare(sRow, sCol);
     Square eSquare = backgroundLayer.getSquare(eRow, eCol);
 
-    int startRow = rows - 1 - Integer.valueOf(start.split(",")[0]);
-    int startCol = cols - 1 - Integer.valueOf(start.split(",")[1]);
+    int startRow = rows - 1 - Integer.valueOf(start.split(MOVE_STR_SEPARATOR)[0]);
+    int startCol = cols - 1 - Integer.valueOf(start.split(MOVE_STR_SEPARATOR)[1]);
 
-    int endRow = rows - 1 - Integer.valueOf(end.split(",")[0]);
-    int endCol = cols - 1 - Integer.valueOf(end.split(",")[1]);
+    int endRow = rows - 1 - Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[0]);
+    int endCol = cols - 1 - Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[1]);
 
     Square startSquare = backgroundLayer.getSquare(startRow, startCol);
     Square endSquare = backgroundLayer.getSquare(endRow, endCol);
@@ -688,9 +690,9 @@ public class Board extends Layer {
     Square captured = null;
     boolean nextCapture = false;
     if (!simpleMove) {
-      int beatenRow = rows - 1 - Integer.valueOf(capture.split(",")[0]);
-      int beatenCol = cols - 1 - Integer.valueOf(capture.split(",")[1]);
-      nextCapture = NEXT_MOVE.equals(capture.split(",")[2]);
+      int beatenRow = rows - 1 - Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[0]);
+      int beatenCol = cols - 1 - Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[1]);
+      nextCapture = NEXT_MOVE.equals(capture.split(MOVE_STR_SEPARATOR)[2]);
       captured = backgroundLayer.getSquare(beatenRow, beatenCol);
     }
 
@@ -749,9 +751,9 @@ public class Board extends Layer {
       removeDraughtFrom(captured);
     } else if (captured != null) {
       if (isMyTurn()) {
-        opponentDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), !isWhite()));
+        opponentDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), isWhite()));
       } else {
-        mineDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), isWhite()));
+        mineDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), !isWhite()));
       }
     }
 
@@ -808,17 +810,17 @@ public class Board extends Layer {
   public void moveDraught(double clickX, double clickY) {
     Draught selectedDraught = Draught.getSelectedDraught();
     if (selectedDraught != null && !highlightedSquares.isEmpty()) {
-      Square endSquare = this.getSquare(clickX, clickY);
+      Square endSquare = getSquare(clickX, clickY);
       lastEndMove = endSquare.toSend();
 
-      Square startSquare = this.getSquare(selectedDraught.getRow(), selectedDraught.getCol());
+      Square startSquare = getSquare(selectedDraught.getRow(), selectedDraught.getCol());
       lastStartMove = startSquare.toSend();
 
       if (highlightedSquares.contains(endSquare) && startSquare.isOnLine(endSquare)) {
-        String captured = this.move(startSquare, endSquare);
+        String captured = lastCaptured = move(startSquare, endSquare);
 
         boolean isSimpleMove = NOT_REMOVED.equals(captured);
-        if (NOT_REMOVED.equals(captured) || STOP_BEAT_MOVE.equals(captured.split(",")[2])) {
+        if (NOT_REMOVED.equals(captured) || STOP_BEAT_MOVE.equals(captured.split(MOVE_STR_SEPARATOR)[2])) {
           toggleTurn();
         }
         if (!selectedDraught.isQueen()) {
@@ -866,24 +868,20 @@ public class Board extends Layer {
     return lastEndMove;
   }
 
-  public void setLastEndMove(String lastEndMove) {
-    this.lastEndMove = lastEndMove;
-  }
-
   public String getLastStartMove() {
     return lastStartMove;
   }
 
-  public void setLastStartMove(String lastStartMove) {
-    this.lastStartMove = lastStartMove;
+  public String getLastCaptured() {
+    return lastCaptured;
   }
 
   public void moveCanceled(String startMove, String endMove, String capture) {
-    int startRow = Integer.valueOf(startMove.split(",")[0]);
-    int startCol = Integer.valueOf(startMove.split(",")[1]);
+    int startRow = Integer.valueOf(startMove.split(MOVE_STR_SEPARATOR)[0]);
+    int startCol = Integer.valueOf(startMove.split(MOVE_STR_SEPARATOR)[1]);
 
-    int endRow = Integer.valueOf(endMove.split(",")[0]);
-    int endCol = Integer.valueOf(endMove.split(",")[1]);
+    int endRow = Integer.valueOf(endMove.split(MOVE_STR_SEPARATOR)[0]);
+    int endCol = Integer.valueOf(endMove.split(MOVE_STR_SEPARATOR)[1]);
 
     Square startSquare = backgroundLayer.getSquare(startRow, startCol);
     Square endSquare = backgroundLayer.getSquare(endRow, endCol);
@@ -894,12 +892,14 @@ public class Board extends Layer {
     Square captured = null;
     boolean nextCapture = false;
     if (!simpleMove) {
-      int beatenRow = rows - 1 - Integer.valueOf(capture.split(",")[0]);
-      int beatenCol = cols - 1 - Integer.valueOf(capture.split(",")[1]);
-      nextCapture = NEXT_MOVE.equals(capture.split(",")[2]);
+      int beatenRow = Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[0]);
+      int beatenCol = Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[1]);
+      nextCapture = NEXT_MOVE.equals(capture.split(MOVE_STR_SEPARATOR)[2]);
       captured = backgroundLayer.getSquare(beatenRow, beatenCol);
     }
 
     move(startSquare, endSquare, captured, nextCapture, cancelMove);
   }
+
+
 }

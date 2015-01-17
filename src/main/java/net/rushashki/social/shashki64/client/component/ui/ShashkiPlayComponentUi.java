@@ -25,7 +25,10 @@ import net.rushashki.social.shashki64.client.component.widget.dialog.InviteDialo
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
-import net.rushashki.social.shashki64.shared.model.*;
+import net.rushashki.social.shashki64.shared.model.Game;
+import net.rushashki.social.shashki64.shared.model.GameEnds;
+import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
@@ -119,11 +122,11 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             return;
           case PLAY:
             if (playerSelectionModel.getSelectedObject() == null) {
-              new DialogBox(constants.info(), constants.selectPlayer()).show();
+              new DialogBox(constants.info(), constants.selectPlayer());
               return;
             }
             if (playerSelectionModel.getSelectedObject().getSystemId().equals(clientFactory.getPlayer().getSystemId())) {
-              new DialogBox(constants.info(), constants.selectAnotherPlayerItsYou()).show();
+              new DialogBox(constants.info(), constants.selectAnotherPlayerItsYou());
               return;
             }
             clientFactory.setOpponent(playerSelectionModel.getSelectedObject());
@@ -191,10 +194,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
               gameMessage.setMessageType(GameMessage.MessageType.PLAY_CANCEL_MOVE);
               gameMessage.setStartMove(board.getLastEndMove());
               gameMessage.setEndMove(board.getLastStartMove());
-
-              String captured = gameMessage.getCaptured() == null ? Board.NOT_REMOVED + "," + Board.CANCEL_MOVE
-                  : gameMessage.getCaptured() + "," + Board.CANCEL_MOVE;
-              gameMessage.setCaptured(captured);
+              gameMessage.setCaptured(board.getLastCaptured() + Board.MOVE_STR_SEPARATOR + Board.CANCEL_MOVE);
 
               eventBus.fireEvent(new GameMessageEvent(gameMessage));
             }
@@ -304,6 +304,9 @@ public class ShashkiPlayComponentUi extends BasicComponent {
             endGame.setPlayEndStatus(GameEnds.BLACK_WON);
           }
         }
+        if (endGame.getPlayEndStatus() == null) {
+          return;
+        }
         gameService.getGame(endGame.getId(), new AsyncCallback<Game>() {
           @Override
           public void onFailure(Throwable throwable) {
@@ -313,23 +316,21 @@ public class ShashkiPlayComponentUi extends BasicComponent {
           @Override
           public void onSuccess(Game game) {
             if (game.getPlayEndStatus() == null) {
-              if (null != endGame.getPlayEndStatus()) {
-                endGame.setPartyNotation(NotationPanel.getNotation());
-                endGame.setPlayEndDate(new Date());
-                gameService.saveGame(endGame, new AsyncCallback<Void>() {
-                  @Override
-                  public void onFailure(Throwable caught) {
-                    new DialogBox(constants.error(), constants.errorWhileSavingGame()).show();
-                    caught.printStackTrace();
-                  }
+              endGame.setPartyNotation(NotationPanel.getNotation());
+              endGame.setPlayEndDate(new Date());
+              gameService.saveGame(endGame, new AsyncCallback<Void>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                  new DialogBox(constants.error(), constants.errorWhileSavingGame());
+                }
 
-                  @Override
-                  public void onSuccess(Void result) {
-                  }
-                });
-              }
+                @Override
+                public void onSuccess(Void result) {
+                  clearPlayComponent(clientFactory);
+                  hidePlayingButtonsAndShowPlayButton();
+                }
+              });
             }
-            clearPlayComponent(clientFactory);
           }
         });
       }
@@ -389,6 +390,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     initEmptyDeskPanel(constants.playRestartDescription());
 
     turnLabel.setHTML(constants.playDidNotStart());
+
+    eventBus.fireEvent(new WebsocketReconnectEvent());
   }
 
   public void setBeatenMine(int count) {
