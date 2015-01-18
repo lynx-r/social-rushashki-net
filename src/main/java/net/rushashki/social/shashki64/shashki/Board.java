@@ -27,6 +27,8 @@ public class Board extends Layer {
   private static final String NEXT_MOVE = "next_move";
   private static final String STOP_BEAT_MOVE = "stop_move";
   public static final String MOVE_STR_SEPARATOR = ",";
+  private static final String ANNOTATION_SIMPLE_MOVE = "-";
+  private static final String ANNOTATION_BEAT_MOVE = ":";
 
   private final BoardBackgroundLayer backgroundLayer;
   private Vector<Square> capturedSquares = new Vector<>();
@@ -567,13 +569,13 @@ public class Board extends Layer {
   }
 
   public void moveEmulatedNextWhite(String move, int stepCursor) {
-    if (move.contains("-")) {
-      String[] steps = move.split("-");
+    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
       Square startSquare = parseStep(steps[0]);
       Square endSquare = parseStep(steps[1]);
       move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(":")) {
-      String[] steps = move.split(":");
+    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
       for (int i = 0; i < steps.length - 1; i++) {
         Square firstStep = parseStep(steps[i]);
         Square secondStep = parseStep(steps[i + 1]);
@@ -588,13 +590,13 @@ public class Board extends Layer {
   }
 
   public void moveEmulatedNextBlack(String move, int stepCursor) {
-    if (move.contains("-")) {
-      String[] steps = move.split("-");
+    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
       Square startSquare = parseStep(steps[0]);
       Square endSquare = parseStep(steps[1]);
       move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(":")) {
-      String[] steps = move.split(":");
+    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
       for (int i = 0; i < steps.length - 1; i++) {
         Square firstStep = parseStep(steps[i]);
         Square secondStep = parseStep(steps[i + 1]);
@@ -609,13 +611,13 @@ public class Board extends Layer {
   }
 
   public void moveEmulatedPrevWhite(String move, int stepCursor) {
-    if (move.contains("-")) {
-      String[] steps = move.split("-");
+    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
       Square startSquare = parseStep(steps[1]);
       Square endSquare = parseStep(steps[0]);
       move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(":")) {
-      String[] steps = move.split(":");
+    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
       for (int i = steps.length - 1; i > 0; i--) {
         Square firstStep = parseStep(steps[i]);
         Square secondStep = parseStep(steps[i - 1]);
@@ -632,13 +634,13 @@ public class Board extends Layer {
   }
 
   public void moveEmulatedPrevBlack(String move, int stepCursor) {
-    if (move.contains("-")) {
-      String[] steps = move.split("-");
+    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
       Square startSquare = parseStep(steps[1]);
       Square endSquare = parseStep(steps[0]);
       move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(":")) {
-      String[] steps = move.split(":");
+    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
       for (int i = steps.length - 1; i > 0; i--) {
         Square firstStep = parseStep(steps[i]);
         Square secondStep = parseStep(steps[i - 1]);
@@ -679,7 +681,7 @@ public class Board extends Layer {
 
     boolean simpleMove = capture.contains(NOT_REMOVED);
     if (!capture.contains(CANCEL_MOVE)) {
-      String op = simpleMove ? "-" : ":";
+      String op = simpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
       String move = sSquare.toNotation(!isWhite(), false, false)
           + op
           + eSquare.toNotation(!isWhite(), true, false)
@@ -829,7 +831,7 @@ public class Board extends Layer {
           }
         }
 
-        String op = isSimpleMove ? "-" : ":";
+        String op = isSimpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
         String move = startSquare.toNotation(isWhite(), false, false)
             + op
             + endSquare.toNotation(isWhite(), true, false)
@@ -900,6 +902,5 @@ public class Board extends Layer {
 
     move(startSquare, endSquare, captured, nextCapture, cancelMove);
   }
-
 
 }
