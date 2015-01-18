@@ -38,7 +38,6 @@ public class GameWebsocket implements WebSocketCallback {
   private EventBus eventBus;
   private Shashist player;
   private ShashkiConstants constants;
-  private final String PLAYER_WEBSOCKET_URL = "ws://localhost:8080/ws/game";
   private ClientFactory clientFactory;
 
   public GameWebsocket(ClientFactory clientFactory) {
@@ -55,7 +54,7 @@ public class GameWebsocket implements WebSocketCallback {
       @Override
       public void onConnectToPlay(ConnectToPlayEvent event) {
         webSocket = new WebSocket(GameWebsocket.this);
-        webSocket.connect(PLAYER_WEBSOCKET_URL);
+        webSocket.connect(Configuration.PLAYER_WEBSOCKET_URL);
       }
     });
 
@@ -86,7 +85,7 @@ public class GameWebsocket implements WebSocketCallback {
       @Override
       public void onWebsocketReconnect(WebsocketReconnectEvent event) {
         webSocket.close();
-        webSocket.connect(PLAYER_WEBSOCKET_URL);
+        webSocket.connect(Configuration.PLAYER_WEBSOCKET_URL);
       }
     });
   }

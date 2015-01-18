@@ -2,5 +2,6 @@
 .idea
 out
 target
+src/main/java/net/rushashki/social/shashki64/client/websocket/Configuration.java
 src/main/java/net/rushashki/social/shashki64/server/servlet/oauth/jsonfilesecrets/WebApplication.java
 src/main/resources/client_secrets.json
