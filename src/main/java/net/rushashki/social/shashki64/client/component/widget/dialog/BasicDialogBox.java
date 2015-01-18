@@ -2,6 +2,7 @@ package net.rushashki.social.shashki64.client.component.widget.dialog;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.DialogBox;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
@@ -23,9 +24,12 @@ public class BasicDialogBox extends DialogBox {
     constants = shashkiGinjector.getShashkiConstants();
 
     setAnimationEnabled(true);
-    addHandler(keyPressEvent -> {
-      if (keyPressEvent.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
-        hide();
+    addHandler(new KeyPressHandler() {
+      @Override
+      public void onKeyPress(KeyPressEvent keyPressEvent) {
+        if (keyPressEvent.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+          hide();
+        }
       }
     }, KeyPressEvent.getType());
   }
