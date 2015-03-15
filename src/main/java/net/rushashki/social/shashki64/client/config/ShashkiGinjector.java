@@ -12,6 +12,7 @@ import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.*;
 import net.rushashki.social.shashki64.client.view.ui.HomeViewUi;
 import net.rushashki.social.shashki64.client.view.ui.PlayViewUi;
+import net.rushashki.social.shashki64.shared.config.ShashkiConfiguration;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 
 /**
@@ -32,6 +33,8 @@ public interface ShashkiGinjector extends Ginjector {
   PlaceController getPlaceController();
 
   ShashkiConstants getShashkiConstants();
+
+  ShashkiConfiguration getShashkiConfiguration();
 
 
   HomeViewUi getHomeView();

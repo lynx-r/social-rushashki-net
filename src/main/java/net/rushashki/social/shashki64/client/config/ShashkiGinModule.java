@@ -11,6 +11,7 @@ import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.*;
 import net.rushashki.social.shashki64.client.view.ui.*;
+import net.rushashki.social.shashki64.shared.config.ShashkiConfiguration;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 
 import javax.inject.Inject;
@@ -33,6 +34,7 @@ public class ShashkiGinModule extends AbstractGinModule {
     bind(PlaceController.class).toProvider(PlaceProvider.class).in(Singleton.class);
 
     bind(ShashkiConstants.class).in(Singleton.class);
+    bind(ShashkiConfiguration.class).in(Singleton.class);
 
     bind(HomeView.class).to(HomeViewUi.class).in(Singleton.class);
     bind(PlayTapeView.class).to(PlayTapeViewUi.class).in(Singleton.class);

@@ -8,8 +8,8 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
+import net.rushashki.social.shashki64.server.config.ServerConfiguration;
 import net.rushashki.social.shashki64.server.service.ShashistService;
-import net.rushashki.social.shashki64.server.servlet.oauth.jsonfilesecrets.JsonFileRepository;
 import net.rushashki.social.shashki64.server.util.Util;
 import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
@@ -37,7 +37,9 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
   @Inject
   private ShashistService shashistService;
 
-  private static ClientSecrets secrets;
+  @Inject
+  private ServerConfiguration serverConfiguration;
+
   private List<String> scopes = new ArrayList<>();
 
   @Override
@@ -89,15 +91,15 @@ public class OAuthVKCallbackServlet extends AbstractAuthorizationCodeCallbackSer
   }
 
   @Override
-  protected void onError(HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse) throws ServletException, IOException {
+  protected void onError(HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
+      throws ServletException, IOException {
     resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
   }
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    secrets = new JsonFileRepository(Util.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class,
-        Util.CURRENT_SOCIAL_TYPE);
-    return Util.getFlow(secrets, scopes);
+    ClientSecrets clientSecrets = new ClientSecrets(serverConfiguration, ClientSecrets.SocialType.VK);
+    return Util.getFlow(clientSecrets, scopes);
   }
 
   @Override

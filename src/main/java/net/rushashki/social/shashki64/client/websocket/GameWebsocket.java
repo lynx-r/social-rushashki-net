@@ -15,6 +15,7 @@ import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
 import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
+import net.rushashki.social.shashki64.shared.config.ShashkiConfiguration;
 import net.rushashki.social.shashki64.shared.dto.GameDto;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
@@ -33,6 +34,7 @@ import java.util.List;
  */
 public class GameWebsocket implements WebSocketCallback {
   private final ProfileRpcServiceAsync profileService;
+  private final ShashkiConfiguration shashkiConfiguration;
   private GameRpcServiceAsync gameService;
   private WebSocket webSocket;
   private EventBus eventBus;
@@ -49,12 +51,13 @@ public class GameWebsocket implements WebSocketCallback {
     this.constants = shashkiGinjector.getShashkiConstants();
     this.gameService = shashkiGinjector.getGameService();
     this.profileService = shashkiGinjector.getProfileService();
+    this.shashkiConfiguration = shashkiGinjector.getShashkiConfiguration();
 
     eventBus.addHandler(ConnectToPlayEvent.TYPE, new ConnectToPlayEventHandler() {
       @Override
       public void onConnectToPlay(ConnectToPlayEvent event) {
         webSocket = new WebSocket(GameWebsocket.this);
-        webSocket.connect(Configuration.PLAYER_WEBSOCKET_URL);
+        webSocket.connect(shashkiConfiguration.playerWebsocketUrl());
       }
     });
 
@@ -85,7 +88,7 @@ public class GameWebsocket implements WebSocketCallback {
       @Override
       public void onWebsocketReconnect(WebsocketReconnectEvent event) {
         webSocket.close();
-        webSocket.connect(Configuration.PLAYER_WEBSOCKET_URL);
+        webSocket.connect(shashkiConfiguration.playerWebsocketUrl());
       }
     });
   }

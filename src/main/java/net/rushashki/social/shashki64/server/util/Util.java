@@ -67,11 +67,4 @@ public class Util {
     return playerMessageBean.as();
   }
 
-  public static SocialType CURRENT_SOCIAL_TYPE = SocialType.VK;
-
-  public enum SocialType {
-    VK,
-    VK_LOCAL
-  }
-
 }

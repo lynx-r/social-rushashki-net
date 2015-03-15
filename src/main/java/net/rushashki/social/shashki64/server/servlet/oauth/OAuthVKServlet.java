@@ -4,9 +4,10 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
 import com.google.api.client.http.GenericUrl;
 import net.rushashki.social.shashki64.server.config.OAuthClient;
-import net.rushashki.social.shashki64.server.servlet.oauth.jsonfilesecrets.JsonFileRepository;
+import net.rushashki.social.shashki64.server.config.ServerConfiguration;
 import net.rushashki.social.shashki64.server.util.Util;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,14 +24,15 @@ import java.util.List;
 @WebServlet(name = "OAuthVKServlet", urlPatterns = {"/OAuthVKServlet"})
 public class OAuthVKServlet extends AbstractAuthorizationCodeServlet {
 
-  private static ClientSecrets secrets;
   private List<String> scope = new ArrayList<>();
+
+  @Inject
+  private ServerConfiguration serverConfiguration;
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
-    secrets = new JsonFileRepository(Util.JSON_FACTORY).loadClientSecrets(OAuthVKServlet.class,
-        Util.CURRENT_SOCIAL_TYPE);
-    return Util.getFlow(secrets, scope);
+    ClientSecrets clientSecrets = new ClientSecrets(serverConfiguration, ClientSecrets.SocialType.VK);
+    return Util.getFlow(clientSecrets, scope);
   }
 
   @Override

@@ -1,6 +1,6 @@
 package net.rushashki.social.shashki64.server.servlet.oauth;
 
-import java.util.List;
+import net.rushashki.social.shashki64.server.config.ServerConfiguration;
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,13 +8,57 @@ import java.util.List;
  * Date: 03.01.15
  * Time: 14:51
  */
-public interface ClientSecrets {
-  public String getClientId();
-  public String getClientName();
-  public String getClientSecret();
-  public String getAuthUri();
-  public String getTokenUri();
-  public String getServerBaseUri();
-  public String getExpiresOn();
-  public List<String> getRedirectUris();
+public class ClientSecrets {
+  private String clientId;
+  private String clientSecret;
+  private String authUri;
+  private String tokenUri;
+
+  public ClientSecrets(ServerConfiguration serverConfiguration, SocialType socialType) {
+    switch (socialType) {
+      case VK:
+        clientId = serverConfiguration.getVkClientId();
+        clientSecret = serverConfiguration.getVkClientSecret();
+        authUri = serverConfiguration.getVkAuthUri();
+        tokenUri = serverConfiguration.getVkTokenUri();
+        break;
+    }
+  }
+
+  public String getClientId() {
+    return clientId;
+  }
+
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
+  }
+
+  public String getClientSecret() {
+    return clientSecret;
+  }
+
+  public void setClientSecret(String clientSecret) {
+    this.clientSecret = clientSecret;
+  }
+
+  public String getAuthUri() {
+    return authUri;
+  }
+
+  public void setAuthUri(String authUri) {
+    this.authUri = authUri;
+  }
+
+  public String getTokenUri() {
+    return tokenUri;
+  }
+
+  public void setTokenUri(String tokenUri) {
+    this.tokenUri = tokenUri;
+  }
+
+  public enum SocialType {
+    VK
+  }
+
 }
