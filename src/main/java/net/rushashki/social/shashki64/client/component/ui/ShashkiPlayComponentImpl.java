@@ -143,14 +143,14 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
                 gameMessage.setMessageType(GameMessage.MessageType.PLAY_INVITE);
 
                 gameMessage.setMessage(constants.inviteMessage(clientFactory.getPlayer().getPublicName(),
-                    String.valueOf(white ? constants.black() : constants.white())));
+                        String.valueOf(white ? constants.black() : constants.white())));
                 gameMessage.setData(String.valueOf(!white));
 
                 eventBus.fireEvent(new GameMessageEvent(gameMessage));
               }
             };
             inviteDialogBox.show(constants.inviteToPlay(clientFactory.getOpponent().getPublicName(),
-                constants.draughts()));
+                    constants.draughts()));
         }
       }
     });
@@ -176,9 +176,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
             GameMessage gameMessage = createSendGameMessage(clientFactory);
             gameMessage.setMessageType(GameMessage.MessageType.PLAY_SURRENDER);
             eventBus.fireEvent(new GameMessageEvent(gameMessage));
-
-            hidePlayingButtonsAndShowPlayButton();
-            clearPlayComponent(clientFactory);
+            eventBus.fireEvent(new ClearPlayComponentEvent());
           }
         }
       };
@@ -228,9 +226,12 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
 
             @Override
             public void onSuccess(Void aVoid) {
-              new DialogBox(constants.info(), constants.opponentLeftGame());
-              clearPlayComponent(clientFactory);
-              hidePlayingButtonsAndShowPlayButton();
+              new DialogBox(constants.info(), constants.opponentLeftGame()) {
+                @Override
+                public void submit() {
+                  eventBus.fireEvent(new ClearPlayComponentEvent());
+                }
+              };
             }
           });
           return;
@@ -249,6 +250,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     eventBus.addHandler(DisconnectFromPlayEvent.TYPE, new DisconnectFromPlayEventHandler() {
       @Override
       public void onDisconnectFromPlay(DisconnectFromPlayEvent event) {
+        GWT.log("Disconnected from Play");
         connectToPlayButton.setActive(true);
         connectToPlayButton.setBlock(true);
         connectToPlayButton.addStyleName("btn-danger");
@@ -335,8 +337,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
 
                 @Override
                 public void onSuccess(Void result) {
-                  clearPlayComponent(clientFactory);
-                  hidePlayingButtonsAndShowPlayButton();
+                  eventBus.fireEvent(new ClearPlayComponentEvent());
                 }
               });
             }
@@ -399,6 +400,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
 
   private void clearPlayComponent(ClientFactory clientFactory) {
     eventBus.fireEvent(new ClearNotationEvent());
+    eventBus.fireEvent(new UpdatePlayerListEvent());
 
     clientFactory.setOpponent(null);
     clientFactory.setGame(null);
@@ -408,8 +410,6 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     initEmptyDeskPanel(constants.playRestartDescription());
 
     turnLabel.setHTML(constants.playDidNotStart());
-
-    eventBus.fireEvent(new WebsocketReconnectEvent());
   }
 
   public void setBeatenMine(int count) {

@@ -37,6 +37,8 @@ public class NotationPanel extends ScrollPanel {
     eventBus.addHandler(ClearNotationEvent.TYPE, new ClearNotationEventHandler() {
       @Override
       public void onClearNotation(ClearNotationEvent event) {
+        stepCounter = 1;
+        notation = "";
         getElement().setInnerHTML("");
       }
     });

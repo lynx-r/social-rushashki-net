@@ -26,8 +26,7 @@ public interface GameMessage extends Message {
 
   void setGame(Game gameId);
 
-  public List<Shashist> getPlayerList();
+  List<Shashist> getPlayerList();
 
-  public void setPlayerList(List<Shashist> playerList);
-
+  void setPlayerList(List<Shashist> playerList);
 }

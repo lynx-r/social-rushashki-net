@@ -48,13 +48,10 @@ public interface Message extends PersistableObject {
     PLAY_MOVE,
     PLAY_CANCEL_MOVE,
     PLAY_CANCEL_MOVE_RESPONSE,
-    PLAY_LEFT,
     PLAY_PROPOSE_DRAW,
     PLAY_ACCEPT_DRAW,
     PLAY_END,
     PLAY_SURRENDER,
     PLAYER_REGISTER
-
   }
-
 }

@@ -35,6 +35,7 @@ public class DialogBox extends BasicDialogBox {
       @Override
       public void onClick(final ClickEvent event) {
         hide();
+        submit();
       }
     });
     panel.add(buttonClose);
@@ -54,5 +55,8 @@ public class DialogBox extends BasicDialogBox {
 
   public void setHeader(String header) {
     setText(header);
+  }
+
+  public void submit() {
   }
 }

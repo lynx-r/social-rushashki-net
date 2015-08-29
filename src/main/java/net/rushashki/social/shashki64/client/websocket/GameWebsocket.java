@@ -54,6 +54,10 @@ public class GameWebsocket implements WebSocketCallback {
     this.profileService = shashkiGinjector.getProfileService();
     this.shashkiConfiguration = shashkiGinjector.getShashkiConfiguration();
 
+    handlers(clientFactory);
+  }
+
+  private void handlers(final ClientFactory clientFactory) {
     eventBus.addHandler(ConnectToPlayEvent.TYPE, new ConnectToPlayEventHandler() {
       @Override
       public void onConnectToPlay(ConnectToPlayEvent event) {
@@ -90,6 +94,15 @@ public class GameWebsocket implements WebSocketCallback {
       public void onWebsocketReconnect(WebsocketReconnectEvent event) {
         webSocket.close();
         webSocket.connect(shashkiConfiguration.playerWebsocketUrl());
+      }
+    });
+
+    eventBus.addHandler(UpdatePlayerListEvent.TYPE, new UpdatePlayerListEventHandler() {
+      @Override
+      public void onUpdatePlayerList(UpdatePlayerListEvent event) {
+        GameMessage message = createSendGameMessage(clientFactory);
+        message.setMessageType(Message.MessageType.USER_LIST_UPDATE);
+        sendGameMessage(message);
       }
     });
   }
@@ -383,5 +396,4 @@ public class GameWebsocket implements WebSocketCallback {
         .show();
     eventBus.fireEvent(new RejectPlayEvent());
   }
-
 }

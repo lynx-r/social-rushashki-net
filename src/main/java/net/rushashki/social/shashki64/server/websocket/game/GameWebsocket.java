@@ -58,6 +58,9 @@ public class GameWebsocket {
       case CHAT_MESSAGE:
         handleChatMessage(session, gameMessage);
         break;
+      case USER_LIST_UPDATE:
+        updatePlayerList(session);
+        break;
       case PLAY_INVITE:
       case PLAY_REJECT_INVITE:
       case PLAY_ALREADY_PLAYING:
@@ -166,6 +169,7 @@ public class GameWebsocket {
 
   private void sendMessage(Session session, GameMessage message) {
     RemoteEndpoint.Basic remote = session.getBasicRemote();
+
     if (remote != null) {
       try {
         remote.sendText(Util.serializePlayerMessageToJson(message), true);

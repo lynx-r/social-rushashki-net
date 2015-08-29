@@ -6,14 +6,14 @@
     <deployment>
         <!-- This allows you to define additional dependencies, it is the same as using the Dependencies: manifest attribute -->
         <dependencies>
-            <module name="org.apache.commons.lang"/>
-            <module name="org.apache.commons.codec"/>
+            <!--<module name="org.apache.commons.lang"/>-->
+            <!--<module name="org.apache.commons.codec"/>-->
             <!--<module name="org.slf4j"/>-->
             <!--<module name="org.slf4j.ui"/>-->
             <!--<module name="org.apache.commons.logging"/>-->
-            <module name="com.fasterxml.jackson.core.jackson-core"/>
-            <module name="org.codehaus.jackson.jackson-core-asl"/>
-            <module name="com.h2database.h2"/>
+            <!--<module name="com.fasterxml.jackson.core.jackson-core"/>-->
+            <!--<module name="org.codehaus.jackson.jackson-core-asl"/>-->
+            <!--<module name="com.h2database.h2"/>-->
         </dependencies>
     </deployment>
 </jboss-deployment-structure>
