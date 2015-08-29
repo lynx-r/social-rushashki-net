@@ -149,4 +149,6 @@ public interface ShashkiConstants extends Messages {
   String youDontMove();
 
   String opponentLeftGame();
+
+  String playAlreadyPlaying(String publicName);
 }

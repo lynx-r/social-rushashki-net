@@ -204,6 +204,10 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     });
 
     // TODO: Not Compile
+    handlers(clientFactory);
+  }
+
+  public void handlers(final ClientFactory clientFactory) {
     eventBus.addHandler(GetPlayerListEvent.TYPE, new GetPlayerListEventHandler() {
       @Override
       public void onGetPlayerList(GetPlayerListEvent event) {
@@ -354,6 +358,15 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
           } else {
             board.moveCanceled(event.getStartMove(), event.getEndMove(), event.getCaptured());
           }
+        }
+      }
+    });
+
+    eventBus.addHandler(HideInviteDialogBoxEvent.TYPE, new HideInviteDialogBoxEventHandler() {
+      @Override
+      public void onHideInviteDialogBox(HideInviteDialogBoxEvent event) {
+        if (inviteDialogBox != null && inviteDialogBox.isVisible()) {
+          inviteDialogBox.hide();
         }
       }
     });

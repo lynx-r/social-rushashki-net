@@ -60,6 +60,7 @@ public class GameWebsocket {
         break;
       case PLAY_INVITE:
       case PLAY_REJECT_INVITE:
+      case PLAY_ALREADY_PLAYING:
       case PLAY_START:
       case PLAY_MOVE:
       case PLAY_END:

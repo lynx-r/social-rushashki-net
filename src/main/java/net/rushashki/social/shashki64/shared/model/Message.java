@@ -43,6 +43,7 @@ public interface Message extends PersistableObject {
     USER_LIST_UPDATE,
     PLAY_INVITE,
     PLAY_REJECT_INVITE,
+    PLAY_ALREADY_PLAYING,
     PLAY_START,
     PLAY_MOVE,
     PLAY_CANCEL_MOVE,

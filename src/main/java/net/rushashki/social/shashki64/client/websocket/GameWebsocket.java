@@ -41,6 +41,7 @@ public class GameWebsocket implements WebSocketCallback {
   private Shashist player;
   private ShashkiConstants constants;
   private ClientFactory clientFactory;
+  private ConfirmPlayDialogBox confirmPlayDialogBox;
 
   public GameWebsocket(ClientFactory clientFactory) {
     ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
@@ -113,7 +114,13 @@ public class GameWebsocket implements WebSocketCallback {
   }
 
   private void handlePlayInvite(GameMessage gameMessage) {
-    ConfirmPlayDialogBox confirmPlayDialogBox = new ConfirmPlayDialogBox() {
+    if (confirmPlayDialogBox != null && confirmPlayDialogBox.isShowing()) {
+      GameMessage message = createSendGameMessage(gameMessage);
+      message.setMessageType(Message.MessageType.PLAY_ALREADY_PLAYING);
+      sendGameMessage(message);
+      return;
+    }
+    confirmPlayDialogBox = new ConfirmPlayDialogBox() {
       @Override
       public void submitted() {
         profileService.getProfile(gameMessage.getSender().getId(), new AsyncCallback<Shashist>() {
@@ -188,6 +195,7 @@ public class GameWebsocket implements WebSocketCallback {
 
   @Override
   public void onMessage(String message) {
+    GWT.log(message);
     MessageFactory messageFactory = GWT.create(MessageFactory.class);
     AutoBean<GameMessage> bean = AutoBeanCodex.decode(messageFactory, GameMessage.class, message);
     GameMessage gameMessage = bean.as();
@@ -203,6 +211,9 @@ public class GameWebsocket implements WebSocketCallback {
         break;
       case PLAY_REJECT_INVITE:
         handlePlayRejectInvite(gameMessage);
+        break;
+      case PLAY_ALREADY_PLAYING:
+        handlePlayAlreadyPlaying(gameMessage);
         break;
       case PLAY_MOVE:
         handlePlayMove(gameMessage);
@@ -226,6 +237,11 @@ public class GameWebsocket implements WebSocketCallback {
         handleChatPrivateMessage(gameMessage);
         break;
     }
+  }
+
+  private void handlePlayAlreadyPlaying(GameMessage gameMessage) {
+    eventBus.fireEvent(new HideInviteDialogBoxEvent());
+    new DialogBox(constants.info(), constants.playAlreadyPlaying(gameMessage.getSender().getPublicName()));
   }
 
   private void handlePlayCancelMoveResponse(GameMessage gameMessage) {
