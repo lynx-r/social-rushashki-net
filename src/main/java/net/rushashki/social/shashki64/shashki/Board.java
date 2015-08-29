@@ -6,7 +6,9 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.event.NodeTouchEndEvent;
 import com.ait.lienzo.client.core.event.NodeTouchEndHandler;
 import com.ait.lienzo.client.core.shape.Layer;
+import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
@@ -53,6 +55,7 @@ public class Board extends Layer {
   private String lastEndMove;
   private String lastStartMove;
   private String lastCaptured;
+  private HandlerRegistration playMoveOpponentHR;
 
   public Board(BoardBackgroundLayer backgroundLayer, int rows, int cols, boolean white) {
 
@@ -79,6 +82,10 @@ public class Board extends Layer {
     alphMap.put("g", 6);
     alphMap.put("h", 7);
 
+    handlers();
+  }
+
+  private void handlers() {
     addNodeMouseClickHandler(new NodeMouseClickHandler() {
       @Override
       public void onNodeMouseClick(NodeMouseClickEvent nodeMouseClickEvent) {
@@ -93,10 +100,17 @@ public class Board extends Layer {
       }
     });
 
-    eventBus.addHandler(PlayMoveOpponentEvent.TYPE, new PlayMoveOpponentEventHandler() {
+    playMoveOpponentHR = eventBus.addHandler(PlayMoveOpponentEvent.TYPE, new PlayMoveOpponentEventHandler() {
       @Override
       public void onPlayMoveOpponent(PlayMoveOpponentEvent event) {
         Board.this.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured());
+      }
+    });
+
+    eventBus.addHandler(RemovePlayMoveOpponentHandlerEvent.TYPE, new RemoveWebsocketHandlersEventHandler() {
+      @Override
+      public void onRemovePlayMoveOpponentHandler(RemovePlayMoveOpponentHandlerEvent event) {
+        playMoveOpponentHR.removeHandler();
       }
     });
   }
@@ -713,6 +727,19 @@ public class Board extends Layer {
 
   private void move(Square startSquare, Square endSquare, Square captured, boolean nextCapture, boolean cancelMove,
                     int stepCursor) {
+    GWT.log(startSquare.toString());
+    GWT.log(endSquare.toString());
+    if (captured != null) {
+      GWT.log(captured.toString());
+    }
+    GWT.log(String.valueOf(nextCapture));
+    GWT.log(String.valueOf(cancelMove));
+    GWT.log(String.valueOf(stepCursor));
+
+    if (!startSquare.isOccupied()) {
+      GWT.log("ERROR: Square not occupied " + startSquare.toString());
+    }
+
     final Draught occupant = startSquare.getOccupant();
 
     // вычисляем координаты для перемещения шашки относительно её центра

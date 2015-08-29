@@ -401,10 +401,12 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
   private void clearPlayComponent(ClientFactory clientFactory) {
     eventBus.fireEvent(new ClearNotationEvent());
     eventBus.fireEvent(new UpdatePlayerListEvent());
+    eventBus.fireEvent(new RemovePlayMoveOpponentHandlerEvent());
 
     clientFactory.setOpponent(null);
     clientFactory.setGame(null);
 
+    lienzoPanel.removeAll();
     board.clearDesk();
     shashki.remove(lienzoPanel);
     initEmptyDeskPanel(constants.playRestartDescription());

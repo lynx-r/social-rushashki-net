@@ -7,6 +7,7 @@ import com.google.gwt.websockets.client.WebSocketCallback;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmeDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmPlayDialogBox;
@@ -42,6 +43,10 @@ public class GameWebsocket implements WebSocketCallback {
   private ShashkiConstants constants;
   private ClientFactory clientFactory;
   private ConfirmPlayDialogBox confirmPlayDialogBox;
+  private HandlerRegistration playMoveHR;
+  private HandlerRegistration updatePlayerListHR;
+  private HandlerRegistration gameMessageHR;
+  private HandlerRegistration connectToPlayHR;
 
   public GameWebsocket(ClientFactory clientFactory) {
     ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
@@ -58,7 +63,7 @@ public class GameWebsocket implements WebSocketCallback {
   }
 
   private void handlers(final ClientFactory clientFactory) {
-    eventBus.addHandler(ConnectToPlayEvent.TYPE, new ConnectToPlayEventHandler() {
+    connectToPlayHR = eventBus.addHandler(ConnectToPlayEvent.TYPE, new ConnectToPlayEventHandler() {
       @Override
       public void onConnectToPlay(ConnectToPlayEvent event) {
         webSocket = new WebSocket(GameWebsocket.this);
@@ -66,7 +71,7 @@ public class GameWebsocket implements WebSocketCallback {
       }
     });
 
-    eventBus.addHandler(GameMessageEvent.TYPE, new GameMessageEventHandler() {
+    gameMessageHR = eventBus.addHandler(GameMessageEvent.TYPE, new GameMessageEventHandler() {
       @Override
       public void onPlayerMessage(GameMessageEvent event) {
         GameMessage gameMessage = event.getGameMessage();
@@ -75,7 +80,7 @@ public class GameWebsocket implements WebSocketCallback {
       }
     });
 
-    eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
+    playMoveHR = eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
       @Override
       public void onPlayMove(PlayMoveEvent event) {
         GameMessage message = createSendGameMessage(clientFactory);
@@ -92,12 +97,13 @@ public class GameWebsocket implements WebSocketCallback {
     eventBus.addHandler(WebsocketReconnectEvent.TYPE, new WebsocketReconnectEventHandler() {
       @Override
       public void onWebsocketReconnect(WebsocketReconnectEvent event) {
+        removeHandlers();
         webSocket.close();
         webSocket.connect(shashkiConfiguration.playerWebsocketUrl());
       }
     });
 
-    eventBus.addHandler(UpdatePlayerListEvent.TYPE, new UpdatePlayerListEventHandler() {
+    updatePlayerListHR = eventBus.addHandler(UpdatePlayerListEvent.TYPE, new UpdatePlayerListEventHandler() {
       @Override
       public void onUpdatePlayerList(UpdatePlayerListEvent event) {
         GameMessage message = createSendGameMessage(clientFactory);
@@ -105,6 +111,20 @@ public class GameWebsocket implements WebSocketCallback {
         sendGameMessage(message);
       }
     });
+
+    eventBus.addHandler(RemovePlayMoveOpponentHandlerEvent.TYPE, new RemoveWebsocketHandlersEventHandler() {
+      @Override
+      public void onRemovePlayMoveOpponentHandler(RemovePlayMoveOpponentHandlerEvent event) {
+        removeHandlers();
+      }
+    });
+  }
+
+  private void removeHandlers() {
+//    playMoveHR.removeHandler();
+//    updatePlayerListHR.removeHandler();
+//    connectToPlayHR.removeHandler();
+//    gameMessageHR.removeHandler();
   }
 
   private GameMessage createSendGameMessage(ClientFactory clientFactory) {
@@ -126,7 +146,7 @@ public class GameWebsocket implements WebSocketCallback {
     eventBus.fireEvent(new GetPlayerListEvent(playerList));
   }
 
-  private void handlePlayInvite(GameMessage gameMessage) {
+  private void handlePlayInvite(final GameMessage gameMessage) {
     if (confirmPlayDialogBox != null && confirmPlayDialogBox.isShowing()) {
       GameMessage message = createSendGameMessage(gameMessage);
       message.setMessageType(Message.MessageType.PLAY_ALREADY_PLAYING);
@@ -267,7 +287,7 @@ public class GameWebsocket implements WebSocketCallback {
     }
   }
 
-  private void handlePlayCancelMove(GameMessage gameMessage) {
+  private void handlePlayCancelMove(final GameMessage gameMessage) {
     new ConfirmeDialogBox(constants.playerProposesCancelMove(gameMessage.getSender().getPublicName())) {
       @Override
       public void procConfirm() {
@@ -310,7 +330,7 @@ public class GameWebsocket implements WebSocketCallback {
     }
   }
 
-  private void handlePlayProposeDraw(GameMessage gameMessage) {
+  private void handlePlayProposeDraw(final GameMessage gameMessage) {
     String senderName = gameMessage.getSender().getPublicName();
     new ConfirmeDialogBox(constants.playerProposesDraw(senderName)) {
       @Override
@@ -368,7 +388,7 @@ public class GameWebsocket implements WebSocketCallback {
         gameMessage.getCaptured()));
   }
 
-  private void handlePlayStart(GameMessage gameMessage) {
+  private void handlePlayStart(final GameMessage gameMessage) {
     gameService.getGame(gameMessage.getGame().getId(), new AsyncCallback<Game>() {
       @Override
       public void onFailure(Throwable throwable) {
