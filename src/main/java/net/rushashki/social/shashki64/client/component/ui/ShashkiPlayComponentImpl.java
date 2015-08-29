@@ -110,6 +110,11 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
       toggleInPlayButton();
     }
 
+    buttons(clientFactory);
+    handlers(clientFactory);
+  }
+
+  public void buttons(final ClientFactory clientFactory) {
     connectToPlayButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
@@ -182,6 +187,9 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     cancelMove.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
+        if (board == null) {
+          return;
+        }
         if (board.isMyTurn()) {
           new DialogBox(constants.info(), constants.youDontMove());
           return;
@@ -202,9 +210,6 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
         };
       }
     });
-
-    // TODO: Not Compile
-    handlers(clientFactory);
   }
 
   public void handlers(final ClientFactory clientFactory) {

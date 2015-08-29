@@ -306,13 +306,16 @@ public class GameWebsocket implements WebSocketCallback {
         message.setMessageType(GameMessage.MessageType.PLAY_ACCEPT_DRAW);
 
         if (isConfirmed()) {
-          eventBus.fireEvent(new ClearPlayComponentEvent());
           message.setData(Boolean.TRUE.toString());
         } else {
           message.setData(Boolean.FALSE.toString());
         }
 
         sendGameMessage(message);
+
+        if (isConfirmed()) {
+          eventBus.fireEvent(new ClearPlayComponentEvent());
+        }
       }
     };
   }
@@ -326,6 +329,7 @@ public class GameWebsocket implements WebSocketCallback {
 
   private void handlePlaySurrender(GameMessage gameMessage) {
     Game game = clientFactory.getGame();
+    GWT.log(game.toString());
     game.setPlayEndDate(new Date());
     game.setPlayEndStatus(clientFactory.isPlayerHasWhiteColor() ? GameEnds.SURRENDER_WHITE
         : GameEnds.SURRENDER_BLACK);
