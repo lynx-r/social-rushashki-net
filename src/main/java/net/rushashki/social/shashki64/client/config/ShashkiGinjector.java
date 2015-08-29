@@ -10,8 +10,8 @@ import net.rushashki.social.shashki64.client.rpc.GameMessageRpcServiceAsync;
 import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
 import net.rushashki.social.shashki64.client.util.ShashkiLogger;
 import net.rushashki.social.shashki64.client.view.*;
-import net.rushashki.social.shashki64.client.view.ui.HomeViewUi;
-import net.rushashki.social.shashki64.client.view.ui.PlayViewUi;
+import net.rushashki.social.shashki64.client.view.ui.HomeViewImpl;
+import net.rushashki.social.shashki64.client.view.ui.PlayViewImpl;
 import net.rushashki.social.shashki64.shared.config.ShashkiConfiguration;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 
@@ -37,11 +37,11 @@ public interface ShashkiGinjector extends Ginjector {
   ShashkiConfiguration getShashkiConfiguration();
 
 
-  HomeViewUi getHomeView();
+  HomeViewImpl getHomeView();
 
   PlayTapeView getPlayTapeView();
 
-  PlayViewUi getPlayView();
+  PlayViewImpl getPlayView();
 
   SignInView getSignInView();
 

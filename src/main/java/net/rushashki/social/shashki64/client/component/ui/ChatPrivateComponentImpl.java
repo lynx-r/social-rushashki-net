@@ -25,17 +25,17 @@ import java.util.List;
  * Date: 30.11.14
  * Time: 13:32
  */
-public class ChatPrivateComponentUi extends BasicComponent {
+public class ChatPrivateComponentImpl extends BasicComponent {
 
   private static final String PREV_MESSAGE = "prev_message";
-  private static ChatPrivateComponentUiUiBinder ourUiBinder = GWT.create(ChatPrivateComponentUiUiBinder.class);
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
   @UiField
   HTMLPanel chatPanel;
   @UiField
   TextBox messageInputTextBox;
 
-  public ChatPrivateComponentUi(final ClientFactory clientFactory) {
+  public ChatPrivateComponentImpl(final ClientFactory clientFactory) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     eventBus.addHandler(StartPlayEvent.TYPE, new StartPlayEventHandler() {
@@ -110,7 +110,7 @@ public class ChatPrivateComponentUi extends BasicComponent {
     chatPanel.add(messageStyled);
   }
 
-  interface ChatPrivateComponentUiUiBinder extends UiBinder<HTMLPanel, ChatPrivateComponentUi> {
+  interface Binder extends UiBinder<HTMLPanel, ChatPrivateComponentImpl> {
   }
 
 }

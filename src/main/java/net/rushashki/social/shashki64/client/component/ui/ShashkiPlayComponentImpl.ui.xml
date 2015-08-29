@@ -44,7 +44,7 @@
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="privateChatColumn" addStyleNames="{style.private-chat}">
             <ui:msg description="Приватный чат" key="privateChat"><b>Персональный чат:</b></ui:msg>
-            <c:ChatPrivateComponentUi ui:field="privateChat"/>
+            <c:ChatPrivateComponentImpl ui:field="privateChat"/>
         </g:HTMLPanel>
         <g:HTMLPanel ui:field="playerListColumn" addStyleNames="{style.player-list}">
             <span>

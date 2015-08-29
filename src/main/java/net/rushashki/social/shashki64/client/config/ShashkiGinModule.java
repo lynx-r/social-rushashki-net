@@ -36,14 +36,14 @@ public class ShashkiGinModule extends AbstractGinModule {
     bind(ShashkiConstants.class).in(Singleton.class);
     bind(ShashkiConfiguration.class).in(Singleton.class);
 
-    bind(HomeView.class).to(HomeViewUi.class).in(Singleton.class);
-    bind(PlayTapeView.class).to(PlayTapeViewUi.class).in(Singleton.class);
-    bind(PlayView.class).to(PlayViewUi.class).in(Singleton.class);
-    bind(SignInView.class).to(SignInViewUi.class).in(Singleton.class);
-    bind(ProfileView.class).to(ProfileViewUi.class).in(Singleton.class);
-    bind(SettingsView.class).to(SettingsViewUi.class).in(Singleton.class);
-    bind(AboutUsView.class).to(AboutUsViewUi.class).in(Singleton.class);
-    bind(NotFoundView.class).to(NotFoundViewUi.class).in(Singleton.class);
+    bind(HomeView.class).to(HomeViewImpl.class).in(Singleton.class);
+    bind(PlayTapeView.class).to(PlayTapeViewImpl.class).in(Singleton.class);
+    bind(PlayView.class).to(PlayViewImpl.class).in(Singleton.class);
+    bind(SignInView.class).to(SignInViewImpl.class).in(Singleton.class);
+    bind(ProfileView.class).to(ProfileViewImpl.class).in(Singleton.class);
+    bind(SettingsView.class).to(SettingsViewImpl.class).in(Singleton.class);
+    bind(AboutUsView.class).to(AboutUsViewImpl.class).in(Singleton.class);
+    bind(NotFoundView.class).to(NotFoundViewImpl.class).in(Singleton.class);
 
     bind(ProfileRpcServiceAsync.class).in(Singleton.class);
     bind(GameMessageRpcServiceAsync.class).in(Singleton.class);

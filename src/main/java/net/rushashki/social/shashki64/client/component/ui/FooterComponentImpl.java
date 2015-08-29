@@ -11,13 +11,13 @@ import org.gwtbootstrap3.client.ui.PanelFooter;
  * Date: 23.11.14
  * Time: 18:20
  */
-public class FooterComponentUi extends Composite {
-  private static FooterComponentImplUiBinder ourUiBinder = GWT.create(FooterComponentImplUiBinder.class);
+public class FooterComponentImpl extends Composite {
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
-  public FooterComponentUi() {
+  public FooterComponentImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
-  interface FooterComponentImplUiBinder extends UiBinder<PanelFooter, FooterComponentUi> {
+  interface Binder extends UiBinder<PanelFooter, FooterComponentImpl> {
   }
 }

@@ -19,16 +19,16 @@ import org.gwtbootstrap3.client.ui.TextBox;
  * Date: 06.12.14
  * Time: 11:40
  */
-public class SettingsViewUi extends BasicViewUi implements SettingsView {
+public class SettingsViewImpl extends BasicViewUi implements SettingsView {
 
-  private static SettingsViewUiUiBinder ourUiBinder = GWT.create(SettingsViewUiUiBinder.class);
+  private static Binder ourUiBinder = GWT.create(Binder.class);
   @UiField
   TextBox playerNameTextBox;
   @UiField
   Button submitPlayerNameButton;
   private Shashist player;
 
-  public SettingsViewUi() {
+  public SettingsViewImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     submitPlayerNameButton.addClickHandler(new ClickHandler() {
@@ -84,7 +84,7 @@ public class SettingsViewUi extends BasicViewUi implements SettingsView {
     playerNameTextBox.setText(player.getPublicName());
   }
 
-  interface SettingsViewUiUiBinder extends UiBinder<HTMLPanel, SettingsViewUi> {
+  interface Binder extends UiBinder<HTMLPanel, SettingsViewImpl> {
   }
 
 }

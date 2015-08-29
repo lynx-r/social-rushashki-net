@@ -12,13 +12,13 @@ import net.rushashki.social.shashki64.client.component.ChatComponent;
  * Date: 23.11.14
  * Time: 17:10
  */
-public class ChatComponentUi extends Composite implements ChatComponent {
-  interface ChatComponentImplUiBinder extends UiBinder<HTMLPanel, ChatComponentUi> {
+public class ChatComponentImpl extends Composite implements ChatComponent {
+  interface Binder extends UiBinder<HTMLPanel, ChatComponentImpl> {
   }
 
-  private static ChatComponentImplUiBinder ourUiBinder = GWT.create(ChatComponentImplUiBinder.class);
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
-  public ChatComponentUi() {
+  public ChatComponentImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 }

@@ -25,8 +25,8 @@ import org.gwtbootstrap3.client.ui.constants.Toggle;
  * Date: 23.11.14
  * Time: 18:29
  */
-public class NavbarComponentUi extends Composite implements NavbarComponent {
-    private static NavbarComponentUiUiBinder ourUiBinder = GWT.create(NavbarComponentUiUiBinder.class);
+public class NavbarComponentImpl extends Composite implements NavbarComponent {
+    private static Binder ourUiBinder = GWT.create(Binder.class);
     @UiField
     NavbarNav navLeft;
     @UiField
@@ -45,7 +45,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
     private AnchorListItem profileDropDown;
     private AnchorListItem aboutUsLink;
 
-    public NavbarComponentUi() {
+    public NavbarComponentImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
 
         this.constants = shashkiGinjector.getShashkiConstants();
@@ -133,7 +133,7 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         eventBus.addHandler(NavbarReloadEvent.TYPE, new NavbarReloadEventHandler() {
             @Override
             public void onEvent(NavbarReloadEvent event) {
-                NavbarComponentUi.this.setActive(event.getToken());
+                NavbarComponentImpl.this.setActive(event.getToken());
             }
         });
 
@@ -200,6 +200,6 @@ public class NavbarComponentUi extends Composite implements NavbarComponent {
         }
     }
 
-    interface NavbarComponentUiUiBinder extends UiBinder<Navbar, NavbarComponentUi> {
+    interface Binder extends UiBinder<Navbar, NavbarComponentImpl> {
     }
 }

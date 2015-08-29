@@ -12,19 +12,19 @@ import org.gwtbootstrap3.client.ui.PageHeader;
  * Date: 30.11.14
  * Time: 11:45
  */
-public class GreetingComponentUi extends BasicComponent {
-  private static GreetingComponentUiUiBinder ourUiBinder = GWT.create(GreetingComponentUiUiBinder.class);
+public class GreetingComponentImpl extends BasicComponent {
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
   @UiField
   PageHeader greeting;
 
-  public GreetingComponentUi() {
+  public GreetingComponentImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     greeting.setText(constants.jumbotronGreeting());
     greeting.setSubText(constants.jumbotronSubGreeting());
   }
 
-  interface GreetingComponentUiUiBinder extends UiBinder<Jumbotron, GreetingComponentUi> {
+  interface Binder extends UiBinder<Jumbotron, GreetingComponentImpl> {
   }
 }

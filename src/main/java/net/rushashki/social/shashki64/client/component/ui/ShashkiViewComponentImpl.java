@@ -25,8 +25,8 @@ import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
  * Date: 29.11.14
  * Time: 0:38
  */
-public class ShashkiViewComponentUi extends BasicComponent implements ClickHandler {
-  private static ShashkiUiBinder ourUiBinder = GWT.create(ShashkiUiBinder.class);
+public class ShashkiViewComponentImpl extends BasicComponent implements ClickHandler {
+  private static Binder ourUiBinder = GWT.create(Binder.class);
   private LienzoPanel lienzoPanel;
   private Shashist player;
 
@@ -43,10 +43,10 @@ public class ShashkiViewComponentUi extends BasicComponent implements ClickHandl
   @UiField
   ScrollPanel notationList;
 
-  private static ShashkiViewComponentUi INSTANCE;
+  private static ShashkiViewComponentImpl INSTANCE;
   private PlayDto playDto;
 
-  public ShashkiViewComponentUi(PlayDto playDto) {
+  public ShashkiViewComponentImpl(PlayDto playDto) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.playDto = playDto;
@@ -72,7 +72,7 @@ public class ShashkiViewComponentUi extends BasicComponent implements ClickHandl
     eventBus.addHandler(ClientFactoryEvent.TYPE, new ClientFactoryEventHandler() {
       @Override
       public void onClientFactory(ClientFactoryEvent event) {
-        ShashkiViewComponentUi.this.player = event.getClientFactory().getPlayer();
+        ShashkiViewComponentImpl.this.player = event.getClientFactory().getPlayer();
         alignNotationPanel(shashkiSide);
       }
     });
@@ -101,6 +101,6 @@ public class ShashkiViewComponentUi extends BasicComponent implements ClickHandl
     INSTANCE = this;
   }
 
-  interface ShashkiUiBinder extends UiBinder<HTMLPanel, ShashkiViewComponentUi> {
+  interface Binder extends UiBinder<HTMLPanel, ShashkiViewComponentImpl> {
   }
 }

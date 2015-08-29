@@ -3,19 +3,19 @@ package net.rushashki.social.shashki64.client.view.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import net.rushashki.social.shashki64.client.view.AboutUsView;
+import net.rushashki.social.shashki64.client.view.HomeView;
 
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
- * Date: 28.12.14
- * Time: 9:47
+ * Date: 23.11.14
+ * Time: 12:32
  */
-public class AboutUsViewUi extends BasicViewUi implements AboutUsView {
+public class HomeViewImpl extends BasicViewUi implements HomeView {
 
-  private static AboutUsViewUiUiBinder ourUiBinder = GWT.create(AboutUsViewUiUiBinder.class);
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
-  public AboutUsViewUi() {
+  public HomeViewImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
@@ -29,7 +29,7 @@ public class AboutUsViewUi extends BasicViewUi implements AboutUsView {
     this.presenter = presenter;
   }
 
-  interface AboutUsViewUiUiBinder extends UiBinder<HTMLPanel, AboutUsViewUi> {
+  interface Binder extends UiBinder<HTMLPanel, HomeViewImpl> {
   }
 
 }

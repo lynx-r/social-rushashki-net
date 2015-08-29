@@ -16,30 +16,30 @@ import java.util.List;
  * Date: 25.11.14
  * Time: 9:18
  */
-public class ShashkiListComponentUi extends Composite {
+public class ShashkiListComponentImpl extends Composite {
 
-  interface ShashkiListComponentUiUiBinder extends UiBinder<HTMLPanel, ShashkiListComponentUi> {
+  interface Binder extends UiBinder<HTMLPanel, ShashkiListComponentImpl> {
   }
 
-  private static ShashkiListComponentUiUiBinder ourUiBinder = GWT.create(ShashkiListComponentUiUiBinder.class);
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
   @UiField
   HTMLPanel shashkiList;
 
-  public ShashkiListComponentUi() {
+  public ShashkiListComponentImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
-    List<ShashkiViewComponentUi> plays = new ArrayList<>();
+    List<ShashkiViewComponentImpl> plays = new ArrayList<>();
 
     PlayDto playDto;
     for (int i = 0; i < 4; i++) {
       playDto = new PlayDto("test" + i, "master" + i, "bachelor" + i);
-      ShashkiViewComponentUi shashkiViewComponentUi = new ShashkiViewComponentUi(playDto);
-      plays.add(shashkiViewComponentUi);
-      playDto.setDeskHtml(shashkiViewComponentUi::toString);
+      ShashkiViewComponentImpl shashkiViewComponentImpl = new ShashkiViewComponentImpl(playDto);
+      plays.add(shashkiViewComponentImpl);
+      playDto.setDeskHtml(shashkiViewComponentImpl::toString);
     }
 
-    for (ShashkiViewComponentUi play : plays) {
+    for (ShashkiViewComponentImpl play : plays) {
       shashkiList.add(play);
     }
   }

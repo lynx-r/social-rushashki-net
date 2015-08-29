@@ -47,8 +47,8 @@ import java.util.List;
  * Date: 30.11.14
  * Time: 13:12
  */
-public class ShashkiPlayComponentUi extends BasicComponent {
-  private static ShashkiPlayComponentUiUiBinder ourUiBinder = GWT.create(ShashkiPlayComponentUiUiBinder.class);
+public class ShashkiPlayComponentImpl extends BasicComponent {
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
   @UiField
   HTMLPanel shashki;
@@ -57,7 +57,7 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   @UiField
   HTMLPanel privateChatColumn;
   @UiField(provided = true)
-  ChatPrivateComponentUi privateChat;
+  ChatPrivateComponentImpl privateChat;
   @UiField
   HTMLPanel notationColumn;
   @UiField
@@ -91,8 +91,8 @@ public class ShashkiPlayComponentUi extends BasicComponent {
   private int CHECKERS_ON_DESK_INIT = 12;
   private GameRpcServiceAsync gameService;
 
-  public ShashkiPlayComponentUi(ClientFactory clientFactory) {
-    privateChat = new ChatPrivateComponentUi(clientFactory);
+  public ShashkiPlayComponentImpl(ClientFactory clientFactory) {
+    privateChat = new ChatPrivateComponentImpl(clientFactory);
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.player = clientFactory.getPlayer();
@@ -512,6 +512,6 @@ public class ShashkiPlayComponentUi extends BasicComponent {
     playerPanel.add(playersCellList);
   }
 
-  interface ShashkiPlayComponentUiUiBinder extends UiBinder<HTMLPanel, ShashkiPlayComponentUi> {
+  interface Binder extends UiBinder<HTMLPanel, ShashkiPlayComponentImpl> {
   }
 }

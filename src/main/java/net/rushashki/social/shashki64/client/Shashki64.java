@@ -11,8 +11,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.activity.AppActivityMapper;
-import net.rushashki.social.shashki64.client.component.ui.FooterComponentUi;
-import net.rushashki.social.shashki64.client.component.ui.NavbarComponentUi;
+import net.rushashki.social.shashki64.client.component.ui.FooterComponentImpl;
+import net.rushashki.social.shashki64.client.component.ui.NavbarComponentImpl;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.ClientFactoryEvent;
 import net.rushashki.social.shashki64.client.page.BasePage;
@@ -57,8 +57,8 @@ public class Shashki64 implements EntryPoint {
     PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
     historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
-    RootPanel.get("navigation").add(new NavbarComponentUi());
-    RootPanel.get("footer").add(new FooterComponentUi());
+    RootPanel.get("navigation").add(new NavbarComponentImpl());
+    RootPanel.get("footer").add(new FooterComponentImpl());
 
     profileService.getAuthProfile(new AsyncCallback<Shashist>() {
       @Override

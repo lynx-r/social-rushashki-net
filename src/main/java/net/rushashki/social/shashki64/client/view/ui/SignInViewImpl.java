@@ -15,13 +15,13 @@ import net.rushashki.social.shashki64.client.view.SignInView;
  * Date: 24.11.14
  * Time: 12:37
  */
-public class SignInViewUi extends BasicViewUi implements SignInView {
-  private static LoginViewUiUiBinder ourUiBinder = GWT.create(LoginViewUiUiBinder.class);
+public class SignInViewImpl extends BasicViewUi implements SignInView {
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
   @UiField
   HTMLPanel signInContainer;
 
-  public SignInViewUi() {
+  public SignInViewImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
 
     Scheduler.get().scheduleFinally(this::verticalAlignEnterBox);
@@ -45,6 +45,6 @@ public class SignInViewUi extends BasicViewUi implements SignInView {
     this.presenter = presenter;
   }
 
-  interface LoginViewUiUiBinder extends UiBinder<HTMLPanel, SignInViewUi> {
+  interface Binder extends UiBinder<HTMLPanel, SignInViewImpl> {
   }
 }

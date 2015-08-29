@@ -5,7 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import net.rushashki.social.shashki64.client.ClientFactory;
-import net.rushashki.social.shashki64.client.component.ui.ShashkiPlayComponentUi;
+import net.rushashki.social.shashki64.client.component.ui.ShashkiPlayComponentImpl;
 import net.rushashki.social.shashki64.client.view.PlayView;
 import net.rushashki.social.shashki64.client.websocket.GameWebsocket;
 
@@ -15,20 +15,20 @@ import net.rushashki.social.shashki64.client.websocket.GameWebsocket;
  * Date: 23.11.14
  * Time: 14:58
  */
-public class PlayViewUi extends BasicViewUi implements PlayView {
+public class PlayViewImpl extends BasicViewUi implements PlayView {
 
-  private static PlayViewImplUiBinder ourUiBinder = GWT.create(PlayViewImplUiBinder.class);
+  private static Binder ourUiBinder = GWT.create(Binder.class);
 
   @UiField(provided = true)
-  ShashkiPlayComponentUi shashkiPlay;
+  ShashkiPlayComponentImpl shashkiPlay;
 
-  public PlayViewUi() {
+  public PlayViewImpl() {
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
-  public PlayViewUi(ClientFactory clientFactory) {
+  public PlayViewImpl(ClientFactory clientFactory) {
     new GameWebsocket(clientFactory);
-    shashkiPlay = new ShashkiPlayComponentUi(clientFactory);
+    shashkiPlay = new ShashkiPlayComponentImpl(clientFactory);
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 
@@ -42,7 +42,7 @@ public class PlayViewUi extends BasicViewUi implements PlayView {
     this.presenter = presenter;
   }
 
-  interface PlayViewImplUiBinder extends UiBinder<HTMLPanel, PlayViewUi> {
+  interface Binder extends UiBinder<HTMLPanel, PlayViewImpl> {
   }
 
 }
