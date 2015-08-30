@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.client.component.widget;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -22,6 +23,7 @@ public class NotationPanel extends ScrollPanel {
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   public static String NOTATION_SEPARATOR = "<br>";
   private static String notation;
+  private int cancelCounter;
 
   public NotationPanel() {
     stepCounter = 1;
@@ -91,12 +93,14 @@ public class NotationPanel extends ScrollPanel {
     String[] notationArray = notation.split(NOTATION_SEPARATOR);
     String lastMove = notationArray[notationArray.length - 1];
     String[] lastMoveArray = lastMove.split(" ");
+    GWT.log(notation);
     if (lastMoveArray.length == 3) {
       notation = notation.substring(0, notation.lastIndexOf(" "));
     } else {
-      notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEPARATOR));
-      stepCounter--;
+      notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEPARATOR)) + NOTATION_SEPARATOR;
+      stepCounter -= cancelCounter;
     }
+    cancelCounter++;
     getElement().setInnerHTML(notation);
   }
 }

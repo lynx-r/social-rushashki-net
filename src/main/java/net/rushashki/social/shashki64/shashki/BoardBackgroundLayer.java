@@ -50,23 +50,19 @@ public class BoardBackgroundLayer extends Layer {
       boardConturRect.setWidth(side).setHeight(side);
     }
 
-    Square square;
     boolean lastColor = false;
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
         if (lastColor) {
-          square = getSquare(i, j);
-          if (square == null) {
-            square = new Square(deskSide, rows, cols, i, j, OFFSET_X);
-            gameBoard[i][j] = square;
-            add(square);
+          Square square = new Square(deskSide, rows, cols, i, j, OFFSET_X);
+          gameBoard[i][j] = square;
+          add(square);
 
-            // текст для отладки
+          // текст для отладки
 //            Text t = new Text(i + " " + j, "sanse", 12);
 //            t.setX(square.getX() + 5);
 //            t.setY(square.getY() + 20);
 //            add(t);
-          }
         }
         // Toggle lastcolor
         lastColor = !lastColor;
@@ -119,11 +115,13 @@ public class BoardBackgroundLayer extends Layer {
   public void resetDeskDrawing() {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-        Square square = getSquare(i, j);
-        if (square != null) {
+        try {
+          Square square = getSquare(i, j);
           square.setAlpha(1.0);
           square.setStrokeWidth(1.5);
           square.setStrokeColor(ColorName.BLACK);
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
         }
       }
     }
@@ -138,23 +136,29 @@ public class BoardBackgroundLayer extends Layer {
     return gameBoard;
   }
 
-  public Square getSquare(int row, int col) {
+  public Square getSquare(int row, int col) throws SquareNotFoundException {
     if (inBounds(row, col)) {
-      return gameBoard[row][col];
+      final Square square = gameBoard[row][col];
+      if (square == null) {
+        throw new SquareNotFoundException();
+      }
+      return square;
     }
-    return null;
+    throw new SquareNotFoundException();
   }
 
-  public Square getSquare(double x, double y) {
+  public Square getSquare(double x, double y) throws SquareNotFoundException {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-        Square square = getSquare(i, j);
-        if (square != null && square.contains(x, y)) {
-          return square;
+        if (inBounds(i, j)) {
+          final Square square = gameBoard[i][j];
+          if (square != null && square.contains(x, y)) {
+            return square;
+          }
         }
       }
     }
-    return null;
+    throw new SquareNotFoundException();
   }
 
   public boolean inBounds(int row, int col) {

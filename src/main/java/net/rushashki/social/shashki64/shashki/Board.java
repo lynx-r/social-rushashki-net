@@ -33,9 +33,9 @@ public class Board extends Layer {
   private static final String ANNOTATION_BEAT_MOVE = ":";
 
   private final BoardBackgroundLayer backgroundLayer;
-  private Vector<Square> capturedSquares = new Vector<>();
-  private Vector<Draught> mineDraughtVector;
-  private Vector<Draught> opponentDraughtVector;
+  private List<Square> capturedSquares = new ArrayList<>();
+  private List<Draught> myDraughtList;
+  private List<Draught> opponentDraughtList;
 
   private boolean white;
   private boolean turn;
@@ -67,8 +67,8 @@ public class Board extends Layer {
     this.rows = rows;
     this.cols = cols;
 
-    mineDraughtVector = new Vector<>(rows / 2 * 3);
-    opponentDraughtVector = new Vector<>(rows / 2 * 3);
+    myDraughtList = new ArrayList<>(rows / 2 * 3);
+    opponentDraughtList = new ArrayList<>(rows / 2 * 3);
 
     placeDraughts();
 
@@ -121,7 +121,7 @@ public class Board extends Layer {
       for (int col = 0; col < 8; col++) {
 //      for (int col = 2; col < 3; col++) {
         if (Square.isValid(row, col)) {
-          opponentDraughtVector.add(addDraught(row, col, !white));
+          opponentDraughtList.add(addDraught(row, col, !white));
         }
       }
     }
@@ -132,47 +132,56 @@ public class Board extends Layer {
       for (int col = 0; col < 8; col++) {
 //      for (int col = 5; col < 6; col++) {
         if (Square.isValid(row, col)) {
-          mineDraughtVector.add(addDraught(row, col, white));
+          myDraughtList.add(addDraught(row, col, white));
         }
       }
     }
 
 /*
     if (isWhite()) {
-      opponentDraughtVector.add(addDraught(3, 4, !white));
+      opponentDraughtList.add(addDraught(3, 4, !white));
     } else {
-      mineDraughtVector.add(addDraught(4, 3, white));
+      myDraughtList.add(addDraught(4, 3, white));
     }
 
     if (isWhite()) {
-      mineDraughtVector.add(addDraught(4, 3, white));
+      myDraughtList.add(addDraught(4, 3, white));
     } else {
-      opponentDraughtVector.add(addDraught(3, 4, !white));
+      opponentDraughtList.add(addDraught(3, 4, !white));
     }
 */
   }
 
   private Draught addDraught(int row, int col, boolean white) {
-    Square square = backgroundLayer.getSquare(row, col);
-    Draught draught;
-    if (square != null && Square.isValid(row, col)) {
-      draught = new Draught(backgroundLayer.getDeskSide(), rows, cols, row, col, white, backgroundLayer.getOffsetX());
-      add(draught);
-      square.setOccupant(draught);
-      return draught;
+    try {
+      Square square = backgroundLayer.getSquare(row, col);
+      if (Square.isValid(row, col)) {
+        Draught draught = new Draught(backgroundLayer.getDeskSide(), rows, cols, row, col, white, backgroundLayer.getOffsetX());
+        add(draught);
+        square.setOccupant(draught);
+        return draught;
+      }
+    } catch (SquareNotFoundException e) {
+      e.printStackTrace();
     }
     return null;
   }
 
-  public List<Square> highlightAllowedMoves(Draught clickedPiece) {
+  /**
+   * Функция заполняет массив highlightedSquares
+   * @param clickedPiece
+   */
+  public void highlightAllowedMoves(Draught clickedPiece) {
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
-        Square square = backgroundLayer.getSquare(row, col);
-        if (null != square) {
+        try {
+          Square square = backgroundLayer.getSquare(row, col);
           Draught draught = square.getOccupant();
           if (draught != null && draught.isWhite() == clickedPiece.isWhite()) {
             highlightPossibleMoves(draught, clickedPiece);
           }
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
         }
       }
     }
@@ -180,30 +189,33 @@ public class Board extends Layer {
     if (!capturedSquares.isEmpty()) {
       for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
-          Square square = backgroundLayer.getSquare(row, col);
-          if (null != square && isHighlightedSquare(square)) {
-            fadeOutSquare(square);
+          try {
+            Square square = backgroundLayer.getSquare(row, col);
+            if (null != square && isHighlightedSquare(square)) {
+              fadeOutSquare(square);
+            }
+          } catch (SquareNotFoundException e) {
+            e.printStackTrace();
           }
         }
       }
     }
     backgroundLayer.draw();
-    return highlightedSquares;
   }
 
   /**
    * Find all possible Squares to which this Draught can move
    *
    * @param p Draught for which moves should be found
-   * @return A Vector of Squares to which this Draught can move
+   * @return A List of Squares to which this Draught can move
    */
   private void highlightPossibleMoves(Draught p, Draught clickedDraught) {
     /* Possible moves include up-left, up-right, down-left, down-right
      * This corresponds to (row-- col--), (row-- col++),
 		 * 						(row++ col--), (row++ col++) respectively
 		 */
-    Vector<Square> possibleMoves = new Vector<>();
-    Vector<Square> jumpMoves = new Vector<>();
+    List<Square> possibleMoves = new ArrayList<>();
+    List<Square> jumpMoves = new ArrayList<>();
     boolean white = p.isWhite();
     int row = p.getRow();
     int col = p.getCol();
@@ -239,10 +251,14 @@ public class Board extends Layer {
     if (p == clickedDraught) {
       if (!jumpMoves.isEmpty()) {
         for (Square currentSq : jumpMoves) {
-          Square initSq = backgroundLayer.getSquare(clickedDraught.getRow(), clickedDraught.getCol());
-          if (initSq.isOnLine(currentSq)) {
-            highlightSquareToBeat(currentSq);
-            highlightedSquares.add(currentSq);
+          try {
+            Square initSq = backgroundLayer.getSquare(clickedDraught.getRow(), clickedDraught.getCol());
+            if (initSq.isOnLine(currentSq)) {
+              highlightSquareToBeat(currentSq);
+              highlightedSquares.add(currentSq);
+            }
+          } catch (SquareNotFoundException e) {
+            e.printStackTrace();
           }
         }
       } else if (!possibleMoves.isEmpty()) {
@@ -283,12 +299,19 @@ public class Board extends Layer {
    * @param outJumpMoves
    */
   private void possibleMovePair(Operator opRow, Operator opCol, int row, int col, boolean white, boolean sideWhite,
-                                boolean queen, Vector<Square> outPossibleMoves, Vector<Square> outJumpMoves,
+                                boolean queen, List<Square> outPossibleMoves, List<Square> outJumpMoves,
                                 boolean straightQueen) {
     if (inBounds(opRow.apply(row, 1), opCol.apply(col, 1)) && (white || queen)) {
+      Square square = null, nextSquare = null;
+      try {
+        square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
+        nextSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+      }
       // Check moves to the op1, op2 of this Draught
-      if (!backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1)).isOccupied()) {
-        outPossibleMoves.add(backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1)));
+      if (square != null && !square.isOccupied()) {
+        outPossibleMoves.add(square);
         if (queen) {
           possibleMovePair(opRow, opCol, opRow.apply(row, 1), opCol.apply(col, 1), white, sideWhite,
               true, outPossibleMoves, outJumpMoves, straightQueen);
@@ -300,13 +323,27 @@ public class Board extends Layer {
         //the next square in the same direction
         if (queen) {
           if (inBounds(opRow.apply(row, 2), opCol.apply(col, 2))) {
-            if (!backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2)).isOccupied()
-                && backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1)).getOccupant().isWhite() != sideWhite) {
+            if (nextSquare != null && !nextSquare.isOccupied()
+                && square != null && square.getOccupant().isWhite() != sideWhite) {
               int i = opRow.apply(row, 2);
               int j = opCol.apply(col, 2);
-              Vector<Square> jumps = new Vector<>();
-              Vector<Square> oneJumps = new Vector<>();
-              while (inBounds(i, j) && !backgroundLayer.getSquare(i, j).isOccupied()) {
+              List<Square> jumps = new ArrayList<>();
+              List<Square> oneJumps = new ArrayList<>();
+              Square startSquareLoop;
+              try {
+                startSquareLoop = backgroundLayer.getSquare(i, j);
+              } catch (SquareNotFoundException e) {
+                e.printStackTrace();
+                return;
+              }
+              while (inBounds(i, j) && !startSquareLoop.isOccupied()) {
+                final Square loopSquare;
+                try {
+                  loopSquare = backgroundLayer.getSquare(i, j);
+                } catch (SquareNotFoundException e) {
+                  e.printStackTrace();
+                  continue;
+                }
                 if (straightQueen) {
                   if (opRow.equals(PossibleOperators.SUB) && opCol.equals(PossibleOperators.SUB)
                       || opRow.equals(PossibleOperators.ADD) && opCol.equals(PossibleOperators.ADD)) { // top-left & bottom-right
@@ -322,13 +359,13 @@ public class Board extends Layer {
                         outPossibleMoves, outJumpMoves, false);
                   }
                   if (!outJumpMoves.isEmpty()) {
-                    jumps.add(backgroundLayer.getSquare(i, j));
+                    jumps.add(loopSquare);
                     outJumpMoves.clear();
                   } else if (jumps.isEmpty()) {
-                    oneJumps.add(backgroundLayer.getSquare(i, j));
+                    oneJumps.add(loopSquare);
                   }
                 } else {
-                  outJumpMoves.add(backgroundLayer.getSquare(i, j));
+                  outJumpMoves.add(loopSquare);
                 }
                 i = opRow.apply(i, 1);
                 j = opCol.apply(j, 1);
@@ -338,21 +375,18 @@ public class Board extends Layer {
               } else if (!oneJumps.isEmpty()) {
                 outJumpMoves.addAll(oneJumps);
               }
-              Square captured = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
-              if (!capturedSquares.contains(captured)) {
-                capturedSquares.add(captured);
+              if (!capturedSquares.contains(square)) {
+                capturedSquares.add(square);
               }
             }
           }
         } else {
           if (inBounds(opRow.apply(row, 2), opCol.apply(col, 2))) {
-            if (!backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2)).isOccupied()
-                && backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1))
-                .getOccupant().isWhite() != sideWhite) {
-              outJumpMoves.add(backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2)));
-              Square captured = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
-              if (!capturedSquares.contains(captured)) {
-                capturedSquares.add(captured);
+            if (nextSquare != null && !nextSquare.isOccupied()
+                && square != null && square.getOccupant().isWhite() != sideWhite) {
+              outJumpMoves.add(nextSquare);
+              if (!capturedSquares.contains(square)) {
+                capturedSquares.add(square);
               }
             }
           }
@@ -362,14 +396,18 @@ public class Board extends Layer {
 
     if (!queen) {
       if (inBounds(opRow.apply(row, 2), opCol.apply(col, 2))) {
-        if (!backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2)).isOccupied()
-            && backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1)).isOccupied()
-            && backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1))
-            .getOccupant().isWhite() != sideWhite) {
-          outJumpMoves.add(backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2)));
-          Square captured = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
-          if (!capturedSquares.contains(captured)) {
-            capturedSquares.add(captured);
+        Square square = null, nextSquare = null;
+        try {
+          square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
+          nextSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
+        }
+        if (nextSquare != null && !nextSquare.isOccupied() && square != null && square.isOccupied()
+            && square.getOccupant().isWhite() != sideWhite) {
+          outJumpMoves.add(nextSquare);
+          if (!capturedSquares.contains(square)) {
+            capturedSquares.add(square);
           }
         }
       }
@@ -384,27 +422,46 @@ public class Board extends Layer {
     backgroundLayer.resetDeskDrawing();
   }
 
-  public Square getSquare(double row, double col) {
+  public Square getSquare(double row, double col) throws SquareNotFoundException {
     return backgroundLayer.getSquare(row, col);
   }
 
-  public Square getSquare(int row, int col) {
+  public Square getSquare(int row, int col) throws SquareNotFoundException {
     return backgroundLayer.getSquare(row, col);
   }
 
   private void possibleNextMovePair(Square takenSquare, Operator opRow, Operator opCol, int row, int col,
-                                    boolean queen, Vector<Square> outJumpMoves) {
+                                    boolean queen, List<Square> outJumpMoves) {
     if (inBounds(opRow.apply(row, 1), opCol.apply(col, 1))) {
       // Check moves to the op1, op2 of this Draught
-      Square jumpSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
-      Square capturedSquare = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
+      Square jumpSquare;
+      try {
+        jumpSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+        return;
+      }
+      Square capturedSquare;
+      try {
+        capturedSquare = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+        return;
+      }
       //if square is occupied, and the color of the Draught in square is
       //not equal to the Draught whose moves we are checking, then
       //check to see if we can make the jump by checking
       //the next square in the same direction
       if (queen) {
         if (inBounds(opRow.apply(row, 2), opCol.apply(col, 2))) {
-          if (capturedSquare.isBetween(backgroundLayer.getSquare(row, col), takenSquare)) {
+          final Square square;
+          try {
+            square = backgroundLayer.getSquare(row, col);
+          } catch (SquareNotFoundException e) {
+            e.printStackTrace();
+            return;
+          }
+          if (capturedSquare.isBetween(square, takenSquare)) {
             return;
           }
           int r = row;
@@ -413,15 +470,39 @@ public class Board extends Layer {
               && !capturedSquare.isOccupied()) {
             r = opRow.apply(r, 1);
             c = opCol.apply(c, 1);
-            capturedSquare = backgroundLayer.getSquare(opRow.apply(r, 1), opCol.apply(c, 1));
-            jumpSquare = backgroundLayer.getSquare(opRow.apply(r, 2), opCol.apply(c, 2));
+            try {
+              capturedSquare = backgroundLayer.getSquare(opRow.apply(r, 1), opCol.apply(c, 1));
+            } catch (SquareNotFoundException e) {
+              e.printStackTrace();
+              return;
+            }
+            try {
+              jumpSquare = backgroundLayer.getSquare(opRow.apply(r, 2), opCol.apply(c, 2));
+            } catch (SquareNotFoundException e) {
+              e.printStackTrace();
+              return;
+            }
           }
           if (jumpSquare != null && !jumpSquare.isOccupied()
               && capturedSquare.getOccupant().isWhite() != white) {
             int i = jumpSquare.getRow();
             int j = jumpSquare.getCol();
-            while (inBounds(i, j) && !backgroundLayer.getSquare(i, j).isOccupied()) {
-              outJumpMoves.add(backgroundLayer.getSquare(i, j));
+            Square squareStartLoop;
+            try {
+              squareStartLoop = backgroundLayer.getSquare(i, j);
+            } catch (SquareNotFoundException e) {
+              e.printStackTrace();
+              return;
+            }
+            while (inBounds(i, j) && !squareStartLoop.isOccupied()) {
+              final Square squareLoop;
+              try {
+                squareLoop = backgroundLayer.getSquare(i, j);
+              } catch (SquareNotFoundException e) {
+                e.printStackTrace();
+                continue;
+              }
+              outJumpMoves.add(squareLoop);
               i = opRow.apply(i, 1);
               j = opCol.apply(j, 1);
             }
@@ -430,17 +511,26 @@ public class Board extends Layer {
             }
           }
         }
-      } else if (backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1)).isOccupied()) {
-        // нельзя возвращяться назад
-        if (takenSquare == jumpSquare) {
+      } else {
+        final Square square;
+        try {
+          square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
           return;
         }
-        if (inBounds(opRow.apply(row, 2), opCol.apply(col, 2))) {
-          if (!jumpSquare.isOccupied()
-              && capturedSquare.getOccupant().isWhite() != white) {
-            outJumpMoves.add(jumpSquare);
-            if (!capturedSquares.contains(capturedSquare)) {
-              capturedSquares.add(capturedSquare);
+        if (square.isOccupied()) {
+          // нельзя возвращяться назад
+          if (takenSquare == jumpSquare) {
+            return;
+          }
+          if (inBounds(opRow.apply(row, 2), opCol.apply(col, 2))) {
+            if (!jumpSquare.isOccupied()
+                && capturedSquare.getOccupant().isWhite() != white) {
+              outJumpMoves.add(jumpSquare);
+              if (!capturedSquares.contains(capturedSquare)) {
+                capturedSquares.add(capturedSquare);
+              }
             }
           }
         }
@@ -487,7 +577,7 @@ public class Board extends Layer {
       if (!queen && row == 0) {
         queen = true;
       }
-      Vector<Square> jumpMoves = new Vector<>();
+      List<Square> jumpMoves = new ArrayList<>();
       if (this.white) {
         possibleNextMovePair(from, Operator.SUBTRACTION, Operator.SUBTRACTION, row, col, queen,
             jumpMoves);
@@ -514,10 +604,10 @@ public class Board extends Layer {
 
       removedCoords = takenSquare.toSend() + (!jumpMoves.isEmpty() ? MOVE_STR_SEPARATOR + NEXT_MOVE : MOVE_STR_SEPARATOR + STOP_BEAT_MOVE);
 
-      opponentDraughtVector.remove(takenSquare.getOccupant());
+      opponentDraughtList.remove(takenSquare.getOccupant());
       removeDraughtFrom(takenSquare);
 
-      capturedSquares = new Vector<>();
+      capturedSquares = new ArrayList<>();
     }
 
     return removedCoords;
@@ -559,7 +649,7 @@ public class Board extends Layer {
     return row >= 0 && row < rows && col >= 0 && col < cols;
   }
 
-  private Square parseStep(String move) {
+  private Square parseStep(String move) throws SquareNotFoundException {
     int sRow = 8 - Integer.parseInt(move.substring(1, 2));
     int sCol = alphMap.get(move.substring(0, 1));
 
@@ -571,7 +661,13 @@ public class Board extends Layer {
     OUTERLOOP:
     for (int n = 0; n < rows; n++) {
       for (int m = 0; m < cols; m++) {
-        Square current = backgroundLayer.getSquare(n, m);
+        Square current;
+        try {
+          current = backgroundLayer.getSquare(n, m);
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
+          continue;
+        }
         if (null != current && null != current.getOccupant() && current.isBetween(firstStep, secondStep)
             && current.isOnLine(firstStep)) {
           captured = current;
@@ -585,14 +681,26 @@ public class Board extends Layer {
   public void moveEmulatedNextWhite(String move, int stepCursor) {
     if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
       String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
-      Square startSquare = parseStep(steps[0]);
-      Square endSquare = parseStep(steps[1]);
+      Square startSquare, endSquare;
+      try {
+        startSquare = parseStep(steps[0]);
+        endSquare = parseStep(steps[1]);
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+        return;
+      }
       move(startSquare, endSquare, null, false, stepCursor);
     } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
       String[] steps = move.split(ANNOTATION_BEAT_MOVE);
       for (int i = 0; i < steps.length - 1; i++) {
-        Square firstStep = parseStep(steps[i]);
-        Square secondStep = parseStep(steps[i + 1]);
+        Square firstStep, secondStep;
+        try {
+          firstStep = parseStep(steps[i]);
+          secondStep = parseStep(steps[i + 1]);
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
+          continue;
+        }
         Square captured = findCaptured(firstStep, secondStep);
         if (null == captured) {
           return;
@@ -606,14 +714,26 @@ public class Board extends Layer {
   public void moveEmulatedNextBlack(String move, int stepCursor) {
     if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
       String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
-      Square startSquare = parseStep(steps[0]);
-      Square endSquare = parseStep(steps[1]);
+      Square startSquare, endSquare;
+      try {
+        startSquare = parseStep(steps[0]);
+        endSquare = parseStep(steps[1]);
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+        return;
+      }
       move(startSquare, endSquare, null, false, stepCursor);
     } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
       String[] steps = move.split(ANNOTATION_BEAT_MOVE);
       for (int i = 0; i < steps.length - 1; i++) {
-        Square firstStep = parseStep(steps[i]);
-        Square secondStep = parseStep(steps[i + 1]);
+        Square firstStep, secondStep;
+        try {
+          firstStep = parseStep(steps[i]);
+          secondStep = parseStep(steps[i + 1]);
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
+          continue;
+        }
         Square captured = findCaptured(firstStep, secondStep);
         if (null == captured) {
           return;
@@ -624,51 +744,51 @@ public class Board extends Layer {
     }
   }
 
-  public void moveEmulatedPrevWhite(String move, int stepCursor) {
-    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
-      Square startSquare = parseStep(steps[1]);
-      Square endSquare = parseStep(steps[0]);
-      move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
-      for (int i = steps.length - 1; i > 0; i--) {
-        Square firstStep = parseStep(steps[i]);
-        Square secondStep = parseStep(steps[i - 1]);
-//        Square captured = findCaptured(firstStep, secondStep);
-        Square captured = capturedStack.pop();
-        if (null == captured) {
-          return;
-        } else {
-          mineDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), !white));
-        }
-        move(firstStep, secondStep, null, false, stepCursor);
-      }
-    }
-  }
+//  public void moveEmulatedPrevWhite(String move, int stepCursor) {
+//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//      Square startSquare = parseStep(steps[1]);
+//      Square endSquare = parseStep(steps[0]);
+//      move(startSquare, endSquare, null, false, stepCursor);
+//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      for (int i = steps.length - 1; i > 0; i--) {
+//        Square firstStep = parseStep(steps[i]);
+//        Square secondStep = parseStep(steps[i - 1]);
+////        Square captured = findCaptured(firstStep, secondStep);
+//        Square captured = capturedStack.pop();
+//        if (null == captured) {
+//          return;
+//        } else {
+//          myDraughtList.add(addDraught(captured.getRow(), captured.getCol(), !white));
+//        }
+//        move(firstStep, secondStep, null, false, stepCursor);
+//      }
+//    }
+//  }
 
-  public void moveEmulatedPrevBlack(String move, int stepCursor) {
-    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
-      Square startSquare = parseStep(steps[1]);
-      Square endSquare = parseStep(steps[0]);
-      move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
-      for (int i = steps.length - 1; i > 0; i--) {
-        Square firstStep = parseStep(steps[i]);
-        Square secondStep = parseStep(steps[i - 1]);
-//        Square captured = findCaptured(firstStep, secondStep);
-        Square captured = capturedStack.pop();
-        if (null == captured) {
-          return;
-        } else {
-          mineDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), white));
-        }
-        move(firstStep, secondStep, null, false, stepCursor);
-      }
-    }
-  }
+//  public void moveEmulatedPrevBlack(String move, int stepCursor) {
+//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//      Square startSquare = parseStep(steps[1]);
+//      Square endSquare = parseStep(steps[0]);
+//      move(startSquare, endSquare, null, false, stepCursor);
+//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      for (int i = steps.length - 1; i > 0; i--) {
+//        Square firstStep = parseStep(steps[i]);
+//        Square secondStep = parseStep(steps[i - 1]);
+////        Square captured = findCaptured(firstStep, secondStep);
+//        Square captured = capturedStack.pop();
+//        if (null == captured) {
+//          return;
+//        } else {
+//          myDraughtList.add(addDraught(captured.getRow(), captured.getCol(), white));
+//        }
+//        move(firstStep, secondStep, null, false, stepCursor);
+//      }
+//    }
+//  }
 
   public void moveOpponent(String startMove, String endMove, String captured) {
     moveOpponent(startMove, endMove, captured, -1);
@@ -681,8 +801,14 @@ public class Board extends Layer {
     int eRow = Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[0]);
     int eCol = Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[1]);
 
-    Square sSquare = backgroundLayer.getSquare(sRow, sCol);
-    Square eSquare = backgroundLayer.getSquare(eRow, eCol);
+    Square sSquare, eSquare;
+    try {
+      sSquare = backgroundLayer.getSquare(sRow, sCol);
+      eSquare = backgroundLayer.getSquare(eRow, eCol);
+    } catch (SquareNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
 
     int startRow = rows - 1 - Integer.valueOf(start.split(MOVE_STR_SEPARATOR)[0]);
     int startCol = cols - 1 - Integer.valueOf(start.split(MOVE_STR_SEPARATOR)[1]);
@@ -690,8 +816,14 @@ public class Board extends Layer {
     int endRow = rows - 1 - Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[0]);
     int endCol = cols - 1 - Integer.valueOf(end.split(MOVE_STR_SEPARATOR)[1]);
 
-    Square startSquare = backgroundLayer.getSquare(startRow, startCol);
-    Square endSquare = backgroundLayer.getSquare(endRow, endCol);
+    Square startSquare, endSquare;
+    try {
+      startSquare = backgroundLayer.getSquare(startRow, startCol);
+      endSquare = backgroundLayer.getSquare(endRow, endCol);
+    } catch (SquareNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
 
     boolean simpleMove = capture.contains(NOT_REMOVED);
     if (!capture.contains(CANCEL_MOVE)) {
@@ -709,7 +841,12 @@ public class Board extends Layer {
       int beatenRow = rows - 1 - Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[0]);
       int beatenCol = cols - 1 - Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[1]);
       nextCapture = NEXT_MOVE.equals(capture.split(MOVE_STR_SEPARATOR)[2]);
-      captured = backgroundLayer.getSquare(beatenRow, beatenCol);
+      try {
+        captured = backgroundLayer.getSquare(beatenRow, beatenCol);
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+        return;
+      }
     }
 
     boolean cancelMove = capture.contains(CANCEL_MOVE);
@@ -764,7 +901,7 @@ public class Board extends Layer {
               occupant.setQueen(true);
               queenStepStack.push(stepCursor);
             }
-          } else if ((rows - 1) == endSquare.getRow()) {
+          } else if ((rows - 1) == endSquare.getRow() && occupant.isWhite() != white) {
             occupant.setPosition(endSquare.getRow(), endSquare.getCol());
             occupant.setQueen(true);
           }
@@ -776,13 +913,13 @@ public class Board extends Layer {
     occupant.setPosition(endSquare.getRow(), endSquare.getCol());
 
     if (captured != null && !cancelMove) {
-      mineDraughtVector.remove(captured.getOccupant());
+      myDraughtList.remove(captured.getOccupant());
       removeDraughtFrom(captured);
     } else if (captured != null) {
       if (isMyTurn()) {
-        opponentDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), isWhite()));
+        opponentDraughtList.add(addDraught(captured.getRow(), captured.getCol(), isWhite()));
       } else {
-        mineDraughtVector.add(addDraught(captured.getRow(), captured.getCol(), !isWhite()));
+        myDraughtList.add(addDraught(captured.getRow(), captured.getCol(), !isWhite()));
       }
     }
 
@@ -803,7 +940,6 @@ public class Board extends Layer {
       }
     }
     startSquare.setOccupant(null);
-    // ---
   }
 
   public boolean isWhite() {
@@ -820,12 +956,12 @@ public class Board extends Layer {
     return turn;
   }
 
-  public Vector<Draught> getMineDraughts() {
-    return mineDraughtVector;
+  public List<Draught> getMyDraughts() {
+    return myDraughtList;
   }
 
-  public Vector<Draught> getOpponentDraughts() {
-    return opponentDraughtVector;
+  public List<Draught> getOpponentDraughts() {
+    return opponentDraughtList;
   }
 
   public boolean isEmulate() {
@@ -838,14 +974,24 @@ public class Board extends Layer {
 
   public void moveDraught(double clickX, double clickY) {
     Draught selectedDraught = Draught.getSelectedDraught();
+    GWT.log(highlightedSquares.size() + "");
     if (selectedDraught != null && !highlightedSquares.isEmpty()) {
-      Square endSquare = getSquare(clickX, clickY);
-      lastEndMove = endSquare.toSend();
+      Square endSquare = null, startSquare = null;
+      try {
+        endSquare = getSquare(clickX, clickY);
+        lastEndMove = endSquare.toSend();
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+      }
 
-      Square startSquare = getSquare(selectedDraught.getRow(), selectedDraught.getCol());
-      lastStartMove = startSquare.toSend();
+      try {
+        startSquare = getSquare(selectedDraught.getRow(), selectedDraught.getCol());
+        lastStartMove = startSquare.toSend();
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+      }
 
-      if (highlightedSquares.contains(endSquare) && startSquare.isOnLine(endSquare)) {
+      if (highlightedSquares.contains(endSquare) && startSquare != null && startSquare.isOnLine(endSquare)) {
         String captured = lastCaptured = move(startSquare, endSquare);
 
         boolean isSimpleMove = NOT_REMOVED.equals(captured);
@@ -858,24 +1004,26 @@ public class Board extends Layer {
           }
         }
 
-        String op = isSimpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
-        String move = startSquare.toNotation(isWhite(), false, false)
-            + op
-            + endSquare.toNotation(isWhite(), true, false)
-            + (isWhite() ? "" : NotationPanel.NOTATION_SEPARATOR);
-        eventBus.fireEvent(new NotationMoveEvent(move));
-        eventBus.fireEvent(new PlayMoveEvent(startSquare.toSend(), endSquare.toSend(), captured));
+        if (endSquare != null) {
+          String op = isSimpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
+          String move = startSquare.toNotation(isWhite(), false, false)
+              + op
+              + endSquare.toNotation(isWhite(), true, false)
+              + (isWhite() ? "" : NotationPanel.NOTATION_SEPARATOR);
+          eventBus.fireEvent(new NotationMoveEvent(move));
+          eventBus.fireEvent(new PlayMoveEvent(startSquare.toSend(), endSquare.toSend(), captured));
 
-        AnimationProperties props = new AnimationProperties();
-        props.push(AnimationProperty.Properties.X(endSquare.getCenterX()));
-        props.push(AnimationProperty.Properties.Y(endSquare.getCenterY()));
+          AnimationProperties props = new AnimationProperties();
+          props.push(AnimationProperty.Properties.X(endSquare.getCenterX()));
+          props.push(AnimationProperty.Properties.Y(endSquare.getCenterY()));
 
-        selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
+          selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
 
-        props = new AnimationProperties();
-        props.push(AnimationProperty.Properties.SCALE(1.0));
+          props = new AnimationProperties();
+          props.push(AnimationProperty.Properties.SCALE(1.0));
 
-        selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
+          selectedDraught.animate(AnimationTweener.LINEAR, props, 100);
+        }
 
         backgroundLayer.resetDeskDrawing();
       }
@@ -885,9 +1033,11 @@ public class Board extends Layer {
   public void clearDesk() {
     for (int i = 0; i < cols; i++) {
       for (int j = 0; j < rows; j++) {
-        Square square = getSquare(i, j);
-        if (square != null) {
+        try {
+          Square square = getSquare(i, j);
           removeDraughtFrom(square, true);
+        } catch (SquareNotFoundException e) {
+          e.printStackTrace();
         }
       }
     }
@@ -912,8 +1062,14 @@ public class Board extends Layer {
     int endRow = Integer.valueOf(endMove.split(MOVE_STR_SEPARATOR)[0]);
     int endCol = Integer.valueOf(endMove.split(MOVE_STR_SEPARATOR)[1]);
 
-    Square startSquare = backgroundLayer.getSquare(startRow, startCol);
-    Square endSquare = backgroundLayer.getSquare(endRow, endCol);
+    Square startSquare, endSquare;
+    try {
+      startSquare = backgroundLayer.getSquare(startRow, startCol);
+      endSquare = backgroundLayer.getSquare(endRow, endCol);
+    } catch (SquareNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
 
     boolean simpleMove = capture.contains(NOT_REMOVED);
     boolean cancelMove = capture.contains(CANCEL_MOVE);
@@ -924,10 +1080,13 @@ public class Board extends Layer {
       int beatenRow = Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[0]);
       int beatenCol = Integer.valueOf(capture.split(MOVE_STR_SEPARATOR)[1]);
       nextCapture = NEXT_MOVE.equals(capture.split(MOVE_STR_SEPARATOR)[2]);
-      captured = backgroundLayer.getSquare(beatenRow, beatenCol);
+      try {
+        captured = backgroundLayer.getSquare(beatenRow, beatenCol);
+      } catch (SquareNotFoundException e) {
+        e.printStackTrace();
+      }
     }
 
     move(startSquare, endSquare, captured, nextCapture, cancelMove);
   }
-
 }

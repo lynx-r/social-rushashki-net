@@ -296,10 +296,10 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     eventBus.addHandler(CheckWinnerEvent.TYPE, new CheckWinnerEventHandler() {
       @Override
       public void onCheckWinner(CheckWinnerEvent event) {
-        setBeatenMine(CHECKERS_ON_DESK_INIT - board.getMineDraughts().size());
+        setBeatenMine(CHECKERS_ON_DESK_INIT - board.getMyDraughts().size());
         setBeatenOpponent(CHECKERS_ON_DESK_INIT - board.getOpponentDraughts().size());
         Game endGame = clientFactory.getGame();
-        if (0 == board.getMineDraughts().size()) {
+        if (0 == board.getMyDraughts().size()) {
           new DialogBox(constants.info(), constants.youLose()).show();
           if (board.isWhite()) {
             endGame.setPlayEndStatus(GameEnds.BLACK_WON);
