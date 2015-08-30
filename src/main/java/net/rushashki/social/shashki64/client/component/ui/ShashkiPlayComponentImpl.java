@@ -351,6 +351,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
       public void onClearPlayComponent(ClearPlayComponentEvent event) {
         clearPlayComponent(clientFactory);
         hidePlayingButtonsAndShowPlayButton();
+        board = null;
       }
     });
 

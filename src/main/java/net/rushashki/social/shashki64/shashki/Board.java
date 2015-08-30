@@ -607,6 +607,7 @@ public class Board extends Layer {
       removedCoords = takenSquare.toSend() + (!jumpMoves.isEmpty() ? MOVE_STR_SEP + NEXT_MOVE : MOVE_STR_SEP + STOP_BEAT_MOVE);
 
       opponentDraughtList.remove(takenSquare.getOccupant());
+      GWT.log("OPPONETNT REMOVED " + takenSquare.toString());
       removeDraughtFrom(takenSquare);
 
       capturedSquares = new ArrayList<>();
@@ -624,6 +625,7 @@ public class Board extends Layer {
     if (takenDraught == null) {
       return;
     }
+    myDraughtList.remove(takenDraught);
     takenSquare.setOccupant(null);
     AnimationProperties props = new AnimationProperties();
     props.push(AnimationProperty.Properties.ALPHA(0));
@@ -902,14 +904,14 @@ public class Board extends Layer {
     occupant.setPosition(endSquare.getRow(), endSquare.getCol());
 
     if (captured != null && !cancelMove) {
-      myDraughtList.remove(captured.getOccupant());
       removeDraughtFrom(captured);
     } else if (captured != null) {
       if (isMyTurn()) {
-        opponentDraughtList.add(addDraught(captured.getRow(), captured.getCol(), isWhite()));
+        myDraughtList.add(addDraught(captured.getRow(), captured.getCol(), isWhite()));
       } else {
-        myDraughtList.add(addDraught(captured.getRow(), captured.getCol(), !isWhite()));
+        opponentDraughtList.add(addDraught(captured.getRow(), captured.getCol(), !isWhite()));
       }
+      eventBus.fireEvent(new CheckWinnerEvent());
     }
 
     if (!nextCapture && !isEmulate()) {
