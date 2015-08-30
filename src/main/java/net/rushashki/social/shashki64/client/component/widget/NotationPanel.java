@@ -18,12 +18,17 @@ import net.rushashki.social.shashki64.client.event.NotationMoveEventHandler;
  * Time: 19:32
  */
 public class NotationPanel extends ScrollPanel {
+  public static final String NOTATION_SEP = "<br>";
+  private static final String BITE_SEP = ":";
+  private static final String MOVE_SEP = " ";
+  private static final String DIV_GARBAGE = "<div[\\s\\w\\d\";:=]*></div>";
+
   private final EventBus eventBus;
   private int stepCounter;
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
-  public static String NOTATION_SEPARATOR = "<br>";
   private static String notation;
   private int cancelCounter;
+  private boolean cancelBite;
 
   public NotationPanel() {
     stepCounter = 1;
@@ -52,24 +57,28 @@ public class NotationPanel extends ScrollPanel {
 
   public void appendMove(String move) {
     String html = getElement().getInnerHTML();
-    if (move.contains(":")) {
-      String firstStep = move.split(":")[0];
-      String[] steps = html.split(NOTATION_SEPARATOR);
+    if (move.contains(BITE_SEP)) {
+      String firstStep = move.split(BITE_SEP)[0];
+      String[] steps = html.split(NOTATION_SEP);
       String lastStroke = steps[steps.length - 1];
       if (lastStroke.endsWith(firstStep)) {
-        String lastBeatenStroke = move.split(":")[1];
-        if (html.endsWith(NOTATION_SEPARATOR)) {
-          html = html.substring(0, html.length() - 1) + ":" + lastBeatenStroke;
+        String lastBeatenStroke = move.split(BITE_SEP)[1];
+        if (html.endsWith(NOTATION_SEP)) {
+          html = html.substring(0, html.length() - 1) + BITE_SEP + lastBeatenStroke;
         } else {
-          html += ":" + lastBeatenStroke;
+          html += BITE_SEP + lastBeatenStroke;
         }
         getElement().setInnerHTML(html);
         return;
       }
     }
-    if (move.contains(NOTATION_SEPARATOR)) {
-      html += " " + move; //+ "sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>";
+    if (move.contains(NOTATION_SEP)) {
+      html += MOVE_SEP + move; //+ "sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>sdsdfsdf<br>";
       stepCounter++;
+      cancelCounter = 0;
+    } else if (move.contains(BITE_SEP) && cancelBite) {
+      html += BITE_SEP + move;
+      cancelBite = false;
     } else {
       html += stepCounter + ". " + move;
     }
@@ -89,18 +98,23 @@ public class NotationPanel extends ScrollPanel {
   }
 
   public void cancelMove() {
-    notation = notation.replaceAll("<div[\\s\\w\\d\";:=]*></div>", "");
-    String[] notationArray = notation.split(NOTATION_SEPARATOR);
+    notation = notation.replaceAll(DIV_GARBAGE, "");
+    String[] notationArray = notation.split(NOTATION_SEP);
     String lastMove = notationArray[notationArray.length - 1];
     String[] lastMoveArray = lastMove.split(" ");
-    GWT.log(notation);
-    if (lastMoveArray.length == 3) {
-      notation = notation.substring(0, notation.lastIndexOf(" "));
+    if (lastMove.contains(BITE_SEP) && !lastMove.contains(MOVE_SEP)) {
+      GWT.log(notation + " - " + notation.lastIndexOf(BITE_SEP));
+      notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
+      cancelBite = true;
     } else {
-      notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEPARATOR)) + NOTATION_SEPARATOR;
-      stepCounter -= cancelCounter;
+      if (lastMoveArray.length == 3) {
+        notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
+      } else {
+        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
+        stepCounter -= cancelCounter;
+      }
+      cancelCounter++;
     }
-    cancelCounter++;
     getElement().setInnerHTML(notation);
   }
 }

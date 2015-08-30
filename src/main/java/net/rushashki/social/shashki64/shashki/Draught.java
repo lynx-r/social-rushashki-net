@@ -116,7 +116,7 @@ public class Draught extends Group {
 
     selectedDraught = currentDraught;
 
-    board.resetDeskDrawing();
+    board.resetDesk();
     board.highlightAllowedMoves(selectedDraught);
   }
 

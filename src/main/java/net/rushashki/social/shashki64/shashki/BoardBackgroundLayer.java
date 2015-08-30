@@ -86,7 +86,7 @@ public class BoardBackgroundLayer extends Layer {
       for (int j = 0; j < cols; j++) {
         if (0 == j) {
           double x = OFFSET_X - 20;
-          double y = deskSide * (((double) i) / ((double) cols) + 1 / ((double) rows * 2));
+          double y = deskSide * (((double) i) / ((double) cols) + 1 / ((double) rows * 2)) + 5;
 
           Text num = new Text(String.valueOf(numCoords), "Times New Roman", 12);
           num.setFillColor(ColorName.BLACK);
@@ -97,7 +97,7 @@ public class BoardBackgroundLayer extends Layer {
           coordsTextVector.add(num);
         }
         if (rows == (i + 1)) {
-          double x = deskSide * ((double) j / ((double) rows) + 1 / ((double) cols * 2)) + OFFSET_X - 25;
+          double x = deskSide * ((double) j / ((double) rows) + 1 / ((double) cols * 2)) + OFFSET_X - 8;
           double y = deskSide + 20;
 
           Text alph = new Text(alphCoords[alphIdCoords], "Times New Roman", 12);
