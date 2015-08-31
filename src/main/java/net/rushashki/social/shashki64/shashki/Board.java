@@ -6,7 +6,6 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.event.NodeTouchEndEvent;
 import com.ait.lienzo.client.core.event.NodeTouchEndHandler;
 import com.ait.lienzo.client.core.shape.Layer;
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
@@ -15,7 +14,10 @@ import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shashki.util.Operator;
 import net.rushashki.social.shashki64.shashki.util.PossibleOperators;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Created with IntelliJ IDEA.
@@ -607,7 +609,6 @@ public class Board extends Layer {
       removedCoords = takenSquare.toSend() + (!jumpMoves.isEmpty() ? MOVE_STR_SEP + NEXT_MOVE : MOVE_STR_SEP + STOP_BEAT_MOVE);
 
       opponentDraughtList.remove(takenSquare.getOccupant());
-      GWT.log("OPPONETNT REMOVED " + takenSquare.toString());
       removeDraughtFrom(takenSquare);
 
       capturedSquares = new ArrayList<>();
@@ -966,7 +967,6 @@ public class Board extends Layer {
 
   public void moveDraught(double clickX, double clickY) {
     Draught selectedDraught = Draught.getSelectedDraught();
-    GWT.log(highlightedSquares.size() + "");
     if (selectedDraught != null && !highlightedSquares.isEmpty()) {
       Square endSquare = null, startSquare = null;
       try {

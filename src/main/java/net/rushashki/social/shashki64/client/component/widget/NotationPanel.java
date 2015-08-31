@@ -58,17 +58,25 @@ public class NotationPanel extends ScrollPanel {
   public void appendMove(String move) {
     String html = getElement().getInnerHTML();
     if (move.contains(BITE_SEP)) {
+      // первый шаг. например, h4:f6:d4 - h4
       String firstStep = move.split(BITE_SEP)[0];
+      GWT.log(firstStep);
+      // шаги из нотации
       String[] steps = html.split(NOTATION_SEP);
+      // последний шаг. например, 2. f2-g3 f6-g5
       String lastStroke = steps[steps.length - 1];
+      GWT.log(lastStroke);
       if (lastStroke.endsWith(firstStep)) {
         String lastBeatenStroke = move.split(BITE_SEP)[1];
+        GWT.log(lastBeatenStroke);
         if (html.endsWith(NOTATION_SEP)) {
           html = html.substring(0, html.length() - 1) + BITE_SEP + lastBeatenStroke;
         } else {
           html += BITE_SEP + lastBeatenStroke;
         }
         getElement().setInnerHTML(html);
+        notation = html;
+        GWT.log(notation);
         return;
       }
     }
@@ -78,12 +86,13 @@ public class NotationPanel extends ScrollPanel {
       cancelCounter = 0;
     } else if (move.contains(BITE_SEP) && cancelBite) {
       html += BITE_SEP + move;
-      cancelBite = false;
     } else {
       html += stepCounter + ". " + move;
     }
+    cancelBite = false;
     getElement().setInnerHTML(html);
     notation = html;
+    GWT.log("Notation " + notation);
     pushScroll();
   }
 
@@ -98,22 +107,34 @@ public class NotationPanel extends ScrollPanel {
   }
 
   public void cancelMove() {
+    GWT.log(notation);
     notation = notation.replaceAll(DIV_GARBAGE, "");
     String[] notationArray = notation.split(NOTATION_SEP);
-    String lastMove = notationArray[notationArray.length - 1];
+    String move = notationArray[notationArray.length - 1];
+    String lastMove = move.split(". ")[1];
     String[] lastMoveArray = lastMove.split(" ");
+    GWT.log(lastMove);
     if (lastMove.contains(BITE_SEP) && !lastMove.contains(MOVE_SEP)) {
       GWT.log(notation + " - " + notation.lastIndexOf(BITE_SEP));
-      notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
-      cancelBite = true;
-    } else {
-      if (lastMoveArray.length == 3) {
+      if (lastMove.split(BITE_SEP).length == 2) {
         notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
+      } else {
+        notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
+        cancelBite = true;
+      }
+    } else {
+      if (lastMoveArray.length == 2) {
+        if (lastMove.split(BITE_SEP).length == 2) {
+          notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
+        } else {
+          notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
+          cancelBite = true;
+        }
       } else {
         notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
         stepCounter -= cancelCounter;
       }
-      cancelCounter++;
+      cancelCounter = 1;
     }
     getElement().setInnerHTML(notation);
   }

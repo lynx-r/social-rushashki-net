@@ -228,7 +228,6 @@ public class GameWebsocket implements WebSocketCallback {
 
   @Override
   public void onMessage(String message) {
-    GWT.log(message);
     MessageFactory messageFactory = GWT.create(MessageFactory.class);
     AutoBean<GameMessage> bean = AutoBeanCodex.decode(messageFactory, GameMessage.class, message);
     GameMessage gameMessage = bean.as();
@@ -362,7 +361,6 @@ public class GameWebsocket implements WebSocketCallback {
 
   private void handlePlaySurrender(GameMessage gameMessage) {
     Game game = clientFactory.getGame();
-    GWT.log(game.toString());
     game.setPlayEndDate(new Date());
     game.setPlayEndStatus(clientFactory.isPlayerHasWhiteColor() ? GameEnds.SURRENDER_WHITE
         : GameEnds.SURRENDER_BLACK);
