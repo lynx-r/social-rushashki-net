@@ -8,7 +8,6 @@ import com.ait.lienzo.client.core.event.NodeTouchEndHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
 import net.rushashki.social.shashki64.shashki.util.Operator;
@@ -835,8 +834,7 @@ public class Board extends Layer {
       String op = simpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
       String move = sSquare.toNotation(!isWhite(), false, false)
           + op
-          + eSquare.toNotation(!isWhite(), true, false)
-          + (isWhite() ? NotationPanel.NOTATION_SEP : "");
+          + eSquare.toNotation(!isWhite(), true, false);
       eventBus.fireEvent(new NotationMoveEvent(move));
     }
 
@@ -1000,8 +998,7 @@ public class Board extends Layer {
           String op = isSimpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
           String move = startSquare.toNotation(isWhite(), false, false)
               + op
-              + endSquare.toNotation(isWhite(), true, false)
-              + (isWhite() ? "" : NotationPanel.NOTATION_SEP);
+              + endSquare.toNotation(isWhite(), true, false);
           eventBus.fireEvent(new NotationMoveEvent(move));
           eventBus.fireEvent(new PlayMoveEvent(startSquare.toSend(), endSquare.toSend(), captured));
 
