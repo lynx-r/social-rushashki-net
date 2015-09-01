@@ -62,26 +62,22 @@ public class NotationPanel extends ScrollPanel {
     notation = notation.replaceAll(DIV_GARBAGE, "");
 
     String[] steps = notation.split(NOTATION_SEP);
-    if (move.contains(BITE_SEP)) { // была побита шашка
-      GWT.log("MOVE" + move);
-      // первый шаг. например, h4:f6:d4 - h4
-      String firstStep = move.split(BITE_SEP)[0];
-      GWT.log("FIRST STEP" + firstStep);
-      // шаги из нотации
-      // последний шаг. например, 2. f2-g3 f6-g5
-      String lastStroke = steps[steps.length - 1];
-      GWT.log("LAST STEP" + lastStroke);
-      if (lastStroke.endsWith(firstStep)) {
-        String lastBeatenStroke = move.split(BITE_SEP)[1];
-        GWT.log("LAST BEATEN STROKE" + lastBeatenStroke);
-        if (lastStroke.endsWith(NOTATION_SEP)) {
-          notation = notation.substring(0, notation.length() - 1) + BITE_SEP + lastBeatenStroke;
-        } else {
-          notation += BITE_SEP + lastBeatenStroke;
-        }
-      } else if (lastStroke.contains(firstStep)) {
-        GWT.log("Last Stroke" + lastStroke);
-        GWT.log("First Step" + firstStep);
+    GWT.log("MOVE" + move);
+    // первый шаг. например, h4:f6:d4 - h4
+    String firstStep = move.split(BITE_SEP)[0];
+    GWT.log("FIRST STEP" + firstStep);
+    // шаги из нотации
+    // последний шаг. например, 2. f2-g3 f6-g5
+    String lastStroke = steps[steps.length - 1];
+    GWT.log("LAST STEP" + lastStroke);
+    if (move.contains(BITE_SEP) && lastStroke.endsWith(firstStep)) { // была побита шашка
+      String lastBeatenStroke = move.split(BITE_SEP)[1];
+      GWT.log("LAST BEATEN STROKE" + lastBeatenStroke);
+      if (!notation.endsWith(NOTATION_SEP)) {
+        notation += BITE_SEP + lastBeatenStroke;
+      } else {
+        // в начале убираем маркер новой строки, потом приципляем ход
+        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + BITE_SEP + lastBeatenStroke + NOTATION_SEP;
       }
     } else { // обычный ход
       String lastMove = steps[steps.length - 1];
@@ -149,7 +145,7 @@ public class NotationPanel extends ScrollPanel {
         final String[] lastStepArray = lastStep.split(BITE_SEP);
         GWT.log(lastStep);
         if (lastStep.contains(BITE_SEP) && lastStep.split(BITE_SEP).length != 2) { // последний ход содержит побитые
-        // шашки
+          // шашки
           notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
           cancelBite = true;
         } else {

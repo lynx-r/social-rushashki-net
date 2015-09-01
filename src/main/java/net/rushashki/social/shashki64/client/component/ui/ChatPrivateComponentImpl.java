@@ -28,6 +28,7 @@ import java.util.List;
 public class ChatPrivateComponentImpl extends BasicComponent {
 
   private static final String PREV_MESSAGE = "prev_message";
+  private static final int LAST_PLAYER_MESSAGES = 200;
   private static Binder ourUiBinder = GWT.create(Binder.class);
 
   @UiField
@@ -41,7 +42,7 @@ public class ChatPrivateComponentImpl extends BasicComponent {
     eventBus.addHandler(StartPlayEvent.TYPE, new StartPlayEventHandler() {
       @Override
       public void onStartPlay(StartPlayEvent event) {
-        gameMessageService.getLastPlayerMessages(200, clientFactory.getPlayer().getId(),
+        gameMessageService.getLastPlayerMessages(LAST_PLAYER_MESSAGES, clientFactory.getPlayer().getId(),
             clientFactory.getOpponent().getId(), new AsyncCallback<List<GameMessage>>() {
           @Override
           public void onFailure(Throwable throwable) {

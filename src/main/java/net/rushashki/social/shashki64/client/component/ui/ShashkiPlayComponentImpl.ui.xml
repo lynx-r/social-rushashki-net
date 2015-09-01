@@ -9,6 +9,7 @@
 
         .notation-column {
             float: left;
+            width: 200px;
             /*margin-left: 10px;*/
         }
 
@@ -21,6 +22,10 @@
             float: left;
             margin-left: 20px;
             max-width: 200px;
+        }
+
+        .player-search {
+            z-index: 0;
         }
     </ui:style>
 
@@ -42,10 +47,10 @@
             <ui:msg description="Нотация" key="notationList"><b>Нотация:</b></ui:msg>
             <g:HTMLPanel ui:field="notationList"/>
         </g:HTMLPanel>
-        <g:HTMLPanel ui:field="privateChatColumn" addStyleNames="{style.private-chat}">
-            <ui:msg description="Приватный чат" key="privateChat"><b>Персональный чат:</b></ui:msg>
-            <c:ChatPrivateComponentImpl ui:field="privateChat"/>
-        </g:HTMLPanel>
+        <!--<g:HTMLPanel ui:field="privateChatColumn" addStyleNames="{style.private-chat}">-->
+            <!--<ui:msg description="Приватный чат" key="privateChat"><b>Персональный чат:</b></ui:msg>-->
+            <!--<c:ChatPrivateComponentImpl ui:field="privateChat"/>-->
+        <!--</g:HTMLPanel>-->
         <g:HTMLPanel ui:field="playerListColumn" addStyleNames="{style.player-list}">
             <span>
                 <b:Button ui:field="connectToPlayButton" icon="REFRESH" addStyleNames="btn btn-default btn-primary btn-block">
@@ -62,7 +67,7 @@
             <g:ScrollPanel ui:field="playerPanel"/>
             <b:InputGroup>
                 <b:InputGroupAddon icon="SEARCH"/>
-                <b:TextBox placeholder="Поиск игроков" autoComplete="true"/>
+                <b:TextBox placeholder="Поиск игроков" autoComplete="true" addStyleNames="{style.player-search}"/>
             </b:InputGroup>
         </g:HTMLPanel>
     </g:HTMLPanel>

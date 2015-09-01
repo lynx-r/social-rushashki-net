@@ -54,10 +54,10 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
   HTMLPanel shashki;
   @UiField
   HTMLPanel shashkiColumn;
-  @UiField
-  HTMLPanel privateChatColumn;
-  @UiField(provided = true)
-  ChatPrivateComponentImpl privateChat;
+//  @UiField
+//  HTMLPanel privateChatColumn;
+//  @UiField(provided = true)
+//  ChatPrivateComponentImpl privateChat;
   @UiField
   HTMLPanel notationColumn;
   @UiField
@@ -92,7 +92,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
   private GameRpcServiceAsync gameService;
 
   public ShashkiPlayComponentImpl(ClientFactory clientFactory) {
-    privateChat = new ChatPrivateComponentImpl(clientFactory);
+//    privateChat = new ChatPrivateComponentImpl(clientFactory);
     initWidget(ourUiBinder.createAndBindUi(this));
 
     this.player = clientFactory.getPlayer();
@@ -351,7 +351,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
       public void onClearPlayComponent(ClearPlayComponentEvent event) {
         clearPlayComponent(clientFactory);
         hidePlayingButtonsAndShowPlayButton();
-        board = null;
+//        board = null;
       }
     });
 
@@ -490,11 +490,13 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
   private void alignNotationPanel() {
     if (Window.getClientWidth() > 0) {
       // 81 - отступы
-      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
-          - playerListColumn.getOffsetWidth() - 81;
-      privateChatColumn.setWidth(side + "px");
+//      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
+//          - playerListColumn.getOffsetWidth() - 81;
+//      privateChatColumn.setWidth(side + "px");
       String notationHeight = lienzoPanel.getHeight() - 50 + "px";
       notationPanel.setHeight(notationHeight);
+      String playerListHeight = lienzoPanel.getHeight() - 105 + "px";
+      playersCellList.setHeight(playerListHeight);
     }
   }
 
