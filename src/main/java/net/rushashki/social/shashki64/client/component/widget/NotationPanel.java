@@ -46,7 +46,7 @@ public class NotationPanel extends ScrollPanel {
     eventBus.addHandler(NotationCancelMoveEvent.TYPE, new NotationCancelMoveEventHandler() {
       @Override
       public void onNotationCancelMove(NotationCancelMoveEvent event) {
-        NotationPanel.this.cancelMove();
+        NotationPanel.this.cancelMove(event.getMove());
       }
     });
     eventBus.addHandler(ClearNotationEvent.TYPE, new ClearNotationEventHandler() {
@@ -133,47 +133,53 @@ public class NotationPanel extends ScrollPanel {
     return notation;
   }
 
-  public void cancelMove() {
+  public void cancelMove(MoveDto move) {
     GWT.log(notation);
     notation = notation.replaceAll(DIV_GARBAGE, "");
-    String[] notationArray = notation.split(NOTATION_SEP);
-    // ход. 2. h4:f6 e7:g5
-    String move = notationArray[notationArray.length - 1];
-    GWT.log("MOVE " + move);
-    String lastMove = move.split(COUNT_SEP_REGEX)[1];
-    String[] lastMoveArray = lastMove.split(MOVE_SEP);
-    GWT.log("LAST MOVE " + lastMove);
-    if (lastMove.contains(BITE_SEP) && !lastMove.contains(MOVE_SEP)) { // первый ход
-      GWT.log(notation + " - " + notation.lastIndexOf(BITE_SEP));
-      if (lastMove.split(BITE_SEP).length == 2) { // первый ход содержит побитые шашки и она одна
-        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
-        stepCounter -= cancelCounter;
-        cancelCounter = 1;
-      } else { // побито несколько шашек
-        notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
-        cancelBite = true;
-      }
-    } else { // второй ход
-      if (lastMoveArray.length == 2) {
-        // послед ход e7:g5
-        final String lastStep = lastMoveArray[1];
-        final String[] lastStepArray = lastStep.split(BITE_SEP);
-        GWT.log(lastStep);
-        if (lastStep.contains(BITE_SEP) && lastStep.split(BITE_SEP).length != 2) { // последний ход содержит побитые
-          // шашки
-          notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
-          cancelBite = true;
-        } else {
-          notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
-          stepCounter -= cancelCounter;
-          cancelCounter = 1;
-        }
-      } else { // первый ход, где нет побитых шашек
-        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
-        stepCounter -= cancelCounter;
-        cancelCounter = 1;
-      }
+    if (move.isFirst()) {
+      notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
+      stepCounter--;
+    } else {
+      notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
     }
+//    String[] notationArray = notation.split(NOTATION_SEP);
+//    // ход. 2. h4:f6 e7:g5
+//    String move = notationArray[notationArray.length - 1];
+//    GWT.log("MOVE " + move);
+//    String lastMove = move.split(COUNT_SEP_REGEX)[1];
+//    String[] lastMoveArray = lastMove.split(MOVE_SEP);
+//    GWT.log("LAST MOVE " + lastMove);
+//    if (lastMove.contains(BITE_SEP) && !lastMove.contains(MOVE_SEP)) { // первый ход
+//      GWT.log(notation + " - " + notation.lastIndexOf(BITE_SEP));
+//      if (lastMove.split(BITE_SEP).length == 2) { // первый ход содержит побитые шашки и она одна
+//        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
+//        stepCounter -= cancelCounter;
+//        cancelCounter = 1;
+//      } else { // побито несколько шашек
+//        notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
+//        cancelBite = true;
+//      }
+//    } else { // второй ход
+//      if (lastMoveArray.length == 2) {
+//        // послед ход e7:g5
+//        final String lastStep = lastMoveArray[1];
+//        final String[] lastStepArray = lastStep.split(BITE_SEP);
+//        GWT.log(lastStep);
+//        if (lastStep.contains(BITE_SEP) && lastStep.split(BITE_SEP).length != 2) { // последний ход содержит побитые
+//          // шашки
+//          notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
+//          cancelBite = true;
+//        } else {
+//          notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
+//          stepCounter -= cancelCounter;
+//          cancelCounter = 1;
+//        }
+//      } else { // первый ход, где нет побитых шашек
+//        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
+//        stepCounter -= cancelCounter;
+//        cancelCounter = 1;
+//      }
+//    }
     getElement().setInnerHTML(notation);
   }
 }

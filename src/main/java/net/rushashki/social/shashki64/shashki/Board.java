@@ -87,7 +87,7 @@ public class Board extends Layer {
       public void onPlayMove(PlayMoveEvent event) {
         final MoveDto move = event.getMove();
         if (move.isCancel()) {
-          eventBus.fireEvent(new NotationCancelMoveEvent());
+          eventBus.fireEvent(new NotationCancelMoveEvent(move));
           if (isMyTurn()) {
             moveOpponent(move);
           } else {
@@ -612,9 +612,9 @@ public class Board extends Layer {
 
       move.setTakenSquare(takenSquare);
       if (jumpMoves.isEmpty()) {
-        move.turnOnContinueBeat();
-      } else {
         move.turnOnStopBeat();
+      } else {
+        move.turnOnContinueBeat();
       }
 
       removeDraughtFrom(takenSquare);
@@ -866,9 +866,11 @@ public class Board extends Layer {
       }
     }
 
-    boolean cancelMove = move.isCancel();
-
-    move(startSquare, endSquare, captured, nextCapture, cancelMove, stepCursor);
+    if (move.isCancel()) {
+      move(endSquare, startSquare, captured, nextCapture, true, stepCursor); // отменяем ход
+    } else {
+      move(startSquare, endSquare, captured, nextCapture, false, stepCursor); // обычный ход опонента
+    }
   }
 
   private void move(Square startSquare, Square endSquare, Square captured, boolean nextCapture, int stepCursor) {
@@ -1093,10 +1095,15 @@ public class Board extends Layer {
       }
     }
 
-    move(startSquare, endSquare, captured, nextCapture, true);
+    move(endSquare, startSquare, captured, nextCapture, true);
+    moveStack.pop();
   }
 
   public MoveDto getLastMove() {
     return moveStack.lastElement();
+  }
+
+  public boolean hasNoMoves() {
+    return moveStack.isEmpty();
   }
 }

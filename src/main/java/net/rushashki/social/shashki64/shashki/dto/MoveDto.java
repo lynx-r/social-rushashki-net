@@ -1,6 +1,5 @@
 package net.rushashki.social.shashki64.shashki.dto;
 
-import com.google.gwt.user.client.rpc.GwtTransient;
 import net.rushashki.social.shashki64.shared.model.Move;
 import net.rushashki.social.shashki64.shashki.Square;
 
@@ -19,6 +18,7 @@ public class MoveDto implements Move {
 
   private int number;
   private boolean first; // первый ход в паре ходов. Например, ee-aa в ee-aa bb-cc
+  private boolean canceled;
 
   private Square startSquare;
   private Square endSquare;

@@ -193,6 +193,9 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
           new DialogBox(constants.info(), constants.youDontMove());
           return;
         }
+        if (board.hasNoMoves()) { // ходов небыло, либо все ходы отменены
+          return;
+        }
         new ConfirmeDialogBox(constants.doYouWantToCancelMove()) {
           @Override
           public void procConfirm() {

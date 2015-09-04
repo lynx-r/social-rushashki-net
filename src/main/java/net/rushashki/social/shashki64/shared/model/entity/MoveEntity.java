@@ -19,6 +19,7 @@ import java.util.Set;
 class MoveEntity extends PersistableObjectImpl implements Move, PersistableObject {
   private int number;
   private boolean first; // первый ход в паре ходов. Например, ee-aa в ee-aa bb-cc
+  private boolean canceled; // ход был отменен (записываем все ходы)
 
   @OneToOne
   @JoinColumn(name="move_id", nullable=false, updatable=false)
