@@ -85,16 +85,24 @@ public class NotationPanel extends ScrollPanel {
       }
     } else { // взята одна или более шашек
       GWT.log(move.isFirst() + " FIRST CONT BEAT");
-      if (move.isStopBeat()) {
-          notation += BEAT_SEP + move.toNotationLastMove() + NOTATION_SEP;
-      } else if (move.isContinueBeat()) {
-        notation += BEAT_SEP + move.toNotationLastMove();
-      } else if (move.isStartBeat()) {
+      if (move.isStartBeat()) {
         if (move.isFirst()) {
           notation += move.getNumber() + COUNT_SEP + move.toNotation();
         } else {
-          notation += MOVE_SEP + move.toNotation();
+          if (move.isContinueBeat()) {
+            notation += MOVE_SEP + move.toNotation();
+          } else {
+            notation += MOVE_SEP + move.toNotation() + NOTATION_SEP;
+          }
         }
+      } else if (move.isStopBeat()) {
+        if (move.isFirst()) {
+          notation += BEAT_SEP + move.toNotationLastMove() + MOVE_SEP;
+        } else {
+          notation += BEAT_SEP + move.toNotationLastMove() + NOTATION_SEP;
+        }
+      } else if (move.isContinueBeat()) {
+        notation += BEAT_SEP + move.toNotationLastMove();
       }
     }
 

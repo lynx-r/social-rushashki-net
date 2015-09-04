@@ -189,7 +189,11 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
         if (board == null) {
           return;
         }
-        if (board.isMyTurn()) {
+        final MoveDto lastMove = board.getLastMove();
+        if (lastMove == null) {
+          return;
+        }
+        if (board.isMyTurn() && lastMove.isSimple()) {
           new DialogBox(constants.info(), constants.youDontMove());
           return;
         }
@@ -202,7 +206,10 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
             if (isConfirmed()) {
               GameMessage gameMessage = createSendGameMessage(clientFactory);
               gameMessage.setMessageType(GameMessage.MessageType.PLAY_CANCEL_MOVE);
-              MoveDto move = board.getLastMove();
+              MoveDto move = lastMove;
+              if (move.isContinueBeat()) {
+                move.mirror();
+              }
               move.setOnCancelMove();
               gameMessage.setMove(move);
 
@@ -483,7 +490,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
 //      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
 //          - playerListColumn.getOffsetWidth() - 81;
 //      privateChatColumn.setWidth(side + "px");
-      String notationHeight = lienzoPanel.getHeight() - 130 + "px";
+      String notationHeight = lienzoPanel.getHeight() - 170 + "px";
       notationPanel.setHeight(notationHeight);
       String playerListHeight = lienzoPanel.getHeight() - 105 + "px";
       playersCellList.setHeight(playerListHeight);

@@ -5,11 +5,11 @@ import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.shared.core.types.Color;
 
 /**
-* Created with IntelliJ IDEA.
-* Profile: alekspo
-* Date: 07.12.13
-* Time: 21:07
-*/
+ * Created with IntelliJ IDEA.
+ * Profile: alekspo
+ * Date: 07.12.13
+ * Time: 21:07
+ */
 public class Square extends Rectangle {
 
   private static final String TO_SEND_SEP = ",";
@@ -19,7 +19,7 @@ public class Square extends Rectangle {
   private boolean occupied;
   private Draught occupant;
   private static double strokeLineWidth = 1.5;
-  private String[] alph = new String[] {"a", "b", "c", "d", "e", "f", "g", "h"};
+  private String[] alph = new String[]{"a", "b", "c", "d", "e", "f", "g", "h"};
 
   private Square() {
     super(0, 0);
@@ -193,5 +193,10 @@ public class Square extends Rectangle {
 
   public double getCenterY() {
     return getY() + getHeight() / 2;
+  }
+
+  public void mirror() {
+    row = BoardBackgroundLayer.ROWS - 1 - row;
+    col = BoardBackgroundLayer.COLS - 1 - col;
   }
 }

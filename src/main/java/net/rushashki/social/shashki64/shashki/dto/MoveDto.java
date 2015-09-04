@@ -187,4 +187,19 @@ public class MoveDto implements Move {
         ", moveFlags=" + moveFlags +
         '}';
   }
+
+  /**
+   * Отражает ход на доске
+   */
+  public void mirror() {
+    if (startSquare != null) {
+      startSquare.mirror();
+    }
+    if (endSquare != null) {
+      endSquare.mirror();
+    }
+    if (takenSquare != null) {
+      takenSquare.mirror();
+    }
+  }
 }
