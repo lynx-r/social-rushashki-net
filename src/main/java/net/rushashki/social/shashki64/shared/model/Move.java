@@ -38,6 +38,7 @@ public interface Move extends IsSerializable {
     CANCEL_MOVE, // ход отменяется
     SIMPLE_MOVE, // ход без взятия
     CONTINUE_BEAT, // продолжить брать
-    STOP_BEAT // остановить взятие
+    START_BEAT, // начало взятия
+    STOP_BEAT // конец взятие
   }
 }

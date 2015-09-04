@@ -203,7 +203,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
               GameMessage gameMessage = createSendGameMessage(clientFactory);
               gameMessage.setMessageType(GameMessage.MessageType.PLAY_CANCEL_MOVE);
               MoveDto move = board.getLastMove();
-              move.turnOnCancelMove();
+              move.setOnCancelMove();
               gameMessage.setMove(move);
 
               eventBus.fireEvent(new GameMessageEvent(gameMessage));

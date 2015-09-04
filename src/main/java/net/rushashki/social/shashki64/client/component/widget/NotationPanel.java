@@ -18,7 +18,7 @@ import net.rushashki.social.shashki64.shashki.dto.MoveDto;
  */
 public class NotationPanel extends ScrollPanel {
   private static final String NOTATION_SEP = "<br>";
-  private static final String BITE_SEP = ":";
+  private static final String BEAT_SEP = ":";
   private static final String MOVE_SEP = " ";
   private static final String DIV_GARBAGE = "<div[\\s\\w\\d\";:=]*></div>";
   private static final String COUNT_SEP_REGEX = "\\. ";
@@ -77,22 +77,37 @@ public class NotationPanel extends ScrollPanel {
     Square start = move.getStartSquare();
     GWT.log("FIRST STEP" + start.toString());
 
-    if (move.isFirst()) {
-      notation += move.getNumber() + COUNT_SEP + move.toNotation();
-    } else {
-      notation += MOVE_SEP + move.toNotation() + NOTATION_SEP;
+    if (move.isSimple()) {
+      if (move.isFirst()) {
+        notation += move.getNumber() + COUNT_SEP + move.toNotation();
+      } else {
+        notation += MOVE_SEP + move.toNotation() + NOTATION_SEP;
+      }
+    } else { // взята одна или более шашек
+      GWT.log(move.isFirst() + " FIRST CONT BEAT");
+      if (move.isStopBeat()) {
+          notation += BEAT_SEP + move.toNotationLastMove() + NOTATION_SEP;
+      } else if (move.isContinueBeat()) {
+        notation += BEAT_SEP + move.toNotationLastMove();
+      } else if (move.isStartBeat()) {
+        if (move.isFirst()) {
+          notation += move.getNumber() + COUNT_SEP + move.toNotation();
+        } else {
+          notation += MOVE_SEP + move.toNotation();
+        }
+      }
     }
 
     // шаги из нотации
     // последний шаг. например, 2. f2-g3 f6-g5
 //    if (!move.isSimple() && lastStroke.endsWith(start)) { // была побита шашка
-//      String lastBeatenStroke = move.split(BITE_SEP)[1];
+//      String lastBeatenStroke = move.split(BEAT_SEP)[1];
 //      GWT.log("LAST BEATEN STROKE" + lastBeatenStroke);
 //      if (!notation.endsWith(NOTATION_SEP)) {
-//        notation += BITE_SEP + lastBeatenStroke;
+//        notation += BEAT_SEP + lastBeatenStroke;
 //      } else {
 //        // в начале убираем маркер новой строки, потом приципляем ход
-//        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + BITE_SEP + lastBeatenStroke + NOTATION_SEP;
+//        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + BEAT_SEP + lastBeatenStroke + NOTATION_SEP;
 //      }
 //    } else { // обычный ход
 //      String lastMove = steps[steps.length - 1];
@@ -108,8 +123,8 @@ public class NotationPanel extends ScrollPanel {
 //        notation += MOVE_SEP + move + NOTATION_SEP;
 //        stepCounter++;
 //        GWT.log("1");
-//      } else if (move.contains(BITE_SEP) && cancelBite) {
-//        notation += BITE_SEP + move + NOTATION_SEP;
+//      } else if (move.contains(BEAT_SEP) && cancelBite) {
+//        notation += BEAT_SEP + move + NOTATION_SEP;
 //        GWT.log("2");
 //      } else {
 //        notation += stepCounter + COUNT_SEP + move;
@@ -149,25 +164,25 @@ public class NotationPanel extends ScrollPanel {
 //    String lastMove = move.split(COUNT_SEP_REGEX)[1];
 //    String[] lastMoveArray = lastMove.split(MOVE_SEP);
 //    GWT.log("LAST MOVE " + lastMove);
-//    if (lastMove.contains(BITE_SEP) && !lastMove.contains(MOVE_SEP)) { // первый ход
-//      GWT.log(notation + " - " + notation.lastIndexOf(BITE_SEP));
-//      if (lastMove.split(BITE_SEP).length == 2) { // первый ход содержит побитые шашки и она одна
+//    if (lastMove.contains(BEAT_SEP) && !lastMove.contains(MOVE_SEP)) { // первый ход
+//      GWT.log(notation + " - " + notation.lastIndexOf(BEAT_SEP));
+//      if (lastMove.split(BEAT_SEP).length == 2) { // первый ход содержит побитые шашки и она одна
 //        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
 //        stepCounter -= cancelCounter;
 //        cancelCounter = 1;
 //      } else { // побито несколько шашек
-//        notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
+//        notation = notation.substring(0, notation.lastIndexOf(BEAT_SEP));
 //        cancelBite = true;
 //      }
 //    } else { // второй ход
 //      if (lastMoveArray.length == 2) {
 //        // послед ход e7:g5
 //        final String lastStep = lastMoveArray[1];
-//        final String[] lastStepArray = lastStep.split(BITE_SEP);
+//        final String[] lastStepArray = lastStep.split(BEAT_SEP);
 //        GWT.log(lastStep);
-//        if (lastStep.contains(BITE_SEP) && lastStep.split(BITE_SEP).length != 2) { // последний ход содержит побитые
+//        if (lastStep.contains(BEAT_SEP) && lastStep.split(BEAT_SEP).length != 2) { // последний ход содержит побитые
 //          // шашки
-//          notation = notation.substring(0, notation.lastIndexOf(BITE_SEP));
+//          notation = notation.substring(0, notation.lastIndexOf(BEAT_SEP));
 //          cancelBite = true;
 //        } else {
 //          notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));

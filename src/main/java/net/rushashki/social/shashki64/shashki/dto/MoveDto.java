@@ -107,11 +107,11 @@ public class MoveDto implements Move {
     return moveFlags.contains(MoveFlags.CANCEL_MOVE);
   }
 
-  public void turnOnCancelMove() {
+  public void setOnCancelMove() {
     moveFlags.add(MoveFlags.CANCEL_MOVE);
   }
 
-  public void turnOffCancelMove() {
+  public void setOffCancelMove() {
     moveFlags.remove(MoveFlags.CANCEL_MOVE);
   }
 
@@ -119,11 +119,11 @@ public class MoveDto implements Move {
     return moveFlags.contains(MoveFlags.SIMPLE_MOVE);
   }
 
-  public void turnOnSimpleMove() {
+  public void setOnSimpleMove() {
     moveFlags.add(MoveFlags.SIMPLE_MOVE);
   }
 
-  public void turnOffSimpleMove() {
+  public void setOffSimpleMove() {
     moveFlags.remove(MoveFlags.SIMPLE_MOVE);
   }
 
@@ -131,7 +131,7 @@ public class MoveDto implements Move {
     return moveFlags.contains(MoveFlags.CONTINUE_BEAT);
   }
 
-  public void turnOnContinueBeat() {
+  public void setOnContinueBeat() {
     moveFlags.add(MoveFlags.CONTINUE_BEAT);
   }
 
@@ -143,12 +143,24 @@ public class MoveDto implements Move {
     return moveFlags.contains(MoveFlags.STOP_BEAT);
   }
 
-  public void turnOnStopBeat() {
+  public void setOnStopBeat() {
     moveFlags.add(MoveFlags.STOP_BEAT);
   }
 
-  public void turnOffStopBeat() {
+  public void setOffStopBeat() {
     moveFlags.remove(MoveFlags.STOP_BEAT);
+  }
+
+  public boolean isStartBeat() {
+    return moveFlags.contains(MoveFlags.START_BEAT);
+  }
+
+  public void setOnStartBeat() {
+    moveFlags.add(MoveFlags.START_BEAT);
+  }
+
+  public void setOffStartBeat() {
+    moveFlags.remove(MoveFlags.START_BEAT);
   }
 
   public Set<MoveFlags> getMoveFlags() {
@@ -158,6 +170,10 @@ public class MoveDto implements Move {
   public String toNotation() {
     return isSimple() ? startSquare.toNotation(first) + SIMPLE_MOVE_SEP + endSquare.toNotation(first)
         : startSquare.toNotation(first) + BEAT_MOVE_SEP + endSquare.toNotation(first);
+  }
+
+  public String toNotationLastMove() {
+    return endSquare.toNotation(first);
   }
 
   @Override

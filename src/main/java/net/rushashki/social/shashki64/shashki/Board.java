@@ -575,7 +575,7 @@ public class Board extends Layer {
       }
 
       if (takenSquare == null) {
-        move.turnOnSimpleMove();
+        move.setOnSimpleMove();
         return move;
       }
 
@@ -612,14 +612,19 @@ public class Board extends Layer {
 
       move.setTakenSquare(takenSquare);
       if (jumpMoves.isEmpty()) {
-        move.turnOnStopBeat();
+        move.setOnStopBeat();
       } else {
-        move.turnOnContinueBeat();
+        move.setOnContinueBeat();
       }
 
       removeDraughtFrom(takenSquare);
+
+      // если предыдущий ход простой (без взятия), тогда устанавливаем флаг на начало взятия
+      if (getLastMove().isSimple()) {
+        move.setOnStartBeat();
+      }
     } else {
-      move.turnOnSimpleMove();
+      move.setOnSimpleMove();
     }
 
     return move;
