@@ -8,6 +8,7 @@
 
         <class>net.rushashki.social.shashki64.shared.model.entity.GameEntity</class>
         <class>net.rushashki.social.shashki64.shared.model.entity.GameMessageEntity</class>
+        <class>net.rushashki.social.shashki64.shared.model.entity.MoveEntity</class>
         <class>net.rushashki.social.shashki64.shared.model.entity.ShashistEntity</class>
         <class>net.rushashki.social.shashki64.shared.model.entity.FriendEntity</class>
 

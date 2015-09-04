@@ -2,6 +2,7 @@ package net.rushashki.social.shashki64.shared.model.entity;
 
 import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.model.Move;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import javax.persistence.*;
@@ -37,13 +38,8 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
   @Column(name = "sent_date")
   private Date sentDate;
 
-  @Column(name = "start_step")
-  private String startStep;
-
-  @Column(name = "end_step")
-  private String endStep;
-
-  private String captured;
+  @OneToOne(mappedBy = "gameMessage")
+  private MoveEntity move;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "game_id")
@@ -125,33 +121,16 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
   }
 
   @Override
-  public String getStartMove() {
-    return startStep;
+  public MoveEntity getMove() {
+    return move;
   }
 
   @Override
-  public void setStartMove(String startStep) {
-    this.startStep = startStep;
+  public void setMove(Move move) {
   }
 
-  @Override
-  public String getEndMove() {
-    return endStep;
-  }
-
-  @Override
-  public void setEndMove(String endStep) {
-    this.endStep = endStep;
-  }
-
-  @Override
-  public String getCaptured() {
-    return captured;
-  }
-
-  @Override
-  public void setCaptured(String captured) {
-    this.captured = captured;
+  public void setMove(MoveEntity move) {
+    this.move = move;
   }
 
   @Override
@@ -166,5 +145,4 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
   public void setGame(GameEntity entity) {
     this.game = entity;
   }
-
 }

@@ -10,18 +10,6 @@ import java.util.List;
  */
 public interface GameMessage extends Message {
 
-  String getStartMove();
-
-  void setStartMove(String startStep);
-
-  String getEndMove();
-
-  void setEndMove(String endStep);
-
-  String getCaptured();
-
-  void setCaptured(String captured);
-
   Game getGame();
 
   void setGame(Game gameId);
@@ -29,4 +17,8 @@ public interface GameMessage extends Message {
   List<Shashist> getPlayerList();
 
   void setPlayerList(List<Shashist> playerList);
+
+  Move getMove();
+
+  void setMove(Move move);
 }

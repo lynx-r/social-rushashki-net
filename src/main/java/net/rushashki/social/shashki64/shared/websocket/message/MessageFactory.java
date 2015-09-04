@@ -5,6 +5,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.model.Move;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 /**
@@ -21,4 +22,5 @@ public interface MessageFactory extends AutoBeanFactory {
 
   AutoBean<Shashist> shashist();
 
+  AutoBean<Move> move();
 }

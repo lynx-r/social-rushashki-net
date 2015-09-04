@@ -12,34 +12,42 @@ import com.ait.lienzo.shared.core.types.Color;
 */
 public class Square extends Rectangle {
 
-  private final int row;
-  private final int col;
-  private final Color boardBackground = new Color(144, 77, 48);
-  private final int rows;
-  private final int cols;
-  private final double side;
+  private static final String TO_SEND_SEP = ",";
+  private int row;
+  private int col;
+  private static final Color boardBackground = new Color(144, 77, 48);
   private boolean occupied;
   private Draught occupant;
-  private double strokeLineWidth = 1.5;
+  private static double strokeLineWidth = 1.5;
   private String[] alph = new String[] {"a", "b", "c", "d", "e", "f", "g", "h"};
-  private double offsetX;
 
-  public Square(double side, int rows, int cols, int row, int col, double offsetX) {
+  private Square() {
     super(0, 0);
-    this.side = side;
-    this.row = row;
-    this.col = col;
-    this.rows = rows;
-    this.cols = cols;
-    this.offsetX = offsetX;
+  }
 
-    occupied = false;
-    occupant = null;
+  public static Square getInstance(int row, int col) {
+    Square square = new Square();
 
-    updateShape();
+    square.row = row;
+    square.col = col;
 
-    setFillColor(boardBackground);
-    setStrokeWidth(strokeLineWidth);
+    square.occupied = false;
+    square.occupant = null;
+
+    square.setFillColor(boardBackground);
+    square.setStrokeWidth(strokeLineWidth);
+
+    return square;
+  }
+
+  public static Square getInstance(String toSendStr) {
+    if (toSendStr == null || toSendStr.isEmpty()) {
+      return null;
+    }
+    final String[] toSendArr = toSendStr.split(TO_SEND_SEP);
+    final Integer row = Integer.valueOf(toSendArr[0]);
+    final Integer col = Integer.valueOf(toSendArr[1]);
+    return getInstance(row, col);
   }
 
   public static boolean isValid(int row, int col) {
@@ -89,14 +97,14 @@ public class Square extends Rectangle {
   }
 
   public String toSend() {
-    return String.valueOf(row) + "," + String.valueOf(col);
+    return String.valueOf(row) + TO_SEND_SEP + String.valueOf(col);
   }
 
-  public String toNotation(boolean white, boolean second, boolean fromOpponent) {
-    if (white) {
-      return alph[col] + String.valueOf(rows - row);
+  public String toNotation(boolean first) {
+    if (first) {
+      return alph[col] + String.valueOf(BoardBackgroundLayer.ROWS - row);
     }
-    return alph[cols - 1 - col] + String.valueOf(row + 1);
+    return alph[BoardBackgroundLayer.COLS - 1 - col] + String.valueOf(row + 1);
   }
 
   /**
@@ -164,7 +172,7 @@ public class Square extends Rectangle {
     return ((value > min) && (value < max));
   }
 
-  public void updateShape() {
+  public void updateShape(int side, int rows, int cols, double offsetX) {
     double x = ((double) col) * side / ((double) rows) + offsetX;
     double y = ((double) row) * side / ((double) cols);
     setX(x);

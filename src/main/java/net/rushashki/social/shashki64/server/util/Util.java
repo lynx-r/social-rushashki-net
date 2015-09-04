@@ -66,5 +66,4 @@ public class Util {
     AutoBean<GameMessage> playerMessageBean = AutoBeanCodex.decode(messageFactory, GameMessage.class, json);
     return playerMessageBean.as();
   }
-
 }

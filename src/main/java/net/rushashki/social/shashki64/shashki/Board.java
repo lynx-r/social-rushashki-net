@@ -6,10 +6,12 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.event.NodeTouchEndEvent;
 import com.ait.lienzo.client.core.event.NodeTouchEndHandler;
 import com.ait.lienzo.client.core.shape.Layer;
+import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
+import net.rushashki.social.shashki64.shashki.dto.MoveDto;
 import net.rushashki.social.shashki64.shashki.util.Operator;
 import net.rushashki.social.shashki64.shashki.util.PossibleOperators;
 
@@ -25,14 +27,6 @@ import java.util.Stack;
  * Time: 13:26
  */
 public class Board extends Layer {
-  public static final String CANCEL_MOVE = "cancel_move";
-  public static final String NOT_REMOVED = "null";
-  private static final String NEXT_MOVE = "next_move";
-  private static final String STOP_BEAT_MOVE = "stop_move";
-  public static final String MOVE_STR_SEP = ",";
-  private static final String ANNOTATION_SIMPLE_MOVE = "-";
-  private static final String ANNOTATION_BEAT_MOVE = ":";
-
   private final BoardBackgroundLayer backgroundLayer;
   private List<Square> capturedSquares = new ArrayList<>();
   private List<Draught> myDraughtList;
@@ -46,17 +40,18 @@ public class Board extends Layer {
   private final double moveDraughtDuration = 800;
   private boolean emulate = false; // эмулировать шашки
   private HashMap<String, Integer> alphMap;
-  private Stack<Square> capturedStack = new Stack<>();
   // стек ходов шашек, когда они становятся дамками
   private Stack<Integer> queenStepStack = new Stack<>();
 
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   private EventBus eventBus;
   private List<Square> highlightedSquares = new ArrayList<>();
-  private String lastEndMove;
-  private String lastStartMove;
-  private String lastCaptured;
+  //  private String lastEndMove;
+//  private String lastStartMove;
+//  private String lastCaptured;
   private HandlerRegistration playMoveOpponentHR;
+
+  private Stack<MoveDto> moveStack = new Stack<>();
 
   public Board(BoardBackgroundLayer backgroundLayer, int rows, int cols, boolean white) {
 
@@ -87,6 +82,21 @@ public class Board extends Layer {
   }
 
   private void handlers() {
+    eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
+      @Override
+      public void onPlayMove(PlayMoveEvent event) {
+        final MoveDto move = event.getMove();
+        if (move.isCancel()) {
+          eventBus.fireEvent(new NotationCancelMoveEvent());
+          if (isMyTurn()) {
+            moveOpponent(move);
+          } else {
+            moveCanceled(move);
+          }
+        }
+      }
+    });
+
     addNodeMouseClickHandler(new NodeMouseClickHandler() {
       @Override
       public void onNodeMouseClick(NodeMouseClickEvent nodeMouseClickEvent) {
@@ -104,7 +114,7 @@ public class Board extends Layer {
     playMoveOpponentHR = eventBus.addHandler(PlayMoveOpponentEvent.TYPE, new PlayMoveOpponentEventHandler() {
       @Override
       public void onPlayMoveOpponent(PlayMoveOpponentEvent event) {
-        Board.this.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured());
+        Board.this.moveOpponent(event.getMove());
       }
     });
 
@@ -163,13 +173,14 @@ public class Board extends Layer {
         return draught;
       }
     } catch (SquareNotFoundException e) {
-      e.printStackTrace();
+      GWT.log(e.getLocalizedMessage(), e);
     }
     return null;
   }
 
   /**
    * Функция заполняет массив highlightedSquares
+   *
    * @param clickedPiece
    */
   public void highlightAllowedMoves(Draught clickedPiece) {
@@ -181,8 +192,8 @@ public class Board extends Layer {
           if (draught != null && draught.isWhite() == clickedPiece.isWhite()) {
             highlightPossibleMoves(draught, clickedPiece);
           }
-        } catch (SquareNotFoundException e) {
-          e.printStackTrace();
+        } catch (SquareNotFoundException ignore) {
+//          GWT.log(e.getLocalizedMessage(), e);
         }
       }
     }
@@ -197,7 +208,7 @@ public class Board extends Layer {
               highlightedSquares.remove(square);
             }
           } catch (SquareNotFoundException e) {
-            e.printStackTrace();
+            GWT.log(e.getLocalizedMessage(), e);
           }
         }
       }
@@ -260,7 +271,7 @@ public class Board extends Layer {
               highlightedSquares.add(currentSq);
             }
           } catch (SquareNotFoundException e) {
-            e.printStackTrace();
+            GWT.log(e.getLocalizedMessage(), e);
           }
         }
       } else if (!possibleMoves.isEmpty()) {
@@ -308,8 +319,8 @@ public class Board extends Layer {
       try {
         square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
         nextSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
-      } catch (SquareNotFoundException e) {
-        e.printStackTrace();
+      } catch (SquareNotFoundException ignore) {
+//        GWT.log(e.getLocalizedMessage(), e);
       }
       // Check moves to the op1, op2 of this Draught
       if (square != null && !square.isOccupied()) {
@@ -335,7 +346,7 @@ public class Board extends Layer {
               try {
                 startSquareLoop = backgroundLayer.getSquare(i, j);
               } catch (SquareNotFoundException e) {
-                e.printStackTrace();
+                GWT.log(e.getLocalizedMessage(), e);
                 return;
               }
               while (inBounds(i, j) && !startSquareLoop.isOccupied()) {
@@ -343,7 +354,7 @@ public class Board extends Layer {
                 try {
                   loopSquare = backgroundLayer.getSquare(i, j);
                 } catch (SquareNotFoundException e) {
-                  e.printStackTrace();
+                  GWT.log(e.getLocalizedMessage(), e);
                   continue;
                 }
                 if (straightQueen) {
@@ -403,7 +414,7 @@ public class Board extends Layer {
           square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
           nextSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
         } catch (SquareNotFoundException e) {
-          e.printStackTrace();
+          GWT.log(e.getLocalizedMessage(), e);
         }
         if (nextSquare != null && !nextSquare.isOccupied() && square != null && square.isOccupied()
             && square.getOccupant().isWhite() != sideWhite) {
@@ -414,10 +425,6 @@ public class Board extends Layer {
         }
       }
     }
-  }
-
-  public BoardBackgroundLayer getBackgroundLayer() {
-    return backgroundLayer;
   }
 
   public void resetDesk() {
@@ -441,14 +448,14 @@ public class Board extends Layer {
       try {
         jumpSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
       } catch (SquareNotFoundException e) {
-        e.printStackTrace();
+        GWT.log(e.getLocalizedMessage(), e);
         return;
       }
       Square capturedSquare;
       try {
         capturedSquare = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
       } catch (SquareNotFoundException e) {
-        e.printStackTrace();
+        GWT.log(e.getLocalizedMessage(), e);
         return;
       }
       //if square is occupied, and the color of the Draught in square is
@@ -461,7 +468,7 @@ public class Board extends Layer {
           try {
             square = backgroundLayer.getSquare(row, col);
           } catch (SquareNotFoundException e) {
-            e.printStackTrace();
+            GWT.log(e.getLocalizedMessage(), e);
             return;
           }
           if (capturedSquare.isBetween(square, takenSquare)) {
@@ -476,13 +483,13 @@ public class Board extends Layer {
             try {
               capturedSquare = backgroundLayer.getSquare(opRow.apply(r, 1), opCol.apply(c, 1));
             } catch (SquareNotFoundException e) {
-              e.printStackTrace();
+              GWT.log(e.getLocalizedMessage(), e);
               return;
             }
             try {
               jumpSquare = backgroundLayer.getSquare(opRow.apply(r, 2), opCol.apply(c, 2));
             } catch (SquareNotFoundException e) {
-              e.printStackTrace();
+              GWT.log(e.getLocalizedMessage(), e);
               return;
             }
           }
@@ -494,7 +501,7 @@ public class Board extends Layer {
             try {
               squareStartLoop = backgroundLayer.getSquare(i, j);
             } catch (SquareNotFoundException e) {
-              e.printStackTrace();
+              GWT.log(e.getLocalizedMessage(), e);
               return;
             }
             while (inBounds(i, j) && !squareStartLoop.isOccupied()) {
@@ -502,7 +509,7 @@ public class Board extends Layer {
               try {
                 squareLoop = backgroundLayer.getSquare(i, j);
               } catch (SquareNotFoundException e) {
-                e.printStackTrace();
+                GWT.log(e.getLocalizedMessage(), e);
                 continue;
               }
               outJumpMoves.add(squareLoop);
@@ -519,7 +526,7 @@ public class Board extends Layer {
         try {
           square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
         } catch (SquareNotFoundException e) {
-          e.printStackTrace();
+          GWT.log(e.getLocalizedMessage(), e);
           return;
         }
         if (square.isOccupied()) {
@@ -542,18 +549,15 @@ public class Board extends Layer {
   }
 
   /**
-   * Perform a move on the board. This function does not perform input checking, as it is only called
-   * once a move has been validated by highlightPossibleMoves
-   * <p>
-   * <p>
-   * //   * @param from 				The square from which we are moving
-   * //   * @param to				The square to which we are moving
+   * получаем флаги передвижения и взятую шашку
    *
-   * @return True if a jump has been performed, false if it's just a normal move
+   * @param from 				The square from which we are moving
+   * @param to				The square to which we are moving
+   *
+   * @return возвращете передвижение с установленными флагами и взятой шашкой
    */
-  public String move(Square from, Square to) {
-    String removedCoords = NOT_REMOVED;
-
+  public MoveDto move(Square from, Square to) {
+    MoveDto move = new MoveDto();
     Draught beingMoved = from.getOccupant();
 
     from.setOccupant(null);
@@ -571,7 +575,8 @@ public class Board extends Layer {
       }
 
       if (takenSquare == null) {
-        return NOT_REMOVED;
+        move.turnOnSimpleMove();
+        return move;
       }
 
       int row = to.getRow();
@@ -605,15 +610,19 @@ public class Board extends Layer {
             jumpMoves);
       }
 
-      removedCoords = takenSquare.toSend() + (!jumpMoves.isEmpty() ? MOVE_STR_SEP + NEXT_MOVE : MOVE_STR_SEP + STOP_BEAT_MOVE);
+      move.setTakenSquare(takenSquare);
+      if (jumpMoves.isEmpty()) {
+        move.turnOnContinueBeat();
+      } else {
+        move.turnOnStopBeat();
+      }
 
-      opponentDraughtList.remove(takenSquare.getOccupant());
       removeDraughtFrom(takenSquare);
-
-      capturedSquares = new ArrayList<>();
+    } else {
+      move.turnOnSimpleMove();
     }
 
-    return removedCoords;
+    return move;
   }
 
   public void removeDraughtFrom(Square takenSquare) {
@@ -621,6 +630,7 @@ public class Board extends Layer {
   }
 
   private void removeDraughtFrom(Square takenSquare, boolean clearDesk) {
+    opponentDraughtList.remove(takenSquare.getOccupant());
     final Draught takenDraught = takenSquare.getOccupant();
     if (takenDraught == null) {
       return;
@@ -647,6 +657,7 @@ public class Board extends Layer {
             }
           }
         });
+    capturedSquares = new ArrayList<>();
   }
 
   public boolean inBounds(int row, int col) {
@@ -669,7 +680,7 @@ public class Board extends Layer {
         try {
           current = backgroundLayer.getSquare(n, m);
         } catch (SquareNotFoundException e) {
-          e.printStackTrace();
+          GWT.log(e.getLocalizedMessage(), e);
           continue;
         }
         if (null != current && null != current.getOccupant() && current.isBetween(firstStep, secondStep)
@@ -682,71 +693,71 @@ public class Board extends Layer {
     return captured;
   }
 
-  public void moveEmulatedNextWhite(String move, int stepCursor) {
-    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
-      Square startSquare, endSquare;
-      try {
-        startSquare = parseStep(steps[0]);
-        endSquare = parseStep(steps[1]);
-      } catch (SquareNotFoundException e) {
-        e.printStackTrace();
-        return;
-      }
-      move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
-      for (int i = 0; i < steps.length - 1; i++) {
-        Square firstStep, secondStep;
-        try {
-          firstStep = parseStep(steps[i]);
-          secondStep = parseStep(steps[i + 1]);
-        } catch (SquareNotFoundException e) {
-          e.printStackTrace();
-          continue;
-        }
-        Square captured = findCaptured(firstStep, secondStep);
-        if (null == captured) {
-          return;
-        }
-        capturedStack.push(captured);
-        move(firstStep, secondStep, captured, false, stepCursor);
-      }
-    }
-  }
+//  public void moveEmulatedNextWhite(String move, int stepCursor) {
+//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//      Square startSquare, endSquare;
+//      try {
+//        startSquare = parseStep(steps[0]);
+//        endSquare = parseStep(steps[1]);
+//      } catch (SquareNotFoundException e) {
+//        GWT.log(e.getLocalizedMessage(), e);
+//        return;
+//      }
+//      move(startSquare, endSquare, null, false, stepCursor);
+//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      for (int i = 0; i < steps.length - 1; i++) {
+//        Square firstStep, secondStep;
+//        try {
+//          firstStep = parseStep(steps[i]);
+//          secondStep = parseStep(steps[i + 1]);
+//        } catch (SquareNotFoundException e) {
+//          GWT.log(e.getLocalizedMessage(), e);
+//          continue;
+//        }
+//        Square captured = findCaptured(firstStep, secondStep);
+//        if (null == captured) {
+//          return;
+//        }
+//        capturedStack.push(captured);
+//        move(firstStep, secondStep, captured, false, stepCursor);
+//      }
+//    }
+//  }
 
-  public void moveEmulatedNextBlack(String move, int stepCursor) {
-    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
-      Square startSquare, endSquare;
-      try {
-        startSquare = parseStep(steps[0]);
-        endSquare = parseStep(steps[1]);
-      } catch (SquareNotFoundException e) {
-        e.printStackTrace();
-        return;
-      }
-      move(startSquare, endSquare, null, false, stepCursor);
-    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
-      for (int i = 0; i < steps.length - 1; i++) {
-        Square firstStep, secondStep;
-        try {
-          firstStep = parseStep(steps[i]);
-          secondStep = parseStep(steps[i + 1]);
-        } catch (SquareNotFoundException e) {
-          e.printStackTrace();
-          continue;
-        }
-        Square captured = findCaptured(firstStep, secondStep);
-        if (null == captured) {
-          return;
-        }
-        capturedStack.push(captured);
-        move(firstStep, secondStep, captured, false, stepCursor);
-      }
-    }
-  }
+//  public void moveEmulatedNextBlack(String move, int stepCursor) {
+//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//      Square startSquare, endSquare;
+//      try {
+//        startSquare = parseStep(steps[0]);
+//        endSquare = parseStep(steps[1]);
+//      } catch (SquareNotFoundException e) {
+//        GWT.log(e.getLocalizedMessage(), e);
+//        return;
+//      }
+//      move(startSquare, endSquare, null, false, stepCursor);
+//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      for (int i = 0; i < steps.length - 1; i++) {
+//        Square firstStep, secondStep;
+//        try {
+//          firstStep = parseStep(steps[i]);
+//          secondStep = parseStep(steps[i + 1]);
+//        } catch (SquareNotFoundException e) {
+//          GWT.log(e.getLocalizedMessage(), e);
+//          continue;
+//        }
+//        Square captured = findCaptured(firstStep, secondStep);
+//        if (null == captured) {
+//          return;
+//        }
+//        capturedStack.push(captured);
+//        move(firstStep, secondStep, captured, false, stepCursor);
+//      }
+//    }
+//  }
 
 //  public void moveEmulatedPrevWhite(String move, int stepCursor) {
 //    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
@@ -794,65 +805,68 @@ public class Board extends Layer {
 //    }
 //  }
 
-  public void moveOpponent(String startMove, String endMove, String captured) {
-    moveOpponent(startMove, endMove, captured, -1);
+  public void moveOpponent(MoveDto move) {
+    moveOpponent(move, -1);
   }
 
-  public void moveOpponent(String start, String end, String capture, int stepCursor) {
-    int sRow = Integer.valueOf(start.split(MOVE_STR_SEP)[0]);
-    int sCol = Integer.valueOf(start.split(MOVE_STR_SEP)[1]);
+  public void moveOpponent(MoveDto move, int stepCursor) {
+    int sRow = move.getStartSquare().getRow();
+    int sCol = move.getStartSquare().getCol();
 
-    int eRow = Integer.valueOf(end.split(MOVE_STR_SEP)[0]);
-    int eCol = Integer.valueOf(end.split(MOVE_STR_SEP)[1]);
+    int eRow = move.getEndSquare().getRow();
+    int eCol = move.getEndSquare().getCol();
 
-    Square sSquare, eSquare;
-    try {
-      sSquare = backgroundLayer.getSquare(sRow, sCol);
-      eSquare = backgroundLayer.getSquare(eRow, eCol);
-    } catch (SquareNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
+//    Square sSquare, eSquare;
+//    try {
+//      sSquare = backgroundLayer.getSquare(sRow, sCol);
+//      eSquare = backgroundLayer.getSquare(eRow, eCol);
+//    } catch (SquareNotFoundException e) {
+//      GWT.log(e.getLocalizedMessage(), e);
+//      return;
+//    }
 
-    int startRow = rows - 1 - Integer.valueOf(start.split(MOVE_STR_SEP)[0]);
-    int startCol = cols - 1 - Integer.valueOf(start.split(MOVE_STR_SEP)[1]);
+    int startRow = rows - 1 - sRow;
+    int startCol = cols - 1 - sCol;
 
-    int endRow = rows - 1 - Integer.valueOf(end.split(MOVE_STR_SEP)[0]);
-    int endCol = cols - 1 - Integer.valueOf(end.split(MOVE_STR_SEP)[1]);
+    int endRow = rows - 1 - eRow;
+    int endCol = cols - 1 - eCol;
 
     Square startSquare, endSquare;
     try {
       startSquare = backgroundLayer.getSquare(startRow, startCol);
       endSquare = backgroundLayer.getSquare(endRow, endCol);
     } catch (SquareNotFoundException e) {
-      e.printStackTrace();
+      GWT.log(e.getLocalizedMessage(), e);
       return;
     }
 
-    boolean simpleMove = capture.contains(NOT_REMOVED);
-    if (!capture.contains(CANCEL_MOVE)) {
-      String op = simpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
-      String move = sSquare.toNotation(!isWhite(), false, false)
-          + op
-          + eSquare.toNotation(!isWhite(), true, false);
+    boolean simpleMove = move.isSimple();
+    if (!move.isCancel()) {
+//      String op = simpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
+//      String move = sSquare.toNotation(!isWhite(), false, false)
+//          + op
+//          + eSquare.toNotation(!isWhite(), true, false);
+      final boolean first = produceFirstMoveFlag(move, true);
+      move.setNumber(move.getNumber())
+          .setFirst(first);
       eventBus.fireEvent(new NotationMoveEvent(move));
     }
 
     Square captured = null;
     boolean nextCapture = false;
     if (!simpleMove) {
-      int beatenRow = rows - 1 - Integer.valueOf(capture.split(MOVE_STR_SEP)[0]);
-      int beatenCol = cols - 1 - Integer.valueOf(capture.split(MOVE_STR_SEP)[1]);
-      nextCapture = NEXT_MOVE.equals(capture.split(MOVE_STR_SEP)[2]);
+      int beatenRow = rows - 1 - move.getTakenSquare().getRow();
+      int beatenCol = cols - 1 - move.getTakenSquare().getCol();
+      nextCapture = move.isContinueBeat();
       try {
         captured = backgroundLayer.getSquare(beatenRow, beatenCol);
       } catch (SquareNotFoundException e) {
-        e.printStackTrace();
+        GWT.log(e.getLocalizedMessage(), e);
         return;
       }
     }
 
-    boolean cancelMove = capture.contains(CANCEL_MOVE);
+    boolean cancelMove = move.isCancel();
 
     move(startSquare, endSquare, captured, nextCapture, cancelMove, stepCursor);
   }
@@ -969,23 +983,29 @@ public class Board extends Layer {
       Square endSquare = null, startSquare = null;
       try {
         endSquare = getSquare(clickX, clickY);
-        lastEndMove = endSquare.toSend();
       } catch (SquareNotFoundException e) {
-        e.printStackTrace();
+        GWT.log(e.getLocalizedMessage(), e);
       }
 
       try {
         startSquare = getSquare(selectedDraught.getRow(), selectedDraught.getCol());
-        lastStartMove = startSquare.toSend();
       } catch (SquareNotFoundException e) {
-        e.printStackTrace();
+        GWT.log(e.getLocalizedMessage(), e);
       }
 
       if (highlightedSquares.contains(endSquare) && startSquare != null && startSquare.isOnLine(endSquare)) {
-        String captured = lastCaptured = move(startSquare, endSquare);
+        // получаем флаги передвижения и взятую шашку
+        MoveDto move = move(startSquare, endSquare);
+        move.setStartSquare(startSquare);
+        move.setEndSquare(endSquare);
 
-        boolean isSimpleMove = NOT_REMOVED.equals(captured);
-        if (NOT_REMOVED.equals(captured) || STOP_BEAT_MOVE.equals(captured.split(MOVE_STR_SEP)[2])) {
+        final boolean first = produceFirstMoveFlag(move, false);
+        move.setNumber(moveStack.size() + 1)
+            .setFirst(first);
+
+        boolean isSimpleMove = move.isSimple();
+        GWT.log("SIMPLE MOVE " + isSimpleMove);
+        if (isSimpleMove || move.isStopBeat()) {
           toggleTurn();
         }
         if (!selectedDraught.isQueen()) {
@@ -995,12 +1015,13 @@ public class Board extends Layer {
         }
 
         if (endSquare != null) {
-          String op = isSimpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
-          String move = startSquare.toNotation(isWhite(), false, false)
-              + op
-              + endSquare.toNotation(isWhite(), true, false);
+//          String op = isSimpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
+//          String move = startSquare.toNotation(isWhite(), false, false)
+//              + op
+//              + endSquare.toNotation(isWhite(), true, false);
           eventBus.fireEvent(new NotationMoveEvent(move));
-          eventBus.fireEvent(new PlayMoveEvent(startSquare.toSend(), endSquare.toSend(), captured));
+          eventBus.fireEvent(new PlayMoveEvent(move));
+          moveStack.push(move);
 
           AnimationProperties props = new AnimationProperties();
           props.push(AnimationProperty.Properties.X(endSquare.getCenterX()));
@@ -1019,6 +1040,14 @@ public class Board extends Layer {
     }
   }
 
+  private boolean produceFirstMoveFlag(MoveDto move, boolean opponent) {
+    if (isWhite()) {
+      return isMyTurn();
+    } else {
+      return !isMyTurn();
+    }
+  }
+
   public void clearDesk() {
     for (int i = 0; i < cols; i++) {
       for (int j = 0; j < rows; j++) {
@@ -1026,56 +1055,48 @@ public class Board extends Layer {
           Square square = getSquare(i, j);
           removeDraughtFrom(square, true);
         } catch (SquareNotFoundException e) {
-          e.printStackTrace();
+          GWT.log(e.getLocalizedMessage(), e);
         }
       }
     }
   }
 
-  public String getLastEndMove() {
-    return lastEndMove;
-  }
+  public void moveCanceled(MoveDto move) {
+    int startRow = move.getStartSquare().getRow();
+    int startCol = move.getStartSquare().getCol();
 
-  public String getLastStartMove() {
-    return lastStartMove;
-  }
-
-  public String getLastCaptured() {
-    return lastCaptured;
-  }
-
-  public void moveCanceled(String startMove, String endMove, String capture) {
-    int startRow = Integer.valueOf(startMove.split(MOVE_STR_SEP)[0]);
-    int startCol = Integer.valueOf(startMove.split(MOVE_STR_SEP)[1]);
-
-    int endRow = Integer.valueOf(endMove.split(MOVE_STR_SEP)[0]);
-    int endCol = Integer.valueOf(endMove.split(MOVE_STR_SEP)[1]);
+    int endRow = move.getEndSquare().getRow();
+    int endCol = move.getEndSquare().getCol();
 
     Square startSquare, endSquare;
     try {
       startSquare = backgroundLayer.getSquare(startRow, startCol);
       endSquare = backgroundLayer.getSquare(endRow, endCol);
     } catch (SquareNotFoundException e) {
-      e.printStackTrace();
+      GWT.log(e.getLocalizedMessage(), e);
       return;
     }
 
-    boolean simpleMove = capture.contains(NOT_REMOVED);
+    boolean simpleMove = move.isSimple();
 //    boolean cancelMove = capture.contains(CANCEL_MOVE);
 
     Square captured = null;
     boolean nextCapture = false;
     if (!simpleMove) {
-      int beatenRow = Integer.valueOf(capture.split(MOVE_STR_SEP)[0]);
-      int beatenCol = Integer.valueOf(capture.split(MOVE_STR_SEP)[1]);
-      nextCapture = NEXT_MOVE.equals(capture.split(MOVE_STR_SEP)[2]);
+      int beatenRow = move.getTakenSquare().getRow();
+      int beatenCol = move.getTakenSquare().getCol();
+      nextCapture = move.isContinueBeat();
       try {
         captured = backgroundLayer.getSquare(beatenRow, beatenCol);
       } catch (SquareNotFoundException e) {
-        e.printStackTrace();
+        GWT.log(e.getLocalizedMessage(), e);
       }
     }
 
     move(startSquare, endSquare, captured, nextCapture, true);
+  }
+
+  public MoveDto getLastMove() {
+    return moveStack.lastElement();
   }
 }

@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
  * Date: 07.12.14
  * Time: 22:58
  */
-public class Util {
+public class Utils {
 
   private MessageFactory messageFactory = GWT.create(MessageFactory.class);
   public static final String MESSAGE_SEPARATOR = " > ";

@@ -32,6 +32,7 @@ import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
+import net.rushashki.social.shashki64.shashki.dto.MoveDto;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
@@ -198,9 +199,9 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
             if (isConfirmed()) {
               GameMessage gameMessage = createSendGameMessage(clientFactory);
               gameMessage.setMessageType(GameMessage.MessageType.PLAY_CANCEL_MOVE);
-              gameMessage.setStartMove(board.getLastEndMove());
-              gameMessage.setEndMove(board.getLastStartMove());
-              gameMessage.setCaptured(board.getLastCaptured() + Board.MOVE_STR_SEP + Board.CANCEL_MOVE);
+              MoveDto move = board.getLastMove();
+              move.turnOnCancelMove();
+              gameMessage.setMove(move);
 
               eventBus.fireEvent(new GameMessageEvent(gameMessage));
             }
@@ -355,20 +356,6 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
       }
     });
 
-    eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
-      @Override
-      public void onPlayMove(PlayMoveEvent event) {
-        if (event.getCaptured().contains(Board.CANCEL_MOVE)) {
-          notationPanel.cancelMove();
-          if (board.isMyTurn()) {
-            board.moveOpponent(event.getStartMove(), event.getEndMove(), event.getCaptured());
-          } else {
-            board.moveCanceled(event.getStartMove(), event.getEndMove(), event.getCaptured());
-          }
-        }
-      }
-    });
-
     eventBus.addHandler(HideInviteDialogBoxEvent.TYPE, new HideInviteDialogBoxEventHandler() {
       @Override
       public void onHideInviteDialogBox(HideInviteDialogBoxEvent event) {
@@ -493,7 +480,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
 //      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
 //          - playerListColumn.getOffsetWidth() - 81;
 //      privateChatColumn.setWidth(side + "px");
-      String notationHeight = lienzoPanel.getHeight() - 50 + "px";
+      String notationHeight = lienzoPanel.getHeight() - 130 + "px";
       notationPanel.setHeight(notationHeight);
       String playerListHeight = lienzoPanel.getHeight() - 105 + "px";
       playersCellList.setHeight(playerListHeight);

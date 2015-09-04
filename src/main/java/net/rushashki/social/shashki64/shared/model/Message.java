@@ -12,31 +12,31 @@ import java.util.Date;
  */
 public interface Message extends PersistableObject {
 
-  public Shashist getSender();
+  Shashist getSender();
 
-  public void setSender(Shashist sender);
+  void setSender(Shashist sender);
 
-  public Shashist getReceiver();
+  Shashist getReceiver();
 
-  public void setReceiver(Shashist receiver);
+  void setReceiver(Shashist receiver);
 
-  public MessageType getMessageType();
+  MessageType getMessageType();
 
-  public void setMessageType(MessageType messageType);
+  void setMessageType(MessageType messageType);
 
-  public String getMessage();
+  String getMessage();
 
-  public void setMessage(String message);
+  void setMessage(String message);
 
-  public String getData();
+  String getData();
 
-  public void setData(String data);
+  void setData(String data);
 
-  public Date getSentDate();
+  Date getSentDate();
 
-  public void setSentDate(Date sentDate);
+  void setSentDate(Date sentDate);
 
-  public enum MessageType implements IsSerializable {
+  enum MessageType implements IsSerializable {
 
     CHAT_MESSAGE,
     CHAT_PRIVATE_MESSAGE,

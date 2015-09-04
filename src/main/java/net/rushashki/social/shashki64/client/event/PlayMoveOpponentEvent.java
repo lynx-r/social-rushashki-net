@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
+import net.rushashki.social.shashki64.shashki.dto.MoveDto;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,26 +11,14 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class PlayMoveOpponentEvent extends GwtEvent<PlayMoveOpponentEventHandler> {
   public static Type<PlayMoveOpponentEventHandler> TYPE = new Type<>();
-  private final String startMove;
-  private final String endMove;
-  private final String captured;
+  private MoveDto move;
 
-  public PlayMoveOpponentEvent(String startMove, String endMove, String captured) {
-    this.startMove = startMove;
-    this.endMove = endMove;
-    this.captured = captured;
+  public PlayMoveOpponentEvent(MoveDto move) {
+    this.move = move;
   }
 
-  public String getStartMove() {
-    return startMove;
-  }
-
-  public String getEndMove() {
-    return endMove;
-  }
-
-  public String getCaptured() {
-    return captured;
+  public MoveDto getMove() {
+    return move;
   }
 
   public Type<PlayMoveOpponentEventHandler> getAssociatedType() {

@@ -6,10 +6,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
-import net.rushashki.social.shashki64.client.event.ClearNotationEvent;
-import net.rushashki.social.shashki64.client.event.ClearNotationEventHandler;
-import net.rushashki.social.shashki64.client.event.NotationMoveEvent;
-import net.rushashki.social.shashki64.client.event.NotationMoveEventHandler;
+import net.rushashki.social.shashki64.client.event.*;
+import net.rushashki.social.shashki64.shashki.Square;
+import net.rushashki.social.shashki64.shashki.dto.MoveDto;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,6 +23,7 @@ public class NotationPanel extends ScrollPanel {
   private static final String DIV_GARBAGE = "<div[\\s\\w\\d\";:=]*></div>";
   private static final String COUNT_SEP_REGEX = "\\. ";
   private static final String COUNT_SEP = ". ";
+  private static final String NOTATION_WIDTH = "200px";
 
   private final EventBus eventBus;
   private int stepCounter;
@@ -43,6 +43,12 @@ public class NotationPanel extends ScrollPanel {
         NotationPanel.this.appendMove(event.getMove());
       }
     });
+    eventBus.addHandler(NotationCancelMoveEvent.TYPE, new NotationCancelMoveEventHandler() {
+      @Override
+      public void onNotationCancelMove(NotationCancelMoveEvent event) {
+        NotationPanel.this.cancelMove();
+      }
+    });
     eventBus.addHandler(ClearNotationEvent.TYPE, new ClearNotationEventHandler() {
       @Override
       public void onClearNotation(ClearNotationEvent event) {
@@ -53,56 +59,65 @@ public class NotationPanel extends ScrollPanel {
     });
 
     Scheduler.get().scheduleFinally(() -> {
-      setWidth("100px");
+      setWidth(NOTATION_WIDTH);
     });
   }
 
-  public void appendMove(String move) {
+  public void appendMove(MoveDto move) {
     notation = getElement().getInnerHTML();
     notation = notation.replaceAll(DIV_GARBAGE, "");
 
     String[] steps = notation.split(NOTATION_SEP);
+    if (steps.length == 0) {
+      steps = new String[]{""};
+      notation = "";
+    }
     GWT.log("MOVE" + move);
     // первый шаг. например, h4:f6:d4 - h4
-    String firstStep = move.split(BITE_SEP)[0];
-    GWT.log("FIRST STEP" + firstStep);
+    Square start = move.getStartSquare();
+    GWT.log("FIRST STEP" + start.toString());
+
+    if (move.isFirst()) {
+      notation += move.getNumber() + COUNT_SEP + move.toNotation();
+    } else {
+      notation += MOVE_SEP + move.toNotation() + NOTATION_SEP;
+    }
+
     // шаги из нотации
     // последний шаг. например, 2. f2-g3 f6-g5
-    String lastStroke = steps[steps.length - 1];
-    GWT.log("LAST STEP" + lastStroke);
-    if (move.contains(BITE_SEP) && lastStroke.endsWith(firstStep)) { // была побита шашка
-      String lastBeatenStroke = move.split(BITE_SEP)[1];
-      GWT.log("LAST BEATEN STROKE" + lastBeatenStroke);
-      if (!notation.endsWith(NOTATION_SEP)) {
-        notation += BITE_SEP + lastBeatenStroke;
-      } else {
-        // в начале убираем маркер новой строки, потом приципляем ход
-        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + BITE_SEP + lastBeatenStroke + NOTATION_SEP;
-      }
-    } else { // обычный ход
-      String lastMove = steps[steps.length - 1];
-      GWT.log("LAST MOVE SIMPLE " + lastMove);
-//      if (steps.length == 1) { // первый ход
-//        if (lastMove.length() != 0 && !notation.endsWith(NOTATION_SEP)) {
-//          notation += MOVE_SEP + move + NOTATION_SEP;
-//          stepCounter++;
-//        } else {
-//          notation += stepCounter + COUNT_SEP + move;
-//        }
-      if (lastMove.contains(COUNT_SEP) && !notation.endsWith(NOTATION_SEP)) {
-        notation += MOVE_SEP + move + NOTATION_SEP;
-        stepCounter++;
-        GWT.log("1");
-      } else if (move.contains(BITE_SEP) && cancelBite) {
-        notation += BITE_SEP + move + NOTATION_SEP;
-        GWT.log("2");
-      } else {
-        notation += stepCounter + COUNT_SEP + move;
-        GWT.log("3");
-      }
-      cancelBite = false;
-      cancelCounter = 0;
-    }
+//    if (!move.isSimple() && lastStroke.endsWith(start)) { // была побита шашка
+//      String lastBeatenStroke = move.split(BITE_SEP)[1];
+//      GWT.log("LAST BEATEN STROKE" + lastBeatenStroke);
+//      if (!notation.endsWith(NOTATION_SEP)) {
+//        notation += BITE_SEP + lastBeatenStroke;
+//      } else {
+//        // в начале убираем маркер новой строки, потом приципляем ход
+//        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + BITE_SEP + lastBeatenStroke + NOTATION_SEP;
+//      }
+//    } else { // обычный ход
+//      String lastMove = steps[steps.length - 1];
+//      GWT.log("LAST MOVE SIMPLE " + lastMove);
+////      if (steps.length == 1) { // первый ход
+////        if (lastMove.length() != 0 && !notation.endsWith(NOTATION_SEP)) {
+////          notation += MOVE_SEP + move + NOTATION_SEP;
+////          stepCounter++;
+////        } else {
+////          notation += stepCounter + COUNT_SEP + move;
+////        }
+//      if (lastMove.contains(COUNT_SEP) && !notation.endsWith(NOTATION_SEP)) {
+//        notation += MOVE_SEP + move + NOTATION_SEP;
+//        stepCounter++;
+//        GWT.log("1");
+//      } else if (move.contains(BITE_SEP) && cancelBite) {
+//        notation += BITE_SEP + move + NOTATION_SEP;
+//        GWT.log("2");
+//      } else {
+//        notation += stepCounter + COUNT_SEP + move;
+//        GWT.log("3");
+//      }
+//      cancelBite = false;
+//      cancelCounter = 0;
+//    }
     getElement().setInnerHTML(notation);
     GWT.log("Notation " + notation);
     pushScroll();

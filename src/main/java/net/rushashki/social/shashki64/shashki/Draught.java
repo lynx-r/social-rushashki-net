@@ -15,13 +15,15 @@ import com.ait.lienzo.client.core.types.Shadow;
 import com.ait.lienzo.shared.core.types.Color;
 import com.ait.lienzo.shared.core.types.ColorName;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * Profile: alekspo
  * Date: 07.12.13
  * Time: 21:08
  */
-public class Draught extends Group {
+public class Draught extends Group implements Serializable {
   private final int deskSide;
   private static Draught selectedDraught;
   private Board board;

@@ -9,8 +9,8 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import net.rushashki.social.shashki64.client.ClientFactory;
-import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmeDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmPlayDialogBox;
+import net.rushashki.social.shashki64.client.component.widget.dialog.ConfirmeDialogBox;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.config.ShashkiGinjector;
 import net.rushashki.social.shashki64.client.event.*;
@@ -22,7 +22,7 @@ import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 import net.rushashki.social.shashki64.shared.model.*;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
-import net.rushashki.social.shashki64.shashki.Board;
+import net.rushashki.social.shashki64.shashki.dto.MoveDto;
 
 import java.util.Date;
 import java.util.List;
@@ -85,9 +85,7 @@ public class GameWebsocket implements WebSocketCallback {
       public void onPlayMove(PlayMoveEvent event) {
         GameMessage message = createSendGameMessage(clientFactory);
         message.setMessageType(Message.MessageType.PLAY_MOVE);
-        message.setStartMove(event.getStartMove());
-        message.setEndMove(event.getEndMove());
-        message.setCaptured(event.getCaptured());
+        message.setMove(event.getMove());
         message.setGame(clientFactory.getGame());
 
         sendGameMessage(message);
@@ -279,8 +277,7 @@ public class GameWebsocket implements WebSocketCallback {
   private void handlePlayCancelMoveResponse(GameMessage gameMessage) {
     boolean isAcceptedCancelMove = Boolean.valueOf(gameMessage.getData());
     if (isAcceptedCancelMove) {
-      eventBus.fireEvent(new PlayMoveEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
-          gameMessage.getCaptured()));
+      eventBus.fireEvent(new PlayMoveEvent(new MoveDto(gameMessage.getMove())));
     } else {
       new DialogBox(constants.info(), constants.playerRejectedMoveCancel(gameMessage.getSender().getPublicName()));
     }
@@ -292,13 +289,10 @@ public class GameWebsocket implements WebSocketCallback {
       public void procConfirm() {
         GameMessage returnGameMessage = createSendGameMessage(gameMessage);
         returnGameMessage.setMessageType(Message.MessageType.PLAY_CANCEL_MOVE_RESPONSE);
-        returnGameMessage.setStartMove(gameMessage.getStartMove());
-        returnGameMessage.setEndMove(gameMessage.getEndMove());
-        returnGameMessage.setCaptured(gameMessage.getCaptured());
+        returnGameMessage.setMove(gameMessage.getMove());
         if (isConfirmed()) {
           returnGameMessage.setData(Boolean.TRUE.toString());
-          eventBus.fireEvent(new PlayMoveEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
-              gameMessage.getCaptured()));
+          eventBus.fireEvent(new PlayMoveEvent(new MoveDto(gameMessage.getMove())));
         } else {
           returnGameMessage.setData(Boolean.FALSE.toString());
         }
@@ -379,11 +373,12 @@ public class GameWebsocket implements WebSocketCallback {
   }
 
   private void handlePlayMove(GameMessage gameMessage) {
-    if (gameMessage.getCaptured().contains(Board.CANCEL_MOVE)) {
+    GWT.log(gameMessage.getMove().toString());
+    final MoveDto moveDto = new MoveDto(gameMessage.getMove());
+    if (moveDto.isCancel()) {
       return;
     }
-    eventBus.fireEvent(new PlayMoveOpponentEvent(gameMessage.getStartMove(), gameMessage.getEndMove(),
-        gameMessage.getCaptured()));
+    eventBus.fireEvent(new PlayMoveOpponentEvent(moveDto));
   }
 
   private void handlePlayStart(final GameMessage gameMessage) {

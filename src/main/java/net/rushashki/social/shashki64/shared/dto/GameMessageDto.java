@@ -2,6 +2,7 @@ package net.rushashki.social.shashki64.shared.dto;
 
 import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
+import net.rushashki.social.shashki64.shared.model.Move;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class GameMessageDto implements GameMessage {
   private String captured;
   private Game game;
   private Long id;
+  private Move move;
 
   @Override
   public Shashist getSender() {
@@ -90,36 +92,6 @@ public class GameMessageDto implements GameMessage {
   }
 
   @Override
-  public String getStartMove() {
-    return startStep;
-  }
-
-  @Override
-  public void setStartMove(String startStep) {
-    this.startStep = startStep;
-  }
-
-  @Override
-  public String getEndMove() {
-    return endStep;
-  }
-
-  @Override
-  public void setEndMove(String endStep) {
-    this.endStep = endStep;
-  }
-
-  @Override
-  public String getCaptured() {
-    return captured;
-  }
-
-  @Override
-  public void setCaptured(String captured) {
-    this.captured = captured;
-  }
-
-  @Override
   public Game getGame() {
     return game;
   }
@@ -137,6 +109,16 @@ public class GameMessageDto implements GameMessage {
   @Override
   public void setPlayerList(List<Shashist> playerList) {
     this.playerList = playerList;
+  }
+
+  @Override
+  public Move getMove() {
+    return move;
+  }
+
+  @Override
+  public void setMove(Move move) {
+    this.move = move;
   }
 
   @Override

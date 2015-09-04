@@ -41,7 +41,7 @@
             <ui:msg description="Сбито шашек" key="beatDraughts"><b>Сбито шашек:</b></ui:msg>
             <g:Label ui:field="beatenMineDraughtsLabel"/>
             <g:Label ui:field="beatenOpponentDraughtsLabel"/>
-            <b:Button ui:field="cancelMove" text="Ход назад" addStyleNames="btn btn-default btn-block">
+            <b:Button ui:field="cancelMove" text="Отменить ход" addStyleNames="btn btn-default btn-block">
                 <ui:attribute name="text"/>
             </b:Button>
             <ui:msg description="Нотация" key="notationList"><b>Нотация:</b></ui:msg>

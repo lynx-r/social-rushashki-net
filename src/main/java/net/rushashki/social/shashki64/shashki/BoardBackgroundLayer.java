@@ -15,14 +15,16 @@ import java.util.Vector;
  * Time: 20:39
  */
 public class BoardBackgroundLayer extends Layer {
+  public static final int ROWS = 8;
+  public static final int COLS = 8;
   private final int rows;
   private final int cols;
-  private final int side;
+  private static int side;
   private final int deskSide;
   private Square[][] gameBoard;
   private Rectangle boardConturRect;
   private Vector<Text> coordsTextVector = new Vector<>();
-  private int OFFSET_X = 30;
+  public static final int OFFSET_X = 30;
 
   public BoardBackgroundLayer(int side, int deskSide, int rows, int cols) {
     setListening(false);
@@ -54,7 +56,8 @@ public class BoardBackgroundLayer extends Layer {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
         if (lastColor) {
-          Square square = new Square(deskSide, rows, cols, i, j, OFFSET_X);
+          Square square = Square.getInstance(i, j);
+          square.updateShape(deskSide, rows, cols, getOffsetX());
           gameBoard[i][j] = square;
           add(square);
 

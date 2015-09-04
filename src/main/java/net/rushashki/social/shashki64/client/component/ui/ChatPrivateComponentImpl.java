@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.component.widget.dialog.DialogBox;
 import net.rushashki.social.shashki64.client.event.*;
-import net.rushashki.social.shashki64.client.util.Util;
+import net.rushashki.social.shashki64.client.util.Utils;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
 import net.rushashki.social.shashki64.shared.dto.GameMessageDto;
 import org.gwtbootstrap3.client.ui.TextBox;
@@ -84,7 +84,7 @@ public class ChatPrivateComponentImpl extends BasicComponent {
           gameMessage.setMessageType(GameMessage.MessageType.CHAT_PRIVATE_MESSAGE);
 
           String message = clientFactory.getPlayer().getPublicName()
-              + Util.MESSAGE_SEPARATOR + messageInputTextBox.getText();
+              + Utils.MESSAGE_SEPARATOR + messageInputTextBox.getText();
 
           gameMessage.setMessage(message);
 
@@ -102,9 +102,9 @@ public class ChatPrivateComponentImpl extends BasicComponent {
     if (publicName.equals(PREV_MESSAGE)) {
       messageStyled.setStyleName("chat-prev-messages");
     } else {
-      if (message.substring(0, message.indexOf(Util.MESSAGE_SEPARATOR)).equals(publicName)) {
+      if (message.substring(0, message.indexOf(Utils.MESSAGE_SEPARATOR)).equals(publicName)) {
         messageStyled.setStyleName("chat-my-message");
-      } else if (message.substring(message.indexOf(Util.MESSAGE_SEPARATOR)).contains(publicName)) {
+      } else if (message.substring(message.indexOf(Utils.MESSAGE_SEPARATOR)).contains(publicName)) {
         messageStyled.setStyleName("chat-refer-me");
       }
     }

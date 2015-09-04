@@ -1,6 +1,7 @@
 package net.rushashki.social.shashki64.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
+import net.rushashki.social.shashki64.shashki.dto.MoveDto;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,14 +11,14 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class NotationMoveEvent extends GwtEvent<NotationMoveEventHandler> {
   public static Type<NotationMoveEventHandler> TYPE = new Type<>();
-  private final String stroke;
+  private final MoveDto move;
 
-  public NotationMoveEvent(String stroke) {
-    this.stroke = stroke;
+  public NotationMoveEvent(MoveDto move) {
+    this.move = move;
   }
 
-  public String getMove() {
-    return stroke;
+  public MoveDto getMove() {
+    return move;
   }
 
   public Type<NotationMoveEventHandler> getAssociatedType() {

@@ -20,6 +20,7 @@ import net.rushashki.social.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.social.shashki64.client.place.AppPlaceHistoryMapper;
 import net.rushashki.social.shashki64.client.place.HomePlace;
 import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
+import net.rushashki.social.shashki64.client.util.DebugUtils;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shared.resources.Resources;
 
@@ -42,43 +43,52 @@ public class Shashki64 implements EntryPoint {
   private BasePage appWidget = new BasePageUi();
 
   public void onModuleLoad() {
-    this.profileService = shashkiGinjector.getProfileService();
-    this.eventBus = shashkiGinjector.getEventBus();
+    DebugUtils.initDebugAndErrorHandling();
 
-    splashImage = new Image(Resources.INSTANCE.images().loadIconImage().getSafeUri());
-    splashImage.addStyleName("loader-image");
-    RootPanel.get("content").add(splashImage);
+    try {
+      this.profileService = shashkiGinjector.getProfileService();
+      this.eventBus = shashkiGinjector.getEventBus();
 
-    ActivityMapper activityMapper = new AppActivityMapper();
-    ActivityManager activityManager = new ActivityManager(activityMapper, shashkiGinjector.getEventBus());
-    activityManager.setDisplay(appWidget);
+      splashImage = new Image(Resources.INSTANCE.images().loadIconImage().getSafeUri());
+      splashImage.addStyleName("loader-image");
+      RootPanel.get("content").add(splashImage);
 
-    AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
-    PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
-    historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
+      ActivityMapper activityMapper = new AppActivityMapper();
+      ActivityManager activityManager = new ActivityManager(activityMapper, shashkiGinjector.getEventBus());
+      activityManager.setDisplay(appWidget);
 
-    RootPanel.get("navigation").add(new NavbarComponentImpl());
-    RootPanel.get("footer").add(new FooterComponentImpl());
+      AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
+      PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
+      historyHandler.register(shashkiGinjector.getPlaceController(), shashkiGinjector.getEventBus(), defaultPlace);
 
-    profileService.getAuthProfile(new AsyncCallback<Shashist>() {
-      @Override
-      public void onFailure(Throwable throwable) {
+      RootPanel.get("navigation").add(new NavbarComponentImpl());
+      RootPanel.get("footer").add(new FooterComponentImpl());
 
-      }
+      profileService.getAuthProfile(new AsyncCallback<Shashist>() {
+        @Override
+        public void onFailure(Throwable throwable) {
 
-      @Override
-      public void onSuccess(Shashist shashist) {
-        RootPanel.get("content").remove(splashImage);
+        }
 
-        clientFactory.setPlayer(shashist);
-        RootPanel.get("content").add((IsWidget) appWidget);
-        eventBus.fireEvent(new ClientFactoryEvent(clientFactory));
-        historyHandler.handleCurrentHistory();
+        @Override
+        public void onSuccess(Shashist shashist) {
+          RootPanel.get("content").remove(splashImage);
+
+          clientFactory.setPlayer(shashist);
+          RootPanel.get("content").add((IsWidget) appWidget);
+          eventBus.fireEvent(new ClientFactoryEvent(clientFactory));
+          historyHandler.handleCurrentHistory();
 
 //        if (shashist != null) {
 //          new PlayerWebsocket(clientFactory);
 //        }
-      }
-    });
+//          eventBus.fireEvent(new StartPlayEvent(true));
+
+        }
+      });
+    } catch (RuntimeException e) {
+      GWT.log("Error in 'onModuleLoad() method", e);
+      e.printStackTrace();
+    }
   }
 }

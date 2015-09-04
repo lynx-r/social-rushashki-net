@@ -14,82 +14,81 @@ import java.util.Set;
  */
 public interface Shashist extends PersistableObject {
 
-  public String getVkUid();
+  String getVkUid();
 
-  public void setVkUid(String vkUid);
+  void setVkUid(String vkUid);
 
-  public String getEmail();
+  String getEmail();
 
-  public void setEmail(String email);
+  void setEmail(String email);
 
-  public String getFirstName();
+  String getFirstName();
 
-  public void setFirstName(String firstName);
+  void setFirstName(String firstName);
 
-  public String getLastName();
+  String getLastName();
 
-  public void setLastName(String lastName);
+  void setLastName(String lastName);
 
-  public String getPlayerName();
+  String getPlayerName();
 
-  public void setPlayerName(String playerName);
+  void setPlayerName(String playerName);
 
-  public String getAuthProvider();
+  String getAuthProvider();
 
-  public void setAuthProvider(String authProvider);
+  void setAuthProvider(String authProvider);
 
-  public Set<FriendEntity> getFriends();
+  Set<FriendEntity> getFriends();
 
-  public void setFriends(Set<FriendEntity> friends);
+  void setFriends(Set<FriendEntity> friends);
 
-  public Set<FriendEntity> getFriendOf();
+  Set<FriendEntity> getFriendOf();
 
-  public void setFriendOf(Set<FriendEntity> friendOf);
+  void setFriendOf(Set<FriendEntity> friendOf);
 
-  public Set<GameMessageEntity> getReceivedPlayerMessages();
+  Set<GameMessageEntity> getReceivedPlayerMessages();
 
-  public void setReceivedPlayerMessages(Set<GameMessageEntity> playerMessageEntities);
+  void setReceivedPlayerMessages(Set<GameMessageEntity> playerMessageEntities);
 
-  public Set<GameMessageEntity> getSentPlayerMessages();
+  Set<GameMessageEntity> getSentPlayerMessages();
 
-  public void setSentPlayerMessages(Set<GameMessageEntity> playerMessageEntities);
+  void setSentPlayerMessages(Set<GameMessageEntity> playerMessageEntities);
 
   Set<GameMessageEntity> getReceivedGameMessages();
 
   void setReceivedGameMessages(Set<GameMessageEntity> receivedGameMessages);
 
-  public boolean isLoggedIn();
+  boolean isLoggedIn();
 
-  public void setLoggedIn(boolean loggedIn);
+  void setLoggedIn(boolean loggedIn);
 
-  public boolean isPlaying();
+  boolean isPlaying();
 
-  public void setPlaying(boolean playing);
+  void setPlaying(boolean playing);
 
-  public boolean isOnline();
+  boolean isOnline();
 
-  public void setOnline(boolean online);
+  void setOnline(boolean online);
 
-  public Date getRegisterDate();
+  Date getRegisterDate();
 
-  public void setRegisterDate(Date registerDate);
+  void setRegisterDate(Date registerDate);
 
-  public Date getLastVisited();
+  Date getLastVisited();
 
-  public void setLastVisited(Date lastVisited);
+  void setLastVisited(Date lastVisited);
 
-  public int getVisitCounter();
+  int getVisitCounter();
 
-  public void setVisitCounter(int visitCounter);
+  void setVisitCounter(int visitCounter);
 
-  public String getPublicName();
+  String getPublicName();
 
-  public String getFullName();
+  String getFullName();
 
-  public String getSessionId();
+  String getSessionId();
 
-  public void setSessionId(String sessionId);
+  void setSessionId(String sessionId);
 
-  public String getSystemId();
-
+  String getSystemId();
 }
