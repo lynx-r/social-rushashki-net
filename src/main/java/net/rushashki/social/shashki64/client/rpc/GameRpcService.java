@@ -22,7 +22,7 @@ public interface GameRpcService extends RemoteService {
 
   /**
    * Utility/Convenience class.
-   * Use GameRpcService.App.getInstance() to access static instance of GameRpcServiceAsync
+   * Use GameRpcService.App.fromString() to access static instance of GameRpcServiceAsync
    */
   public static class App {
     private static final GameRpcServiceAsync ourInstance = (GameRpcServiceAsync) GWT.create(GameRpcService.class);

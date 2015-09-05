@@ -13,41 +13,49 @@ import com.ait.lienzo.shared.core.types.Color;
 public class Square extends Rectangle {
 
   private static final String TO_SEND_SEP = ",";
-  private int row;
-  private int col;
+  private final int row;
+  private final int col;
   private static final Color boardBackground = new Color(144, 77, 48);
   private boolean occupied;
   private Draught occupant;
   private static double strokeLineWidth = 1.5;
   private String[] alph = new String[]{"a", "b", "c", "d", "e", "f", "g", "h"};
 
-  private Square() {
+  public Square(int row, int col) {
     super(0, 0);
+    this.row = row;
+    this.col = col;
+
+    this.occupied = false;
+    this.occupant = null;
+
+    this.setFillColor(boardBackground);
+    this.setStrokeWidth(strokeLineWidth);
   }
 
-  public static Square getInstance(int row, int col) {
-    Square square = new Square();
+//  public static Square fromString(int row, int col) {
+//    Square square = new Square();
+//
+//    square.row = row;
+//    square.col = col;
+//
+//    square.occupied = false;
+//    square.occupant = null;
+//
+//    square.setFillColor(boardBackground);
+//    square.setStrokeWidth(strokeLineWidth);
+//
+//    return square;
+//  }
 
-    square.row = row;
-    square.col = col;
-
-    square.occupied = false;
-    square.occupant = null;
-
-    square.setFillColor(boardBackground);
-    square.setStrokeWidth(strokeLineWidth);
-
-    return square;
-  }
-
-  public static Square getInstance(String toSendStr) {
+  public static Square fromString(String toSendStr) {
     if (toSendStr == null || toSendStr.isEmpty()) {
       return null;
     }
     final String[] toSendArr = toSendStr.split(TO_SEND_SEP);
     final Integer row = Integer.valueOf(toSendArr[0]);
     final Integer col = Integer.valueOf(toSendArr[1]);
-    return getInstance(row, col);
+    return new Square(row, col);
   }
 
   public static boolean isValid(int row, int col) {
@@ -195,8 +203,10 @@ public class Square extends Rectangle {
     return getY() + getHeight() / 2;
   }
 
-  public void mirror() {
-    row = BoardBackgroundLayer.ROWS - 1 - row;
-    col = BoardBackgroundLayer.COLS - 1 - col;
+  public Square mirror() {
+    int row = BoardBackgroundLayer.ROWS - 1 - this.row;
+    int col = BoardBackgroundLayer.COLS - 1 - this.col;
+
+    return new Square(row, col);
   }
 }

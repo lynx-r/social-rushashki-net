@@ -52,6 +52,7 @@ public class Board extends Layer {
   private HandlerRegistration playMoveOpponentHR;
 
   private Stack<MoveDto> moveStack = new Stack<>();
+  private Stack<MoveDto> moveOpponentStack = new Stack<>();
 
   public Board(BoardBackgroundLayer backgroundLayer, int rows, int cols, boolean white) {
 
@@ -88,9 +89,12 @@ public class Board extends Layer {
         final MoveDto move = event.getMove();
         if (move.isCancel()) {
           eventBus.fireEvent(new NotationCancelMoveEvent(move));
-          if (isMyTurn()) {
+          if (isMyTurn() && !move.isContinueBeat()) {
             moveOpponent(move);
           } else {
+            if (isMyTurn()) { // если отменен мой ход, то отражаем ход на мою доску
+              move.mirror();
+            }
             moveCanceled(move);
           }
         }
@@ -217,10 +221,10 @@ public class Board extends Layer {
   }
 
   /**
-   * Find all possible Squares to which this Draught can move
+   * Find all possible Squares to which this Draught can calcMove
    *
    * @param p Draught for which moves should be found
-   * @return A List of Squares to which this Draught can move
+   * @return A List of Squares to which this Draught can calcMove
    */
   private void highlightPossibleMoves(Draught p, Draught clickedDraught) {
     /* Possible moves include up-left, up-right, down-left, down-right
@@ -233,8 +237,8 @@ public class Board extends Layer {
     int row = p.getRow();
     int col = p.getCol();
 
-    //Begin checking which moves are possible, keeping in mind that only black shashki may move up
-    //and only red shashki may move downwards
+    //Begin checking which moves are possible, keeping in mind that only black shashki may calcMove up
+    //and only red shashki may calcMove downwards
 
     boolean queen = p.isQueen();
     if (this.white) {
@@ -300,7 +304,7 @@ public class Board extends Layer {
   }
 
   /**
-   * Possible move in next and back direction
+   * Possible calcMove in next and back direction
    *
    * @param opRow
    * @param opCol
@@ -551,12 +555,11 @@ public class Board extends Layer {
   /**
    * получаем флаги передвижения и взятую шашку
    *
-   * @param from 				The square from which we are moving
-   * @param to				The square to which we are moving
-   *
+   * @param from The square from which we are moving
+   * @param to   The square to which we are moving
    * @return возвращете передвижение с установленными флагами и взятой шашкой
    */
-  public MoveDto move(Square from, Square to) {
+  public MoveDto calcMove(Square from, Square to) {
     MoveDto move = new MoveDto();
     Draught beingMoved = from.getOccupant();
 
@@ -617,10 +620,11 @@ public class Board extends Layer {
         move.setOnContinueBeat();
       }
 
+      GWT.log(takenSquare.toString());
       removeDraughtFrom(takenSquare);
 
       // если предыдущий ход простой (без взятия), тогда устанавливаем флаг на начало взятия
-      if (getLastMove().isSimple()) {
+      if (getLastMove() != null && getLastMove().isSimple()) {
         move.setOnStartBeat();
       }
     } else {
@@ -698,9 +702,9 @@ public class Board extends Layer {
     return captured;
   }
 
-//  public void moveEmulatedNextWhite(String move, int stepCursor) {
-//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//  public void moveEmulatedNextWhite(String calcMove, int stepCursor) {
+//    if (calcMove.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_SIMPLE_MOVE);
 //      Square startSquare, endSquare;
 //      try {
 //        startSquare = parseStep(steps[0]);
@@ -709,9 +713,9 @@ public class Board extends Layer {
 //        GWT.log(e.getLocalizedMessage(), e);
 //        return;
 //      }
-//      move(startSquare, endSquare, null, false, stepCursor);
-//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      calcMove(startSquare, endSquare, null, false, stepCursor);
+//    } else if (calcMove.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_BEAT_MOVE);
 //      for (int i = 0; i < steps.length - 1; i++) {
 //        Square firstStep, secondStep;
 //        try {
@@ -726,14 +730,14 @@ public class Board extends Layer {
 //          return;
 //        }
 //        capturedStack.push(captured);
-//        move(firstStep, secondStep, captured, false, stepCursor);
+//        calcMove(firstStep, secondStep, captured, false, stepCursor);
 //      }
 //    }
 //  }
 
-//  public void moveEmulatedNextBlack(String move, int stepCursor) {
-//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//  public void moveEmulatedNextBlack(String calcMove, int stepCursor) {
+//    if (calcMove.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_SIMPLE_MOVE);
 //      Square startSquare, endSquare;
 //      try {
 //        startSquare = parseStep(steps[0]);
@@ -742,9 +746,9 @@ public class Board extends Layer {
 //        GWT.log(e.getLocalizedMessage(), e);
 //        return;
 //      }
-//      move(startSquare, endSquare, null, false, stepCursor);
-//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      calcMove(startSquare, endSquare, null, false, stepCursor);
+//    } else if (calcMove.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_BEAT_MOVE);
 //      for (int i = 0; i < steps.length - 1; i++) {
 //        Square firstStep, secondStep;
 //        try {
@@ -759,19 +763,19 @@ public class Board extends Layer {
 //          return;
 //        }
 //        capturedStack.push(captured);
-//        move(firstStep, secondStep, captured, false, stepCursor);
+//        calcMove(firstStep, secondStep, captured, false, stepCursor);
 //      }
 //    }
 //  }
 
-//  public void moveEmulatedPrevWhite(String move, int stepCursor) {
-//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//  public void moveEmulatedPrevWhite(String calcMove, int stepCursor) {
+//    if (calcMove.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_SIMPLE_MOVE);
 //      Square startSquare = parseStep(steps[1]);
 //      Square endSquare = parseStep(steps[0]);
-//      move(startSquare, endSquare, null, false, stepCursor);
-//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      calcMove(startSquare, endSquare, null, false, stepCursor);
+//    } else if (calcMove.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_BEAT_MOVE);
 //      for (int i = steps.length - 1; i > 0; i--) {
 //        Square firstStep = parseStep(steps[i]);
 //        Square secondStep = parseStep(steps[i - 1]);
@@ -782,19 +786,19 @@ public class Board extends Layer {
 //        } else {
 //          myDraughtList.add(addDraught(captured.getRow(), captured.getCol(), !white));
 //        }
-//        move(firstStep, secondStep, null, false, stepCursor);
+//        calcMove(firstStep, secondStep, null, false, stepCursor);
 //      }
 //    }
 //  }
 
-//  public void moveEmulatedPrevBlack(String move, int stepCursor) {
-//    if (move.contains(ANNOTATION_SIMPLE_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_SIMPLE_MOVE);
+//  public void moveEmulatedPrevBlack(String calcMove, int stepCursor) {
+//    if (calcMove.contains(ANNOTATION_SIMPLE_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_SIMPLE_MOVE);
 //      Square startSquare = parseStep(steps[1]);
 //      Square endSquare = parseStep(steps[0]);
-//      move(startSquare, endSquare, null, false, stepCursor);
-//    } else if (move.contains(ANNOTATION_BEAT_MOVE)) {
-//      String[] steps = move.split(ANNOTATION_BEAT_MOVE);
+//      calcMove(startSquare, endSquare, null, false, stepCursor);
+//    } else if (calcMove.contains(ANNOTATION_BEAT_MOVE)) {
+//      String[] steps = calcMove.split(ANNOTATION_BEAT_MOVE);
 //      for (int i = steps.length - 1; i > 0; i--) {
 //        Square firstStep = parseStep(steps[i]);
 //        Square secondStep = parseStep(steps[i - 1]);
@@ -805,19 +809,17 @@ public class Board extends Layer {
 //        } else {
 //          myDraughtList.add(addDraught(captured.getRow(), captured.getCol(), white));
 //        }
-//        move(firstStep, secondStep, null, false, stepCursor);
+//        calcMove(firstStep, secondStep, null, false, stepCursor);
 //      }
 //    }
 //  }
 
   public void moveOpponent(MoveDto move) {
-    moveOpponent(move, -1);
-  }
-
-  public void moveOpponent(MoveDto move, int stepCursor) {
+    GWT.log("NOT MIRRORED " + move.toString());
     move.mirror();
+    GWT.log("MIRRORED " + move.toString());
 
-    Square startSquare, endSquare;
+    Square startSquare, endSquare, takenSquare = null;
     try {
       startSquare = getSquare(move.getStartSquare().getRow(), move.getStartSquare().getCol());
       endSquare = getSquare(move.getEndSquare().getRow(), move.getEndSquare().getCol());
@@ -826,15 +828,31 @@ public class Board extends Layer {
       return;
     }
 
-    if (move.isCancel()) {
+    if (move.isCancel() && !move.isContinueBeat()) {
       move.setStartSquare(endSquare);
       move.setEndSquare(startSquare);
+      moveOpponentStack.pop();
     } else {
       move.setStartSquare(startSquare);
       move.setEndSquare(endSquare);
+      moveOpponentStack.push(move);
     }
 
-    boolean simpleMove = move.isSimple();
+    if (move.getTakenSquare() != null) {
+      try {
+        takenSquare = getSquare(move.getTakenSquare().getRow(), move.getTakenSquare().getCol());
+        GWT.log(takenSquare.toString());
+      } catch (SquareNotFoundException ignore) {
+      }
+    }
+
+    move.setTakenSquare(takenSquare);
+
+    if (move.isContinueBeat()) {
+//      move.mirror();
+      GWT.log("MOVE CONT BEAT " + move.toString());
+    }
+
     if (!move.isCancel()) {
       final boolean first = produceFirstMoveFlag(move, true);
       move.setNumber(move.getNumber())
@@ -842,36 +860,30 @@ public class Board extends Layer {
       eventBus.fireEvent(new NotationMoveEvent(move));
     }
 
-    boolean nextCapture = !simpleMove || move.isContinueBeat();
-
-    if (move.isCancel()) {
-      move(move, nextCapture, true, stepCursor); // отменяем ход
-    } else {
-      move(move, nextCapture, false, stepCursor); // обычный ход опонента
-    }
+    doMove(move); // сделать ход
   }
 
-  private void move(MoveDto moveDto, boolean nextCapture, boolean cancelMove) {
-    move(moveDto, nextCapture, cancelMove, -1);
+  private void doMove(MoveDto moveDto) {
+    doMove(moveDto, -1);
   }
 
   /**
-   * Функция которая выполняет физическое перемещение шашек
-   * @param nextCapture
-   * @param cancelMove
+   * Функция, которая выполняет физическое перемещение шашек
+   *
+   * @param move
    * @param stepCursor
    */
-  private void move(MoveDto move, boolean nextCapture, boolean cancelMove, int stepCursor) {
+  private void doMove(MoveDto move, int stepCursor) {
     final Draught occupant = move.getStartSquare().getOccupant();
-    GWT.log(move.getStartSquare().toString());
-    GWT.log(move.getStartPos());
-    GWT.log(move.getEndSquare().toString());
-    GWT.log(move.getEndPos());
+    GWT.log("DO MOVE " + move.toString());
 
     // вычисляем координаты для перемещения шашки относительно её центра
     occupant.updateShape();
+
     Square endSquare = move.getEndSquare();
     Square startSquare = move.getStartSquare();
+    Square taken = move.getTakenSquare();
+
     final double mouseMovedX = occupant.getX() + endSquare.getCenterX() - startSquare.getCenterX(); // + occupant.getMouseMovedX();
     final double mouseMovedY = occupant.getY() + endSquare.getCenterY() - startSquare.getCenterY(); // + occupant.getMouseMovedY();
 
@@ -903,23 +915,26 @@ public class Board extends Layer {
     endSquare.setOccupant(occupant);
     occupant.setPosition(endSquare.getRow(), endSquare.getCol());
 
-    Square taken = move.getTakenSquare();
-    if (taken != null && !cancelMove) {
+    if (taken != null && !move.isCancel()) {
       removeDraughtFrom(taken);
     } else if (taken != null) {
       if (isMyTurn()) {
+        if (move.isContinueBeat()) {
+          opponentDraughtList.add(addDraught(taken.getRow(), taken.getCol(), !isWhite()));
+        } else {
+          myDraughtList.add(addDraught(taken.getRow(), taken.getCol(), isWhite()));
+        }
+      } else {
         if (move.isContinueBeat()) {
           myDraughtList.add(addDraught(taken.getRow(), taken.getCol(), isWhite()));
         } else {
           opponentDraughtList.add(addDraught(taken.getRow(), taken.getCol(), !isWhite()));
         }
-      } else {
-        opponentDraughtList.add(addDraught(taken.getRow(), taken.getCol(), !isWhite()));
       }
       eventBus.fireEvent(new CheckWinnerEvent());
     }
 
-    if (!nextCapture && !isEmulate()) {
+    if (!move.isContinueBeat() && !isEmulate()) {
       toggleTurn();
     }
 
@@ -987,7 +1002,7 @@ public class Board extends Layer {
 
       if (highlightedSquares.contains(endSquare) && startSquare != null && startSquare.isOnLine(endSquare)) {
         // получаем флаги передвижения и взятую шашку
-        MoveDto move = move(startSquare, endSquare);
+        MoveDto move = calcMove(startSquare, endSquare);
         move.setStartSquare(startSquare);
         move.setEndSquare(endSquare);
 
@@ -1008,7 +1023,7 @@ public class Board extends Layer {
 
         if (endSquare != null) {
 //          String op = isSimpleMove ? ANNOTATION_SIMPLE_MOVE : ANNOTATION_BEAT_MOVE;
-//          String move = startSquare.toNotation(isWhite(), false, false)
+//          String calcMove = startSquare.toNotation(isWhite(), false, false)
 //              + op
 //              + endSquare.toNotation(isWhite(), true, false);
           eventBus.fireEvent(new NotationMoveEvent(move));
@@ -1054,6 +1069,7 @@ public class Board extends Layer {
   }
 
   public void moveCanceled(MoveDto move) {
+    GWT.log("MOVE CANCELED " + move.toString());
     int startRow = move.getStartSquare().getRow();
     int startCol = move.getStartSquare().getCol();
 
@@ -1070,16 +1086,12 @@ public class Board extends Layer {
     }
     move.setStartSquare(endSquare);
     move.setEndSquare(startSquare);
-
-    boolean simpleMove = move.isSimple();
-//    boolean cancelMove = capture.contains(CANCEL_MOVE);
+    GWT.log("MOVE CANCELED REVERSED " + move.toString());
 
     Square taken = null;
-    boolean nextCapture = false;
-    if (!simpleMove) {
+    if (!move.isSimple()) {
       int beatenRow = move.getTakenSquare().getRow();
       int beatenCol = move.getTakenSquare().getCol();
-      nextCapture = move.isContinueBeat();
       try {
         taken = backgroundLayer.getSquare(beatenRow, beatenCol);
       } catch (SquareNotFoundException e) {
@@ -1088,7 +1100,9 @@ public class Board extends Layer {
       move.setTakenSquare(taken);
     }
 
-    move(move, nextCapture, true);
+    GWT.log("MOVE CANCELED 1");
+    doMove(move);
+    GWT.log("MOVE CANCELED 2");
     moveStack.pop();
   }
 
@@ -1099,7 +1113,10 @@ public class Board extends Layer {
     return moveStack.lastElement();
   }
 
-  public boolean hasNoMoves() {
-    return moveStack.isEmpty();
+  public MoveDto getLastOpponentMove() {
+    if (moveOpponentStack.isEmpty()) {
+      return null;
+    }
+    return moveOpponentStack.lastElement();
   }
 }

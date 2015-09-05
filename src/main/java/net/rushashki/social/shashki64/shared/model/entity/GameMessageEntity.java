@@ -38,7 +38,7 @@ public class GameMessageEntity extends PersistableObjectImpl implements GameMess
   @Column(name = "sent_date")
   private Date sentDate;
 
-  @OneToOne(mappedBy = "gameMessage")
+  @OneToOne(mappedBy = "gameMessage", cascade = CascadeType.ALL)
   private MoveEntity move;
 
   @ManyToOne(fetch = FetchType.LAZY)

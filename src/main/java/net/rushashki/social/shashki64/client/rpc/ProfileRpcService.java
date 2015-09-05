@@ -24,7 +24,7 @@ public interface ProfileRpcService extends RemoteService {
 
   /**
    * Utility/Convenience class.
-   * Use ProfileRpcService.App.getInstance() to access static instance of ProfileRpcServiceAsync
+   * Use ProfileRpcService.App.fromString() to access static instance of ProfileRpcServiceAsync
    */
   public static class App {
     private static final ProfileRpcServiceAsync ourInstance = (ProfileRpcServiceAsync) GWT.create(ProfileRpcService.class);

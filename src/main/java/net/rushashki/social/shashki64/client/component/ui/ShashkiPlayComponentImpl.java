@@ -190,14 +190,12 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
           return;
         }
         final MoveDto lastMove = board.getLastMove();
-        if (lastMove == null) {
+        final MoveDto lastOpponentMove = board.getLastOpponentMove();
+        if (lastOpponentMove != null && lastOpponentMove.isContinueBeat()) {
           return;
         }
-        if (board.isMyTurn() && lastMove.isSimple()) {
+        if (board.isMyTurn() && !lastMove.isContinueBeat()) {
           new DialogBox(constants.info(), constants.youDontMove());
-          return;
-        }
-        if (board.hasNoMoves()) { // ходов небыло, либо все ходы отменены
           return;
         }
         new ConfirmeDialogBox(constants.doYouWantToCancelMove()) {

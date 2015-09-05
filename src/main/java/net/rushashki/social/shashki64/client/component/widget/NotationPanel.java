@@ -108,8 +108,8 @@ public class NotationPanel extends ScrollPanel {
 
     // шаги из нотации
     // последний шаг. например, 2. f2-g3 f6-g5
-//    if (!move.isSimple() && lastStroke.endsWith(start)) { // была побита шашка
-//      String lastBeatenStroke = move.split(BEAT_SEP)[1];
+//    if (!calcMove.isSimple() && lastStroke.endsWith(start)) { // была побита шашка
+//      String lastBeatenStroke = calcMove.split(BEAT_SEP)[1];
 //      GWT.log("LAST BEATEN STROKE" + lastBeatenStroke);
 //      if (!notation.endsWith(NOTATION_SEP)) {
 //        notation += BEAT_SEP + lastBeatenStroke;
@@ -122,20 +122,20 @@ public class NotationPanel extends ScrollPanel {
 //      GWT.log("LAST MOVE SIMPLE " + lastMove);
 ////      if (steps.length == 1) { // первый ход
 ////        if (lastMove.length() != 0 && !notation.endsWith(NOTATION_SEP)) {
-////          notation += MOVE_SEP + move + NOTATION_SEP;
+////          notation += MOVE_SEP + calcMove + NOTATION_SEP;
 ////          stepCounter++;
 ////        } else {
-////          notation += stepCounter + COUNT_SEP + move;
+////          notation += stepCounter + COUNT_SEP + calcMove;
 ////        }
 //      if (lastMove.contains(COUNT_SEP) && !notation.endsWith(NOTATION_SEP)) {
-//        notation += MOVE_SEP + move + NOTATION_SEP;
+//        notation += MOVE_SEP + calcMove + NOTATION_SEP;
 //        stepCounter++;
 //        GWT.log("1");
-//      } else if (move.contains(BEAT_SEP) && cancelBite) {
-//        notation += BEAT_SEP + move + NOTATION_SEP;
+//      } else if (calcMove.contains(BEAT_SEP) && cancelBite) {
+//        notation += BEAT_SEP + calcMove + NOTATION_SEP;
 //        GWT.log("2");
 //      } else {
-//        notation += stepCounter + COUNT_SEP + move;
+//        notation += stepCounter + COUNT_SEP + calcMove;
 //        GWT.log("3");
 //      }
 //      cancelBite = false;
@@ -167,9 +167,9 @@ public class NotationPanel extends ScrollPanel {
     }
 //    String[] notationArray = notation.split(NOTATION_SEP);
 //    // ход. 2. h4:f6 e7:g5
-//    String move = notationArray[notationArray.length - 1];
-//    GWT.log("MOVE " + move);
-//    String lastMove = move.split(COUNT_SEP_REGEX)[1];
+//    String calcMove = notationArray[notationArray.length - 1];
+//    GWT.log("MOVE " + calcMove);
+//    String lastMove = calcMove.split(COUNT_SEP_REGEX)[1];
 //    String[] lastMoveArray = lastMove.split(MOVE_SEP);
 //    GWT.log("LAST MOVE " + lastMove);
 //    if (lastMove.contains(BEAT_SEP) && !lastMove.contains(MOVE_SEP)) { // первый ход

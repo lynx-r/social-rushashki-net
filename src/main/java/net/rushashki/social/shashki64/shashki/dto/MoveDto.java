@@ -18,7 +18,6 @@ public class MoveDto implements Move {
 
   private int number;
   private boolean first; // первый ход в паре ходов. Например, ee-aa в ee-aa bb-cc
-  private boolean canceled;
 
   private Square startSquare;
   private Square endSquare;
@@ -31,9 +30,9 @@ public class MoveDto implements Move {
   public MoveDto(Move move) {
     this.number = move.getNumber();
     this.first = move.isFirst();
-    this.startSquare = Square.getInstance(move.getStartPos());
-    this.endSquare = Square.getInstance(move.getEndPos());
-    this.takenSquare = Square.getInstance(move.getTakenPos());
+    this.startSquare = Square.fromString(move.getStartPos());
+    this.endSquare = Square.fromString(move.getEndPos());
+    this.takenSquare = Square.fromString(move.getTakenPos());
     this.moveFlags = move.getMoveFlags();
   }
 
@@ -193,13 +192,13 @@ public class MoveDto implements Move {
    */
   public void mirror() {
     if (startSquare != null) {
-      startSquare.mirror();
+      startSquare = startSquare.mirror();
     }
     if (endSquare != null) {
-      endSquare.mirror();
+      endSquare = endSquare.mirror();
     }
     if (takenSquare != null) {
-      takenSquare.mirror();
+      takenSquare = takenSquare.mirror();
     }
   }
 }

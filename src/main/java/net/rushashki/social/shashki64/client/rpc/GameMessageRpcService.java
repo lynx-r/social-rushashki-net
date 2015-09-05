@@ -20,7 +20,7 @@ public interface GameMessageRpcService extends RemoteService {
 
   /**
    * Utility/Convenience class.
-   * Use GameMessageService.App.getInstance() to access static instance of GameMessageServiceAsync
+   * Use GameMessageService.App.fromString() to access static instance of GameMessageServiceAsync
    */
   public static class App {
     private static final GameMessageRpcServiceAsync ourInstance = (GameMessageRpcServiceAsync) GWT.create(GameMessageRpcService.class);

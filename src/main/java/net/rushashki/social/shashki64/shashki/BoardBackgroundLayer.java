@@ -56,7 +56,7 @@ public class BoardBackgroundLayer extends Layer {
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
         if (lastColor) {
-          Square square = Square.getInstance(i, j);
+          Square square = new Square(i, j);
           square.updateShape(deskSide, rows, cols, getOffsetX());
           gameBoard[i][j] = square;
           add(square);
