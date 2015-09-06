@@ -25,6 +25,9 @@ public class MoveDto implements Move {
   private Set<MoveFlags> moveFlags = new HashSet<>();
 
   public MoveDto() {
+    startSquare = null;
+    endSquare = null;
+    takenSquare = null;
   }
 
   public MoveDto(Move move) {
@@ -188,17 +191,22 @@ public class MoveDto implements Move {
   }
 
   /**
-   * Отражает ход на доске
+   * Отражает ход на доске не изменяя сам объект
+   *
+   * @return moveDto отраженный объект
    */
-  public void mirror() {
-    if (startSquare != null) {
-      startSquare = startSquare.mirror();
+  public MoveDto mirror() {
+    MoveDto moveDto = new MoveDto(this);
+
+    if (moveDto.getStartSquare() != null) {
+      moveDto.setStartSquare(startSquare.mirror());
     }
-    if (endSquare != null) {
-      endSquare = endSquare.mirror();
+    if (moveDto.getEndSquare() != null) {
+      moveDto.setEndSquare(endSquare.mirror());
     }
-    if (takenSquare != null) {
-      takenSquare = takenSquare.mirror();
+    if (moveDto.getTakenSquare() != null) {
+      moveDto.setTakenSquare(takenSquare.mirror());
     }
+    return moveDto;
   }
 }

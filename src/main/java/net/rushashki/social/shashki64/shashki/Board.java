@@ -92,10 +92,11 @@ public class Board extends Layer {
           if (isMyTurn() && !move.isContinueBeat()) {
             moveOpponent(move);
           } else {
-            if (isMyTurn()) { // если отменен мой ход, то отражаем ход на мою доску
-              move.mirror();
+            MoveDto moveCanceled = move;
+            if (move.isContinueBeat()) {
+              moveCanceled = move.mirror();
             }
-            moveCanceled(move);
+            moveCanceled(moveCanceled);
           }
         }
       }
@@ -816,7 +817,7 @@ public class Board extends Layer {
 
   public void moveOpponent(MoveDto move) {
     GWT.log("NOT MIRRORED " + move.toString());
-    move.mirror();
+    move = move.mirror();
     GWT.log("MIRRORED " + move.toString());
 
     Square startSquare, endSquare, takenSquare = null;
@@ -857,7 +858,8 @@ public class Board extends Layer {
       final boolean first = produceFirstMoveFlag(move, true);
       move.setNumber(move.getNumber())
           .setFirst(first);
-      eventBus.fireEvent(new NotationMoveEvent(move));
+      MoveDto forNotation = move.mirror();
+      eventBus.fireEvent(new NotationMoveEvent(forNotation));
     }
 
     doMove(move); // сделать ход

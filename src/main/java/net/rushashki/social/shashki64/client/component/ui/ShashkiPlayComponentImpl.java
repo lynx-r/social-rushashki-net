@@ -204,12 +204,11 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
             if (isConfirmed()) {
               GameMessage gameMessage = createSendGameMessage(clientFactory);
               gameMessage.setMessageType(GameMessage.MessageType.PLAY_CANCEL_MOVE);
-              MoveDto move = lastMove;
-              if (move.isContinueBeat()) {
-                move.mirror();
+              if (lastMove.isContinueBeat()) {
+                lastMove.mirror();
               }
-              move.setOnCancelMove();
-              gameMessage.setMove(move);
+              lastMove.setOnCancelMove();
+              gameMessage.setMove(lastMove);
 
               eventBus.fireEvent(new GameMessageEvent(gameMessage));
             }
@@ -305,7 +304,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     eventBus.addHandler(CheckWinnerEvent.TYPE, new CheckWinnerEventHandler() {
       @Override
       public void onCheckWinner(CheckWinnerEvent event) {
-        setBeatenMine(CHECKERS_ON_DESK_INIT - board.getMyDraughts().size());
+        setBeatenMy(CHECKERS_ON_DESK_INIT - board.getMyDraughts().size());
         setBeatenOpponent(CHECKERS_ON_DESK_INIT - board.getOpponentDraughts().size());
         Game endGame = clientFactory.getGame();
         if (0 == board.getMyDraughts().size()) {
@@ -386,12 +385,16 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     connectToPlayButton.setVisible(true);
     drawButton.setVisible(false);
     surrenderButton.setVisible(false);
+    setBeatenMy(0);
+    setBeatenOpponent(0);
   }
 
   private void hidePlayButtonAndShowPlayingButtons() {
     connectToPlayButton.setVisible(false);
     drawButton.setVisible(true);
     surrenderButton.setVisible(true);
+    setBeatenMy(0);
+    setBeatenOpponent(0);
   }
 
   private void clearPlayComponent(ClientFactory clientFactory) {
@@ -410,7 +413,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     turnLabel.setHTML(constants.playDidNotStart());
   }
 
-  public void setBeatenMine(int count) {
+  public void setBeatenMy(int count) {
     beatenMineDraughtsLabel.setText(count + " - " + (board.isWhite() ? constants.whites()
         : constants.blacks()));
   }
