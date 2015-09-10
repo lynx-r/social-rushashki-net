@@ -194,7 +194,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
         if (lastOpponentMove != null && lastOpponentMove.isContinueBeat()) {
           return;
         }
-        if (board.isMyTurn() && !lastMove.isContinueBeat()) {
+        if (board.isMyTurn() && !(lastMove != null && lastMove.isContinueBeat())) {
           new DialogBox(constants.info(), constants.youDontMove());
           return;
         }

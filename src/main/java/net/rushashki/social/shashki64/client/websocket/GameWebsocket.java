@@ -80,9 +80,9 @@ public class GameWebsocket implements WebSocketCallback {
       }
     });
 
-    playMoveHR = eventBus.addHandler(PlayMoveEvent.TYPE, new PlayMoveEventHandler() {
+    playMoveHR = eventBus.addHandler(PlayMoveMessageEvent.TYPE, new PlayMoveMessageEventHandler() {
       @Override
-      public void onPlayMove(PlayMoveEvent event) {
+      public void onPlayMoveMessage(PlayMoveMessageEvent event) {
         GameMessage message = createSendGameMessage(clientFactory);
         message.setMessageType(Message.MessageType.PLAY_MOVE);
         message.setMove(event.getMove());
@@ -274,15 +274,25 @@ public class GameWebsocket implements WebSocketCallback {
     new DialogBox(constants.info(), constants.playAlreadyPlaying(gameMessage.getSender().getPublicName()));
   }
 
+  /**
+   * Обработчик ответа на отмену хода. Если оппонент подтвердил, тогда перемещаем его шашку.
+   * @param gameMessage
+   */
   private void handlePlayCancelMoveResponse(GameMessage gameMessage) {
     boolean isAcceptedCancelMove = Boolean.valueOf(gameMessage.getData());
     if (isAcceptedCancelMove) {
-      eventBus.fireEvent(new PlayMoveEvent(new MoveDto(gameMessage.getMove())));
+      final MoveDto move = new MoveDto(gameMessage.getMove()).mirror();
+      eventBus.fireEvent(new PlayMoveCancelEvent(move));
     } else {
       new DialogBox(constants.info(), constants.playerRejectedMoveCancel(gameMessage.getSender().getPublicName()));
     }
   }
 
+  /**
+   * Вопрос на строне оппонента о том, что ему предлагается отменить ход. Если он соглашается, то он двигает шашку
+   * оппонента
+   * @param gameMessage
+   */
   private void handlePlayCancelMove(final GameMessage gameMessage) {
     new ConfirmeDialogBox(constants.playerProposesCancelMove(gameMessage.getSender().getPublicName())) {
       @Override
@@ -292,7 +302,7 @@ public class GameWebsocket implements WebSocketCallback {
         returnGameMessage.setMove(gameMessage.getMove());
         if (isConfirmed()) {
           returnGameMessage.setData(Boolean.TRUE.toString());
-          eventBus.fireEvent(new PlayMoveEvent(new MoveDto(gameMessage.getMove())));
+          eventBus.fireEvent(new PlayMoveOpponentCancelEvent(new MoveDto(gameMessage.getMove())));
         } else {
           returnGameMessage.setData(Boolean.FALSE.toString());
         }
@@ -374,10 +384,8 @@ public class GameWebsocket implements WebSocketCallback {
 
   private void handlePlayMove(GameMessage gameMessage) {
     GWT.log(gameMessage.getMove().toString());
-    final MoveDto moveDto = new MoveDto(gameMessage.getMove());
-    if (moveDto.isCancel()) {
-      return;
-    }
+    // отправлем отраженный ход здесь
+    final MoveDto moveDto = new MoveDto(gameMessage.getMove()).mirror();
     eventBus.fireEvent(new PlayMoveOpponentEvent(moveDto));
   }
 

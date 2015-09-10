@@ -69,13 +69,12 @@ public class NotationPanel extends ScrollPanel {
 
     String[] steps = notation.split(NOTATION_SEP);
     if (steps.length == 0) {
-      steps = new String[]{""};
       notation = "";
     }
-    GWT.log("MOVE" + move);
+    GWT.log("MOVE in NOTATION " + move);
     // первый шаг. например, h4:f6:d4 - h4
     Square start = move.getStartSquare();
-    GWT.log("FIRST STEP" + start.toString());
+    GWT.log("FIRST STEP " + start.toString());
 
     if (move.isSimple()) {
       if (move.isFirst()) {
@@ -106,41 +105,6 @@ public class NotationPanel extends ScrollPanel {
       }
     }
 
-    // шаги из нотации
-    // последний шаг. например, 2. f2-g3 f6-g5
-//    if (!calcMove.isSimple() && lastStroke.endsWith(start)) { // была побита шашка
-//      String lastBeatenStroke = calcMove.split(BEAT_SEP)[1];
-//      GWT.log("LAST BEATEN STROKE" + lastBeatenStroke);
-//      if (!notation.endsWith(NOTATION_SEP)) {
-//        notation += BEAT_SEP + lastBeatenStroke;
-//      } else {
-//        // в начале убираем маркер новой строки, потом приципляем ход
-//        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + BEAT_SEP + lastBeatenStroke + NOTATION_SEP;
-//      }
-//    } else { // обычный ход
-//      String lastMove = steps[steps.length - 1];
-//      GWT.log("LAST MOVE SIMPLE " + lastMove);
-////      if (steps.length == 1) { // первый ход
-////        if (lastMove.length() != 0 && !notation.endsWith(NOTATION_SEP)) {
-////          notation += MOVE_SEP + calcMove + NOTATION_SEP;
-////          stepCounter++;
-////        } else {
-////          notation += stepCounter + COUNT_SEP + calcMove;
-////        }
-//      if (lastMove.contains(COUNT_SEP) && !notation.endsWith(NOTATION_SEP)) {
-//        notation += MOVE_SEP + calcMove + NOTATION_SEP;
-//        stepCounter++;
-//        GWT.log("1");
-//      } else if (calcMove.contains(BEAT_SEP) && cancelBite) {
-//        notation += BEAT_SEP + calcMove + NOTATION_SEP;
-//        GWT.log("2");
-//      } else {
-//        notation += stepCounter + COUNT_SEP + calcMove;
-//        GWT.log("3");
-//      }
-//      cancelBite = false;
-//      cancelCounter = 0;
-//    }
     getElement().setInnerHTML(notation);
     GWT.log("Notation " + notation);
     pushScroll();

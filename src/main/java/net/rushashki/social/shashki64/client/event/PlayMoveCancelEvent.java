@@ -9,12 +9,12 @@ import net.rushashki.social.shashki64.shashki.dto.MoveDto;
  * Date: 03.01.15
  * Time: 17:11
  */
-public class PlayMoveEvent extends GwtEvent<PlayMoveEventHandler> {
+public class PlayMoveCancelEvent extends GwtEvent<PlayMoveCancelEventHandler> {
 
-  public static Type<PlayMoveEventHandler> TYPE = new Type<>();
+  public static Type<PlayMoveCancelEventHandler> TYPE = new Type<>();
   private final MoveDto move;
 
-  public PlayMoveEvent(MoveDto move) {
+  public PlayMoveCancelEvent(MoveDto move) {
     this.move = move;
   }
 
@@ -22,11 +22,11 @@ public class PlayMoveEvent extends GwtEvent<PlayMoveEventHandler> {
     return move;
   }
 
-  public Type<PlayMoveEventHandler> getAssociatedType() {
+  public Type<PlayMoveCancelEventHandler> getAssociatedType() {
     return TYPE;
   }
 
-  protected void dispatch(PlayMoveEventHandler handler) {
+  protected void dispatch(PlayMoveCancelEventHandler handler) {
     handler.onPlayMove(this);
   }
 
