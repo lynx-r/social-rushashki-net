@@ -26,14 +26,12 @@ public class NotationPanel extends ScrollPanel {
   private static final String NOTATION_WIDTH = "200px";
 
   private final EventBus eventBus;
-  private int stepCounter;
   private final ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   private static String notation;
   private boolean cancelBite;
   private int cancelCounter;
 
   public NotationPanel() {
-    stepCounter = 1;
     this.eventBus = shashkiGinjector.getEventBus();
 
     // TODO: Not Compile
@@ -52,7 +50,6 @@ public class NotationPanel extends ScrollPanel {
     eventBus.addHandler(ClearNotationEvent.TYPE, new ClearNotationEventHandler() {
       @Override
       public void onClearNotation(ClearNotationEvent event) {
-        stepCounter = 1;
         notation = "";
         getElement().setInnerHTML("");
       }
@@ -123,11 +120,20 @@ public class NotationPanel extends ScrollPanel {
   public void cancelMove(MoveDto move) {
     GWT.log(notation);
     notation = notation.replaceAll(DIV_GARBAGE, "");
-    if (move.isFirst()) {
-      notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
-      stepCounter--;
+    if (move.isSimple()) {
+      if (move.isFirst()) {
+        notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
+      } else {
+        notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
+      }
     } else {
-      notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
+      if (move.isFirst()) {
+        if (move.isStartBeat()) {
+          notation = notation.substring(0, notation.lastIndexOf(NOTATION_SEP)) + NOTATION_SEP;
+        } else {
+          notation = notation.substring(0, notation.lastIndexOf(BEAT_SEP));
+        }
+      }
     }
 //    String[] notationArray = notation.split(NOTATION_SEP);
 //    // ход. 2. h4:f6 e7:g5
