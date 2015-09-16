@@ -133,6 +133,12 @@ public class NotationPanel extends ScrollPanel {
         } else {
           notation = notation.substring(0, notation.lastIndexOf(BEAT_SEP));
         }
+      } else {
+        if (move.isStartBeat()) {
+          notation = notation.substring(0, notation.lastIndexOf(MOVE_SEP));
+        } else {
+          notation = notation.substring(0, notation.lastIndexOf(BEAT_SEP));
+        }
       }
     }
 //    String[] notationArray = notation.split(NOTATION_SEP);

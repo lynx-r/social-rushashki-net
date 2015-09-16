@@ -50,7 +50,8 @@ public class Board extends Layer {
 
   private Stack<MoveDto> moveMyStack = new Stack<>();
   private Stack<MoveDto> moveOpponentStack = new Stack<>();
-  private int moveCounter;
+  private int moveCounter = 0;
+  private boolean complexBeat = false;
 
   public Board(BoardBackgroundLayer backgroundLayer, int rows, int cols, boolean white) {
 
@@ -184,8 +185,7 @@ public class Board extends Layer {
         square.setOccupant(draught);
         return draught;
       }
-    } catch (SquareNotFoundException e) {
-      GWT.log(e.getLocalizedMessage(), e);
+    } catch (SquareNotFoundException ignore) {
     }
     return null;
   }
@@ -219,8 +219,7 @@ public class Board extends Layer {
               fadeOutSquare(square);
               highlightedSquares.remove(square);
             }
-          } catch (SquareNotFoundException e) {
-            GWT.log(e.getLocalizedMessage(), e);
+          } catch (SquareNotFoundException ignore) {
           }
         }
       }
@@ -282,8 +281,7 @@ public class Board extends Layer {
               highlightSquareToBeat(currentSq);
               highlightedSquares.add(currentSq);
             }
-          } catch (SquareNotFoundException e) {
-            GWT.log(e.getLocalizedMessage(), e);
+          } catch (SquareNotFoundException ignore) {
           }
         }
       } else if (!possibleMoves.isEmpty()) {
@@ -358,7 +356,6 @@ public class Board extends Layer {
               try {
                 startSquareLoop = backgroundLayer.getSquare(i, j);
               } catch (SquareNotFoundException e) {
-                GWT.log(e.getLocalizedMessage(), e);
                 return;
               }
               while (inBounds(i, j) && !startSquareLoop.isOccupied()) {
@@ -366,7 +363,6 @@ public class Board extends Layer {
                 try {
                   loopSquare = backgroundLayer.getSquare(i, j);
                 } catch (SquareNotFoundException e) {
-                  GWT.log(e.getLocalizedMessage(), e);
                   continue;
                 }
                 if (straightQueen) {
@@ -425,8 +421,7 @@ public class Board extends Layer {
         try {
           square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
           nextSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
-        } catch (SquareNotFoundException e) {
-          GWT.log(e.getLocalizedMessage(), e);
+        } catch (SquareNotFoundException ignore) {
         }
         if (nextSquare != null && !nextSquare.isOccupied() && square != null && square.isOccupied()
             && square.getOccupant().isWhite() != sideWhite) {
@@ -460,14 +455,12 @@ public class Board extends Layer {
       try {
         jumpSquare = backgroundLayer.getSquare(opRow.apply(row, 2), opCol.apply(col, 2));
       } catch (SquareNotFoundException e) {
-        GWT.log(e.getLocalizedMessage(), e);
         return;
       }
       Square capturedSquare;
       try {
         capturedSquare = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
       } catch (SquareNotFoundException e) {
-        GWT.log(e.getLocalizedMessage(), e);
         return;
       }
       //if square is occupied, and the color of the Draught in square is
@@ -480,7 +473,6 @@ public class Board extends Layer {
           try {
             square = backgroundLayer.getSquare(row, col);
           } catch (SquareNotFoundException e) {
-            GWT.log(e.getLocalizedMessage(), e);
             return;
           }
           if (capturedSquare.isBetween(square, takenSquare)) {
@@ -495,13 +487,11 @@ public class Board extends Layer {
             try {
               capturedSquare = backgroundLayer.getSquare(opRow.apply(r, 1), opCol.apply(c, 1));
             } catch (SquareNotFoundException e) {
-              GWT.log(e.getLocalizedMessage(), e);
               return;
             }
             try {
               jumpSquare = backgroundLayer.getSquare(opRow.apply(r, 2), opCol.apply(c, 2));
             } catch (SquareNotFoundException e) {
-              GWT.log(e.getLocalizedMessage(), e);
               return;
             }
           }
@@ -513,7 +503,6 @@ public class Board extends Layer {
             try {
               squareStartLoop = backgroundLayer.getSquare(i, j);
             } catch (SquareNotFoundException e) {
-              GWT.log(e.getLocalizedMessage(), e);
               return;
             }
             while (inBounds(i, j) && !squareStartLoop.isOccupied()) {
@@ -521,7 +510,6 @@ public class Board extends Layer {
               try {
                 squareLoop = backgroundLayer.getSquare(i, j);
               } catch (SquareNotFoundException e) {
-                GWT.log(e.getLocalizedMessage(), e);
                 continue;
               }
               outJumpMoves.add(squareLoop);
@@ -538,7 +526,6 @@ public class Board extends Layer {
         try {
           square = backgroundLayer.getSquare(opRow.apply(row, 1), opCol.apply(col, 1));
         } catch (SquareNotFoundException e) {
-          GWT.log(e.getLocalizedMessage(), e);
           return;
         }
         if (square.isOccupied()) {
@@ -574,6 +561,9 @@ public class Board extends Layer {
     from.setOccupant(null);
     beingMoved.setPosition(to.getRow(), to.getCol());
     to.setOccupant(beingMoved);
+
+    final boolean first = isFirstMoveFlag();
+    move.setFirst(first);
 
     if (!capturedSquares.isEmpty()) {
       //A jump has been performed, so get the Square that lies between from and to
@@ -624,20 +614,30 @@ public class Board extends Layer {
       move.setTakenSquare(takenSquare);
       if (jumpMoves.isEmpty()) {
         move.setOnStopBeat();
+
+        if (!complexBeat) {
+          move.setOnStartBeat();
+        } else {
+          complexBeat = false;
+        }
       } else {
         move.setOnContinueBeat();
+        if (!complexBeat) {
+          move.setOnStartBeat();
+        }
+        complexBeat = true;
       }
 
       GWT.log(takenSquare.toString());
       removeDraughtFrom(takenSquare);
-
-      // если предыдущий ход простой (без взятия), тогда устанавливаем флаг на начало взятия
-      if (getLastMove() != null && getLastMove().isSimple()) {
-        move.setOnStartBeat();
-      }
     } else {
       move.setOnSimpleMove();
     }
+
+    if (move.isSimple() || move.isStartBeat()) {
+      moveCounter++;
+    }
+    move.setNumber(moveCounter);
 
     return move;
   }
@@ -697,7 +697,6 @@ public class Board extends Layer {
         try {
           current = backgroundLayer.getSquare(n, m);
         } catch (SquareNotFoundException e) {
-          GWT.log(e.getLocalizedMessage(), e);
           continue;
         }
         if (null != current && null != current.getOccupant() && current.isBetween(firstStep, secondStep)
@@ -833,7 +832,6 @@ public class Board extends Layer {
         takenSquare = getSquare(move.getTakenSquare().getRow(), move.getTakenSquare().getCol());
       }
     } catch (SquareNotFoundException e) {
-      GWT.log(e.getLocalizedMessage(), e);
       return;
     }
 
@@ -860,7 +858,7 @@ public class Board extends Layer {
     }
 
     if (!move.isCancel()) {
-      final boolean first = produceFirstMoveFlag(move, true);
+      final boolean first = isFirstMoveFlag();
       move.setNumber(move.getNumber())
           .setFirst(first);
       MoveDto forNotation = move.mirror();
@@ -997,14 +995,12 @@ public class Board extends Layer {
       Square endSquare = null, startSquare = null;
       try {
         endSquare = getSquare(clickX, clickY);
-      } catch (SquareNotFoundException e) {
-        GWT.log(e.getLocalizedMessage(), e);
+      } catch (SquareNotFoundException ignore) {
       }
 
       try {
         startSquare = getSquare(selectedDraught.getRow(), selectedDraught.getCol());
-      } catch (SquareNotFoundException e) {
-        GWT.log(e.getLocalizedMessage(), e);
+      } catch (SquareNotFoundException ignore) {
       }
 
       if (highlightedSquares.contains(endSquare) && startSquare != null && startSquare.isOnLine(endSquare)) {
@@ -1013,13 +1009,6 @@ public class Board extends Layer {
 
         move.setStartSquare(startSquare);
         move.setEndSquare(endSquare);
-
-        final boolean first = produceFirstMoveFlag(move, false);
-        if (move.isSimple() || move.isStartBeat()) {
-          moveCounter++;
-        }
-        move.setNumber(moveCounter);
-        move.setFirst(first);
 
         boolean isSimpleMove = move.isSimple();
         GWT.log("SIMPLE MOVE " + isSimpleMove);
@@ -1058,7 +1047,11 @@ public class Board extends Layer {
     }
   }
 
-  private boolean produceFirstMoveFlag(MoveDto move, boolean opponent) {
+  /**
+   * Вычисляем является ли ход первым в полном ходе a1 b2 - а1 первый ход
+   * @return
+   */
+  private boolean isFirstMoveFlag() {
     if (isWhite()) {
       return isMyTurn();
     } else {
@@ -1072,8 +1065,7 @@ public class Board extends Layer {
         try {
           Square square = getSquare(i, j);
           removeDraughtFrom(square, true);
-        } catch (SquareNotFoundException e) {
-          GWT.log(e.getLocalizedMessage(), e);
+        } catch (SquareNotFoundException ignore) {
         }
       }
     }
@@ -1096,7 +1088,6 @@ public class Board extends Layer {
       startSquare = getSquare(startRow, startCol);
       endSquare = getSquare(endRow, endCol);
     } catch (SquareNotFoundException e) {
-      GWT.log(e.getLocalizedMessage(), e);
       return;
     }
 
@@ -1117,8 +1108,7 @@ public class Board extends Layer {
       int beatenCol = move.getTakenSquare().getCol();
       try {
         taken = backgroundLayer.getSquare(beatenRow, beatenCol);
-      } catch (SquareNotFoundException e) {
-        GWT.log(e.getLocalizedMessage(), e);
+      } catch (SquareNotFoundException ignore) {
       }
       move.setTakenSquare(taken);
     }
