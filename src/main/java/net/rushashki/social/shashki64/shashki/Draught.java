@@ -69,10 +69,18 @@ public class Draught extends Group implements Serializable {
 
     int i = 0;
     for (Circle circle : circles) {
-      if (i % 2 == 0) {
-        circle.setShadow(new Shadow(Color.fromColorString("#000"), 6, 0, 4));
+      if (isWhite()) {
+        if (i % 2 == 0) {
+          circle.setShadow(new Shadow(ColorName.GRAY, 6, 0, 4));
+        } else {
+          circle.setShadow(new Shadow(ColorName.GRAY, 6, 0, -4));
+        }
       } else {
-        circle.setShadow(new Shadow(Color.fromColorString("#000"), 6, 0, -4));
+        if (i % 2 == 0) {
+          circle.setShadow(new Shadow(ColorName.BLACK, 6, 0, 4));
+        } else {
+          circle.setShadow(new Shadow(ColorName.BLACK, 6, 0, -4));
+        }
       }
       i++;
       circle.setFillColor(white ? ColorName.WHITE : Color.fromColorString("#555"));
@@ -135,7 +143,7 @@ public class Draught extends Group implements Serializable {
     double y = row * deskSide / cols;
     double squareSize = deskSide / rows;
     setX(x + squareSize / 2 + offsetX);
-    setY(y + squareSize / 2);
+    setY(y + squareSize / 2 + offsetX - 2);
 
     double radius = squareSize / 2 - 5;
 

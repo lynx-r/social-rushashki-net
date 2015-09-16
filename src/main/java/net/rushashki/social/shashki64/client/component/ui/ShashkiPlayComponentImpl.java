@@ -101,7 +101,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
 
     initEmptyDeskPanel(constants.playStartDescription());
     initNotationPanel();
-    initCellList();
+    initPlayersCellList();
 
     if (clientFactory.getPlayerList() != null) {
       setPlayerList(clientFactory.getPlayerList());
@@ -469,7 +469,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
   }
 
   private BoardBackgroundLayer initDeskPanel(boolean white) {
-    int lienzoSide = lienzoPanel.getHeight() - 20;
+    int lienzoSide = lienzoPanel.getHeight() - 50;
     BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
         lienzoSide, lienzoSide - 30,
         8, 8);
@@ -498,7 +498,7 @@ public class ShashkiPlayComponentImpl extends BasicComponent {
     }
   }
 
-  private void initCellList() {
+  private void initPlayersCellList() {
     playersCellList = new CellList<>(new AbstractCell<Shashist>() {
       @Override
       public void render(Context context, Shashist value, SafeHtmlBuilder sb) {

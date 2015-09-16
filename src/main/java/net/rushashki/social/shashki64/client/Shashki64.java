@@ -18,7 +18,7 @@ import net.rushashki.social.shashki64.client.event.ClientFactoryEvent;
 import net.rushashki.social.shashki64.client.page.BasePage;
 import net.rushashki.social.shashki64.client.page.ui.BasePageUi;
 import net.rushashki.social.shashki64.client.place.AppPlaceHistoryMapper;
-import net.rushashki.social.shashki64.client.place.HomePlace;
+import net.rushashki.social.shashki64.client.place.PlayTapePlace;
 import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
 import net.rushashki.social.shashki64.client.util.DebugUtils;
 import net.rushashki.social.shashki64.shared.model.Shashist;
@@ -34,7 +34,7 @@ public class Shashki64 implements EntryPoint {
 
   private Image splashImage;
 
-  private HomePlace defaultPlace = new HomePlace("Home");
+  private PlayTapePlace defaultPlace = new PlayTapePlace("doPlayTape");
 
   private ClientFactory clientFactory = GWT.create(ClientFactory.class);
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;

@@ -6,7 +6,7 @@
     <b:Navbar position="FIXED_TOP">
         <b:Container fluid="true">
             <b:NavbarHeader>
-                <b:NavbarBrand href="/">
+                <b:NavbarBrand>
                     <ui:msg description="Brand">Русские шашки</ui:msg>
                 </b:NavbarBrand>
                 <b:NavbarCollapseButton dataTarget="#navbar-collapse"/>

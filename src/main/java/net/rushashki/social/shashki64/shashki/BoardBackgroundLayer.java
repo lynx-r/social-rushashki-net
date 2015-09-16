@@ -4,6 +4,8 @@ package net.rushashki.social.shashki64.shashki;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Text;
+import com.ait.lienzo.client.core.types.Shadow;
+import com.ait.lienzo.shared.core.types.Color;
 import com.ait.lienzo.shared.core.types.ColorName;
 
 import java.util.Vector;
@@ -24,7 +26,8 @@ public class BoardBackgroundLayer extends Layer {
   private Square[][] gameBoard;
   private Rectangle boardConturRect;
   private Vector<Text> coordsTextVector = new Vector<>();
-  public static final int OFFSET_X = 30;
+  public static final int OFFSET_X = 29;
+  private static final Color boardBackground = new Color(65, 133, 132);
 
   public BoardBackgroundLayer(int side, int deskSide, int rows, int cols) {
     setListening(false);
@@ -41,12 +44,15 @@ public class BoardBackgroundLayer extends Layer {
   }
 
   private void drawDesk() {
-    Rectangle background = new Rectangle(deskSide, deskSide).setX(OFFSET_X).setY(0);
-    background.setFillColor(ColorName.LIGHTGRAY);
+    Rectangle background = new Rectangle(deskSide + 2 * OFFSET_X, deskSide + 2 * OFFSET_X).setX(0).setY(0);
+    background.setFillColor(boardBackground);
+    background.setShadow(new Shadow(ColorName.GRAY, 15, 10, 10));
     add(background);
 
     if (boardConturRect == null) {
-      boardConturRect = new Rectangle(deskSide, deskSide).setX(OFFSET_X).setY(0);
+      boardConturRect = new Rectangle(deskSide, deskSide).setX(OFFSET_X).setY(OFFSET_X - 2);
+      boardConturRect.setFillColor(ColorName.LIGHTGRAY);
+      boardConturRect.setStrokeColor(ColorName.BLACK);
       add(boardConturRect);
     } else {
       boardConturRect.setWidth(side).setHeight(side);
@@ -57,7 +63,7 @@ public class BoardBackgroundLayer extends Layer {
       for (int j = 0; j < cols; j++) {
         if (lastColor) {
           Square square = new Square(i, j);
-          square.updateShape(deskSide, rows, cols, getOffsetX());
+          square.updateShape(deskSide, rows, cols, OFFSET_X, OFFSET_X - 2);
           gameBoard[i][j] = square;
           add(square);
 
@@ -89,7 +95,7 @@ public class BoardBackgroundLayer extends Layer {
       for (int j = 0; j < cols; j++) {
         if (0 == j) {
           double x = OFFSET_X - 20;
-          double y = deskSide * (((double) i) / ((double) cols) + 1 / ((double) rows * 2)) + 5;
+          double y = deskSide * (((double) i) / ((double) cols) + 1 / ((double) rows * 2)) + OFFSET_X + 5;
 
           Text num = new Text(String.valueOf(numCoords), "Times New Roman", 12);
           num.setFillColor(ColorName.BLACK);
@@ -101,7 +107,7 @@ public class BoardBackgroundLayer extends Layer {
         }
         if (rows == (i + 1)) {
           double x = deskSide * ((double) j / ((double) rows) + 1 / ((double) cols * 2)) + OFFSET_X - 8;
-          double y = deskSide + 20;
+          double y = deskSide + OFFSET_X + 18;
 
           Text alph = new Text(alphCoords[alphIdCoords], "Times New Roman", 12);
           alph.setFillColor(ColorName.BLACK);
@@ -121,8 +127,6 @@ public class BoardBackgroundLayer extends Layer {
         try {
           Square square = getSquare(i, j);
           square.setAlpha(1.0);
-          square.setStrokeWidth(1.5);
-          square.setStrokeColor(ColorName.BLACK);
         } catch (SquareNotFoundException e) {
           e.printStackTrace();
         }

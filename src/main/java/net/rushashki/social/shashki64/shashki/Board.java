@@ -54,7 +54,6 @@ public class Board extends Layer {
   private boolean complexBeat = false;
 
   public Board(BoardBackgroundLayer backgroundLayer, int rows, int cols, boolean white) {
-
     this.backgroundLayer = backgroundLayer;
     this.white = white;
     this.eventBus = shashkiGinjector.getEventBus();

@@ -1,22 +1,23 @@
 package net.rushashki.social.shashki64.client.component.ui;
 
+import com.ait.lienzo.client.core.shape.Layer;
+import com.ait.lienzo.client.core.shape.Rectangle;
+import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import net.rushashki.social.shashki64.client.event.ClientFactoryEvent;
-import net.rushashki.social.shashki64.client.event.ClientFactoryEventHandler;
-import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
 import net.rushashki.social.shashki64.shared.dto.PlayDto;
+import net.rushashki.social.shashki64.shared.model.Shashist;
+import net.rushashki.social.shashki64.shashki.Board;
 import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
 
 /**
@@ -27,6 +28,7 @@ import net.rushashki.social.shashki64.shashki.BoardBackgroundLayer;
  */
 public class ShashkiViewComponentImpl extends BasicComponent implements ClickHandler {
   private static Binder ourUiBinder = GWT.create(Binder.class);
+  private Board board;
   private LienzoPanel lienzoPanel;
   private Shashist player;
 
@@ -43,6 +45,8 @@ public class ShashkiViewComponentImpl extends BasicComponent implements ClickHan
   @UiField
   ScrollPanel notationList;
 
+  private NotationPanel notationPanel;
+
   private static ShashkiViewComponentImpl INSTANCE;
   private PlayDto playDto;
 
@@ -52,49 +56,81 @@ public class ShashkiViewComponentImpl extends BasicComponent implements ClickHan
     this.playDto = playDto;
     INSTANCE = this;
 
+    initEmptyDeskPanel(constants.playStartDescription());
+    initNotationPanel();
+  }
+
+  private BoardBackgroundLayer initDeskPanel(boolean white) {
+    int lienzoSide = lienzoPanel.getHeight() - 50;
+    BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
+        lienzoSide, lienzoSide - 30,
+        8, 8);
+    boardBackgroundLayer.drawCoordinates(white);
+    lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
+    return boardBackgroundLayer;
+  }
+
+  private void initNotationPanel() {
+    notationPanel = new NotationPanel();
+    notationList.add(notationPanel);
+
+    Scheduler.get().scheduleFinally(this::alignNotationPanel);
+  }
+
+  private void alignNotationPanel() {
+    if (Window.getClientWidth() > 0) {
+      // 81 - отступы
+//      int side = Window.getClientWidth() - shashkiColumn.getOffsetWidth() - notationColumn.getOffsetWidth()
+//          - playerListColumn.getOffsetWidth() - 81;
+//      privateChatColumn.setWidth(side + "px");
+      String notationHeight = lienzoPanel.getHeight() - 170 + "px";
+      notationPanel.setHeight(notationHeight);
+    }
+  }
+
+  private void initEmptyDeskPanel(String playStartDescription) {
     int shashkiSide = Window.getClientHeight() - RootPanel.get("navigation").getOffsetHeight() -
         RootPanel.get("footer").getOffsetHeight();
     shashkiColumn.setWidth(shashkiSide + "px");
 
     lienzoPanel = new LienzoPanel(shashkiSide, shashkiSide);
-    BoardBackgroundLayer boardBackgroundLayer = new BoardBackgroundLayer(
-        lienzoPanel.getHeight(), lienzoPanel.getHeight() - 30,
-        8, 8);
-    lienzoPanel.setBackgroundLayer(boardBackgroundLayer);
+//    int lienzoSide = lienzoPanel.getHeight() - 20;
+//    Layer initDeskRect = new Layer();
+//    Rectangle contour = new Rectangle(lienzoSide, lienzoSide);
+//    contour.setX(1);
+//    contour.setY(1);
+//    initDeskRect.add(contour);
+//    String[] descriptions = playStartDescription.split("\n");
+//    int y = 0;
+//    for (String description : descriptions) {
+//      Text greeting = new Text(description, "Times New Roman", 14);
+//      greeting.setFillColor("blue");
+//      greeting.setStrokeColor("blue");
+//      greeting.setY(lienzoSide / 2 - 20 + y);
+//      greeting.setX(lienzoSide / 2 - 180);
+//      initDeskRect.add(greeting);
+//      y += 20;
+//    }
+//    lienzoPanel.setBackgroundLayer(initDeskRect);
     shashki.add(lienzoPanel);
 
-    social.add(new HTML("Твитнуть"));
-    comments.add(new HTML("Отличная игра!"));
-
-    lienzoPanel.addClickHandler(this);
-
-    // TODO: Not Compile
-    eventBus.addHandler(ClientFactoryEvent.TYPE, new ClientFactoryEventHandler() {
-      @Override
-      public void onClientFactory(ClientFactoryEvent event) {
-        ShashkiViewComponentImpl.this.player = event.getClientFactory().getPlayer();
-        alignNotationPanel(shashkiSide);
-      }
-    });
-
-    if (player == null) {
-      Scheduler.get().scheduleFinally(() -> {
-          alignNotationPanel(shashkiSide);
-      });
-    }
+    boolean isWhite = true;
+    BoardBackgroundLayer backgroundLayer = initDeskPanel(isWhite);
+    board = new Board(backgroundLayer, 8, 8, isWhite);
+    lienzoPanel.add(board);
   }
 
-  private void alignNotationPanel(int shashkiSide) {
-    if (this.getOffsetWidth() > 0) {
-      sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
-      sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
-      // 20 текст Нотация
-      notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
-    }
-  }
+//  private void alignNotationPanel(int shashkiSide) {
+//    if (this.getOffsetWidth() > 0) {
+//      sidebarColumn.setWidth(this.getOffsetWidth() - shashkiSide + "px");
+//      sidebarColumn.getElement().getStyle().setMarginLeft(shashkiSide + 15, Style.Unit.PX);
+//      // 20 текст Нотация
+//      notationList.setHeight(shashkiColumn.getOffsetHeight() - 20 + "px");
+//    }
+//  }
 
   @Override
-  public void onClick(ClickEvent clickEvent){
+  public void onClick(ClickEvent clickEvent) {
     INSTANCE.removeStyleName("focused");
     addStyleName("focused");
     RootPanel.get().getElement().setScrollTop(this.getElement().getAbsoluteTop() - 50);

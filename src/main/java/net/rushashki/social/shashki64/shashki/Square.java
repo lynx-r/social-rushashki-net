@@ -15,10 +15,10 @@ public class Square extends Rectangle {
   private static final String TO_SEND_SEP = ",";
   private final int row;
   private final int col;
-  private static final Color boardBackground = new Color(144, 77, 48);
+  private static final Color boardBackground = new Color(65, 133, 132);
   private boolean occupied;
   private Draught occupant;
-  private static double strokeLineWidth = 1.5;
+  private static double strokeLineWidth = 0;
   private String[] alph = new String[]{"a", "b", "c", "d", "e", "f", "g", "h"};
 
   public Square(int row, int col) {
@@ -30,7 +30,7 @@ public class Square extends Rectangle {
     this.occupant = null;
 
     this.setFillColor(boardBackground);
-    this.setStrokeWidth(strokeLineWidth);
+//    this.setStrokeWidth(strokeLineWidth);
   }
 
 //  public static Square fromString(int row, int col) {
@@ -180,15 +180,16 @@ public class Square extends Rectangle {
     return ((value > min) && (value < max));
   }
 
-  public void updateShape(int side, int rows, int cols, double offsetX) {
+  public void updateShape(int side, int rows, int cols, double offsetX, int offsetY) {
     double x = ((double) col) * side / ((double) rows) + offsetX;
-    double y = ((double) row) * side / ((double) cols);
+    double y = ((double) row) * side / ((double) cols) + offsetY;
     setX(x);
     setY(y);
 
     double squareSize = side / (double) rows;
     setWidth(squareSize);
     setHeight(squareSize);
+//    this.setStrokeWidth(strokeLineWidth);
   }
 
   public boolean contains(double x, double y) {
