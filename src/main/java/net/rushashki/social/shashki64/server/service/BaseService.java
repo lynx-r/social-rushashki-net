@@ -3,7 +3,6 @@ package net.rushashki.social.shashki64.server.service;
 import net.rushashki.social.shashki64.server.dao.Dao;
 import net.rushashki.social.shashki64.shared.model.PersistableObject;
 
-import javax.ejb.Stateless;
 import java.util.List;
 
 /**
@@ -37,5 +36,9 @@ public abstract class BaseService<E extends PersistableObject> {
 
   public List<E> findPublishedAll() {
     return getDao().findPublishedAll();
+  }
+
+  public List<E> findRange(int start, int length) {
+    return getDao().findRange(start, length);
   }
 }

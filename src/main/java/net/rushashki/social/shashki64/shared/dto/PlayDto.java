@@ -1,6 +1,8 @@
 package net.rushashki.social.shashki64.shared.dto;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
+import net.rushashki.social.shashki64.shared.model.Game;
+import net.rushashki.social.shashki64.shared.model.GameEnds;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,25 +11,18 @@ import com.google.gwt.safehtml.shared.SafeHtml;
  * Time: 18:07
  */
 public class PlayDto {
-  private String title;
   private String playerWhite;
   private String playerBlack;
   private SafeHtml deskHtml;
+  private GameEnds gameEnd;
 
   public PlayDto() {
   }
 
-  public PlayDto(String title, String playerWhite, String playerBlack) {
-    this.title = title;
-    this.playerWhite = playerWhite;
-    this.playerBlack = playerBlack;
-  }
-
-  public PlayDto(String title, String playerWhite, String playerBlack, SafeHtml deskHtml) {
-    this.title = title;
-    this.playerWhite = playerWhite;
-    this.playerBlack = playerBlack;
-    this.deskHtml = deskHtml;
+  public PlayDto(Game game) {
+    this.playerWhite = game.getPlayerWhite().getPublicName();
+    this.playerBlack = game.getPlayerBlack().getPublicName();
+    this.gameEnd = game.getPlayEndStatus();
   }
 
   public String getPlayerWhite() {
@@ -62,11 +57,11 @@ public class PlayDto {
     return playerWhite;
   }
 
-  public String getTitle() {
-    return title;
+  public GameEnds getGameEnd() {
+    return gameEnd;
   }
 
-  public void setTitle(String title) {
-    this.title = title;
+  public void setGameEnd(GameEnds gameEnd) {
+    this.gameEnd = gameEnd;
   }
 }

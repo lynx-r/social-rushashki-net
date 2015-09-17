@@ -5,6 +5,7 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
+import net.rushashki.social.shashki64.client.ClientFactory;
 import net.rushashki.social.shashki64.client.rpc.GameRpcServiceAsync;
 import net.rushashki.social.shashki64.client.rpc.GameMessageRpcServiceAsync;
 import net.rushashki.social.shashki64.client.rpc.ProfileRpcServiceAsync;
@@ -24,7 +25,9 @@ import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
 @GinModules(ShashkiGinModule.class)
 public interface ShashkiGinjector extends Ginjector {
 
-  public static final ShashkiGinjector INSTANCE = GWT.create(ShashkiGinjector.class);
+  ShashkiGinjector INSTANCE = GWT.create(ShashkiGinjector.class);
+
+  ClientFactory getClientFactory();
 
   ShashkiLogger getLogger();
 

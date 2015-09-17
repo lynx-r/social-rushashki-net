@@ -1,13 +1,13 @@
 package net.rushashki.social.shashki64.server.dao.impl;
 
 import net.rushashki.social.shashki64.server.dao.GameDao;
-import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,7 +31,7 @@ public class GameDaoImpl extends DaoImpl<GameEntity> implements GameDao {
   }
 
   @Override
-  public Game findLazyFalse(Long id) {
+  public GameEntity findLazyFalse(Long id) {
     String hql = "SELECT g " +
         "FROM GameEntity g " +
         "JOIN FETCH g.playerWhite " +
@@ -39,6 +39,18 @@ public class GameDaoImpl extends DaoImpl<GameEntity> implements GameDao {
         "WHERE g.id = :gameId";
     Query query = entityManager.createQuery(hql);
     query.setParameter("gameId", id);
-    return (Game) query.getSingleResult();
+    return (GameEntity) query.getSingleResult();
+  }
+
+  @Override
+  public List<GameEntity> findRange(int start, int length) {
+    String hql = "SELECT ge " +
+        "FROM GameEntity ge " +
+        "JOIN FETCH ge.playerWhite " +
+        "JOIN FETCH ge.playerBlack";
+    Query query = entityManager.createQuery(hql);
+    query.setFirstResult(start);
+    query.setMaxResults(length);
+    return query.getResultList();
   }
 }

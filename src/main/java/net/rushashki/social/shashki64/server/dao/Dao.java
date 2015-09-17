@@ -11,18 +11,17 @@ import java.util.List;
  * Time: 16:58
  */
 public interface Dao<E extends PersistableObject> {
-  public void create(E entity);
+  void create(E entity);
 
-  public void edit(E entity);
+  void edit(E entity);
 
-  public void remove(E entity);
+  void remove(E entity);
 
-  public E find(Object id);
+  E find(Object id);
 
-  public List<E> findAll();
+  List<E> findAll();
 
-  public List<E> findPublishedAll();
+  List<E> findPublishedAll();
 
-  public List<E> findRange(int[] range);
-
+  List<E> findRange(int start, int length);
 }

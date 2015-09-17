@@ -151,4 +151,20 @@ public interface ShashkiConstants extends Messages {
   String opponentLeftGame();
 
   String playAlreadyPlaying(String publicName);
+
+  String playViewTitle(String whitePlayer, String blackPlayer, String winner);
+
+  String BLACK_WON();
+
+  String WHITE_WON();
+
+  String BLACK_LEFT();
+
+  String WHITE_LEFT();
+
+  String SURRENDER_BLACK();
+
+  String SURRENDER_WHITE();
+
+  String DRAW();
 }

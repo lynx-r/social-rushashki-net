@@ -58,13 +58,12 @@ public abstract class DaoImpl<E extends PersistableObject> implements Dao<E> {
     return getEntityManager().createQuery(cq).getResultList();
   }
 
-  public List<E> findRange(int[] range) {
+  public List<E> findRange(int start, int length) {
     CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
     cq.select(cq.from(entityClass));
     Query q = getEntityManager().createQuery(cq);
-    q.setMaxResults(range[1] - range[0]);
-    q.setFirstResult(range[0]);
+    q.setMaxResults(length);
+    q.setFirstResult(start);
     return q.getResultList();
   }
-
 }

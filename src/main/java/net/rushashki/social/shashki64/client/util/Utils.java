@@ -3,6 +3,8 @@ package net.rushashki.social.shashki64.client.util;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import net.rushashki.social.shashki64.shared.locale.ShashkiConstants;
+import net.rushashki.social.shashki64.shared.model.GameEnds;
 import net.rushashki.social.shashki64.shared.websocket.message.MessageFactory;
 import net.rushashki.social.shashki64.shared.model.GameMessage;
 
@@ -52,4 +54,34 @@ public class Utils {
     return bean.as();
   }
 
+  public static String getGameEnd(GameEnds gameEnd, ShashkiConstants constants) {
+    if (gameEnd == null) {
+      return "";
+    }
+    String winner = "";
+    switch (gameEnd) {
+      case BLACK_WON:
+        winner = constants.BLACK_WON();
+        break;
+      case WHITE_WON:
+        winner = constants.WHITE_WON();
+        break;
+      case BLACK_LEFT:
+        winner = constants.BLACK_LEFT();
+        break;
+      case WHITE_LEFT:
+        winner = constants.WHITE_LEFT();
+        break;
+      case SURRENDER_BLACK:
+        winner = constants.SURRENDER_BLACK();
+        break;
+      case SURRENDER_WHITE:
+        winner = constants.SURRENDER_WHITE();
+        break;
+      case DRAW:
+        winner = constants.DRAW();
+        break;
+    }
+    return winner;
+  }
 }

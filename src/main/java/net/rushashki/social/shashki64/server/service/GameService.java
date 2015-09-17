@@ -2,11 +2,11 @@ package net.rushashki.social.shashki64.server.service;
 
 import net.rushashki.social.shashki64.server.dao.Dao;
 import net.rushashki.social.shashki64.server.dao.GameDao;
-import net.rushashki.social.shashki64.shared.model.Game;
 import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +25,12 @@ public class GameService extends BaseService<GameEntity> {
     return gameDao;
   }
 
-  public Game findLazyFalse(Long id) {
+  @Override
+  public List<GameEntity> findRange(int start, int length) {
+    return gameDao.findRange(start, length);
+  }
+
+  public GameEntity findLazyFalse(Long id) {
     return gameDao.findLazyFalse(id);
   }
 }

@@ -24,22 +24,13 @@ public abstract class BasicViewUi extends Composite implements BasicView {
   protected String token;
   protected BasicView.Presenter presenter;
   protected ProfileRpcServiceAsync profileService;
-  private ClientFactory clientFactory;
+  protected ClientFactory clientFactory;
 
   public BasicViewUi() {
     logger = shashkiGinjector.getLogger();
     constants = shashkiGinjector.getShashkiConstants();
     profileService = shashkiGinjector.getProfileService();
-  }
-
-  @Override
-  public ClientFactory getClientFactory() {
-    return clientFactory;
-  }
-
-  @Override
-  public void setClientFactory(ClientFactory clientFactory) {
-    this.clientFactory = clientFactory;
+    clientFactory = shashkiGinjector.getClientFactory();
   }
 
   @Override

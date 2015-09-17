@@ -1,8 +1,5 @@
 package net.rushashki.social.shashki64.client.component.ui;
 
-import com.ait.lienzo.client.core.shape.Layer;
-import com.ait.lienzo.client.core.shape.Rectangle;
-import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -11,10 +8,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import net.rushashki.social.shashki64.client.component.widget.NotationPanel;
+import net.rushashki.social.shashki64.client.util.Utils;
 import net.rushashki.social.shashki64.shared.dto.PlayDto;
 import net.rushashki.social.shashki64.shared.model.Shashist;
 import net.rushashki.social.shashki64.shashki.Board;
@@ -44,6 +43,8 @@ public class ShashkiViewComponentImpl extends BasicComponent implements ClickHan
   HTMLPanel sidebarColumn;
   @UiField
   ScrollPanel notationList;
+  @UiField
+  HTML title;
 
   private NotationPanel notationPanel;
 
@@ -53,11 +54,24 @@ public class ShashkiViewComponentImpl extends BasicComponent implements ClickHan
   public ShashkiViewComponentImpl(PlayDto playDto) {
     initWidget(ourUiBinder.createAndBindUi(this));
 
+    String winner = Utils.getGameEnd(playDto.getGameEnd(), constants);
+    title.setHTML(constants.playViewTitle(playDto.getWhitePlayer(), playDto.getBlackPlayer(), winner));
+
+    title.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent clickEvent) {
+        lienzoPanel.setVisible(!lienzoPanel.isVisible());
+        sidebarColumn.setVisible(!sidebarColumn.isVisible());
+      }
+    });
+
     this.playDto = playDto;
     INSTANCE = this;
 
     initEmptyDeskPanel(constants.playStartDescription());
     initNotationPanel();
+    lienzoPanel.setVisible(false);
+    sidebarColumn.setVisible(false);
   }
 
   private BoardBackgroundLayer initDeskPanel(boolean white) {

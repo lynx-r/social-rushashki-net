@@ -26,19 +26,27 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main-view}">
-        <g:HTMLPanel ui:field="shashkiColumn" addStyleNames="{style.shashki-column}">
-            <g:HTMLPanel ui:field="shashki"/>
-            <g:HTMLPanel addStyleNames="{style.block}">
-                <ui:msg description="Поделиться" key="shareShashki">Поделиться:</ui:msg>
-                <g:HTMLPanel ui:field="social"/>
-                <ui:msg description="Комментарии" key="commentsShashki">Комментарии:</ui:msg>
-                <g:HTMLPanel ui:field="comments"/>
-            </g:HTMLPanel>
-        </g:HTMLPanel>
-        <g:HTMLPanel ui:field="sidebarColumn" addStyleNames="{style.sidebar-column}">
-            <ui:msg description="Нотация" key="notationList">Нотация:</ui:msg>
-            <g:ScrollPanel ui:field="notationList"/>
-        </g:HTMLPanel>
+        <b:Well>
+            <g:HTML ui:field="title"></g:HTML>
+        </b:Well>
+        <b:Row>
+            <b:Column size="MD_9">
+                <g:HTMLPanel ui:field="shashkiColumn" addStyleNames="{style.shashki-column}">
+                    <g:HTMLPanel ui:field="shashki"/>
+                    <g:HTMLPanel addStyleNames="{style.block}">
+                        <ui:msg description="Поделиться" key="shareShashki">Поделиться:</ui:msg>
+                        <g:HTMLPanel ui:field="social"/>
+                        <ui:msg description="Комментарии" key="commentsShashki">Комментарии:</ui:msg>
+                        <g:HTMLPanel ui:field="comments"/>
+                    </g:HTMLPanel>
+                </g:HTMLPanel>
+            </b:Column>
+            <b:Column size="MD_3">
+                <g:HTMLPanel ui:field="sidebarColumn" addStyleNames="{style.sidebar-column}">
+                    <ui:msg description="Нотация" key="notationList">Нотация:</ui:msg>
+                    <g:ScrollPanel ui:field="notationList"/>
+                </g:HTMLPanel>
+            </b:Column>
+        </b:Row>
     </g:HTMLPanel>
-
 </ui:UiBinder>

@@ -145,7 +145,7 @@ public class NavbarComponentImpl extends Composite implements NavbarComponent {
         if (shashist != null) {
 //                    navLeft.add(homeLink);
           navLeft.add(playTapeLink);
-          navLeft.add(playLink);
+//          navLeft.add(playLink);
 //                    navLeft.add(aboutUsLink);
           navRight.add(profileDropDown);
           profileDropDown.setIcon(IconType.USER);

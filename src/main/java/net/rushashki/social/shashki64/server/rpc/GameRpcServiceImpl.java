@@ -10,6 +10,8 @@ import net.rushashki.social.shashki64.shared.model.entity.GameEntity;
 import net.rushashki.social.shashki64.shared.model.entity.ShashistEntity;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -64,5 +66,25 @@ public class GameRpcServiceImpl extends RemoteServiceServlet implements GameRpcS
       gameEntity.setPlayerBlack(playerBlack);
       gameService.edit(gameEntity);
     }
+  }
+
+  @Override
+  public List<Game> findGames(int start, int length) {
+    List<GameEntity> gameEntities= gameService.findRange(start, length);
+    return getGames(gameEntities);
+  }
+
+  @Override
+  public List<Game> findAllGames() {
+    List<GameEntity> gameEntities= gameService.findAll();
+    return getGames(gameEntities);
+  }
+
+  private List<Game> getGames(List<GameEntity> gameEntities) {
+    List<Game> games = new ArrayList<>();
+    for (GameEntity gameEntity : gameEntities) {
+      games.add(new GameDto().copy(gameEntity));
+    }
+    return games;
   }
 }

@@ -36,7 +36,7 @@ public class Shashki64 implements EntryPoint {
 
   private PlayTapePlace defaultPlace = new PlayTapePlace("doPlayTape");
 
-  private ClientFactory clientFactory = GWT.create(ClientFactory.class);
+  private ClientFactory clientFactory;
   private ShashkiGinjector shashkiGinjector = ShashkiGinjector.INSTANCE;
   private EventBus eventBus;
   private ProfileRpcServiceAsync profileService;
@@ -48,6 +48,7 @@ public class Shashki64 implements EntryPoint {
     try {
       this.profileService = shashkiGinjector.getProfileService();
       this.eventBus = shashkiGinjector.getEventBus();
+      this.clientFactory = shashkiGinjector.getClientFactory();
 
       splashImage = new Image(Resources.INSTANCE.images().loadIconImage().getSafeUri());
       splashImage.addStyleName("loader-image");

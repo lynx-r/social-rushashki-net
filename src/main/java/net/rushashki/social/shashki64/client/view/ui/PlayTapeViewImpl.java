@@ -15,10 +15,11 @@ import net.rushashki.social.shashki64.client.view.PlayTapeView;
  */
 public class PlayTapeViewImpl extends BasicViewUi implements PlayTapeView {
   private static Binder ourUiBinder = GWT.create(Binder.class);
-  @UiField
-  ShashkiListComponentImpl shashkiLenta;
+  @UiField(provided = true)
+  ShashkiListComponentImpl shashkiList;
 
   public PlayTapeViewImpl() {
+    shashkiList = new ShashkiListComponentImpl();
     initWidget(ourUiBinder.createAndBindUi(this));
   }
 

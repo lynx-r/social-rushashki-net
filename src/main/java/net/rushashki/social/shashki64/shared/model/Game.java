@@ -33,5 +33,4 @@ public interface Game extends PersistableObject {
   Shashist getPlayerWhite();
 
   void setPlayerWhite(Shashist playerWhite);
-
 }

@@ -5,6 +5,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import net.rushashki.social.shashki64.shared.model.Game;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: alekspo
@@ -14,17 +16,21 @@ import net.rushashki.social.shashki64.shared.model.Game;
 @RemoteServiceRelativePath("GameRpcService")
 public interface GameRpcService extends RemoteService {
 
-  public Game createGame(Game game);
+  Game createGame(Game game);
 
-  public Game getGame(Long id);
+  Game getGame(Long id);
 
-  public void saveGame(Game game);
+  void saveGame(Game game);
+
+  List<Game> findGames(int start, int length);
+
+  List<Game> findAllGames();
 
   /**
    * Utility/Convenience class.
    * Use GameRpcService.App.fromString() to access static instance of GameRpcServiceAsync
    */
-  public static class App {
+  class App {
     private static final GameRpcServiceAsync ourInstance = (GameRpcServiceAsync) GWT.create(GameRpcService.class);
 
     public static GameRpcServiceAsync getInstance() {
